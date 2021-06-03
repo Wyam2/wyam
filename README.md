@@ -1,4 +1,4 @@
-A continuation of the original project Wyam created by [Dave Glick](https://github.com/daveaglick) since it's the only open-source project handling markdown and code documentation, except docFX.
+A continuation of the awesome project [Wyam](https://github.com/Wyamio/Wyam) created by [Dave Glick](https://github.com/daveaglick) since it's the only open-source, cross-platform .NET documentation project that I know of, except docFX. For Windows-only there is also [Sandcastle](https://github.com/EWSoftware/SHFB).
 ---
 
 
@@ -29,6 +29,7 @@ For more information see [Wyam.io](https://wyam.io).
 
 ## Acknowledgements
 
+* Original project [Wyam](https://github.com/Wyamio/Wyam) under MIT license.
 * Portions of the IO support were originally inspired from [Cake](http://cakebuild.net) under an MIT license.
 * The RSS/Atom support was originally ported from [WebFeeds](https://github.com/mckamey/web-feeds.net) under an MIT license.
 * Many other fantastic OSS libraries are used directly as NuGet packages, thanks to all the OSS authors out there!
