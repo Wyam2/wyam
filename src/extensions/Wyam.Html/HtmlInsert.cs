@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AngleSharp;
 using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Html;
-using AngleSharp.Parser.Html;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using Wyam.Common.Configuration;
 using Wyam.Common.Execution;
 using Wyam.Common.Modules;
 using Wyam.Common.Tracing;
 using Wyam.Common.Util;
+using IDocument = Wyam.Common.Documents.IDocument;
 
 namespace Wyam.Html
 {
@@ -81,7 +78,7 @@ namespace Wyam.Html
         }
 
         /// <inheritdoc />
-        public IEnumerable<Common.Documents.IDocument> Execute(IReadOnlyList<Common.Documents.IDocument> inputs, IExecutionContext context)
+        public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
             HtmlParser parser = new HtmlParser();
             return inputs.AsParallel().Select(context, input =>

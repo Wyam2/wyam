@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Html;
-using AngleSharp.Parser.Html;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using Wyam.Common.Execution;
 using Wyam.Common.Meta;
 using Wyam.Common.Modules;
 using Wyam.Common.Util;
+using IDocument = Wyam.Common.Documents.IDocument;
 
 namespace Wyam.Html
 {
@@ -166,7 +166,7 @@ namespace Wyam.Html
         }
 
         /// <inheritdoc />
-        public IEnumerable<Common.Documents.IDocument> Execute(IReadOnlyList<Common.Documents.IDocument> inputs, IExecutionContext context)
+        public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
             if (string.IsNullOrWhiteSpace(_metadataKey))
             {
@@ -288,8 +288,8 @@ namespace Wyam.Html
             public IElement Element { get; set; }
             public Heading Previous { get; set; }
             public int Level { get; set; }
-            public Common.Documents.IDocument Document { get; set; }
-            public List<Common.Documents.IDocument> Children { get; } = new List<Common.Documents.IDocument>();
+            public IDocument Document { get; set; }
+            public List<IDocument> Children { get; } = new List<IDocument>();
         }
     }
 }

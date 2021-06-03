@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Html;
-using AngleSharp.Parser.Html;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using Polly;
 using Polly.Retry;
-using Wyam.Common.Documents;
 using Wyam.Common.Execution;
 using Wyam.Common.IO;
 using Wyam.Common.Modules;
+using Wyam.Common.Tracing;
 using Wyam.Common.Util;
+using IDocument = Wyam.Common.Documents.IDocument;
 
 namespace Wyam.Html
 {
@@ -63,7 +60,7 @@ namespace Wyam.Html
             _pathFunc = pathFunc ?? throw new ArgumentNullException(nameof(pathFunc));
         }
 
-        public IEnumerable<Common.Documents.IDocument> Execute(IReadOnlyList<Common.Documents.IDocument> inputs, IExecutionContext context)
+        public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
 #pragma warning disable RCS1163 // Unused parameter.
             // Handle invalid HTTPS certificates and allow alternate security protocols (see http://stackoverflow.com/a/5670954/807064)
@@ -152,7 +149,7 @@ namespace Wyam.Html
             IFile outputFile = context.FileSystem.GetOutputFile(path);
             if (!outputFile.Exists)
             {
-                Common.Tracing.Trace.Verbose($"Downloading resource from {uri} to {path.FullPath}");
+                Trace.Verbose($"Downloading resource from {uri} to {path.FullPath}");
 
                 // Retry with exponential backoff links. This helps with websites like GitHub that will give us a 429 -- TooManyRequests.
                 RetryPolicy<HttpResponseMessage> retryPolicy = Policy

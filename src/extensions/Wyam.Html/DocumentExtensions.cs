@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
-using AngleSharp.Parser.Html;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using Wyam.Common.Documents;
 using Wyam.Common.Tracing;
 
@@ -33,7 +29,7 @@ namespace Wyam.Html
             {
                 using (Stream stream = document.GetStream())
                 {
-                    return parser.Parse(stream);
+                    return parser.ParseDocument(stream);
                 }
             }
             catch (Exception ex)

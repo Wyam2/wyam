@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using AngleSharp.Parser.Html;
-using Wyam.Common.Documents;
+﻿using System.Collections.Generic;
+using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
 using Wyam.Common.Execution;
 using Wyam.Common.JavaScript;
 using Wyam.Common.Meta;
 using Wyam.Common.Shortcodes;
+using IDocument = Wyam.Common.Documents.IDocument;
 
 namespace Wyam.Highlight.Shortcodes
 {
@@ -68,8 +65,8 @@ namespace Wyam.Highlight.Shortcodes
                 }
             }))
             {
-                AngleSharp.Dom.IDocument htmlDocument = parser.Parse(string.Empty);
-                AngleSharp.Dom.IElement element = htmlDocument.CreateElement(dictionary.String("Element", "code"));
+                AngleSharp.Dom.IDocument htmlDocument = parser.ParseDocument(string.Empty);
+                IElement element = htmlDocument.CreateElement(dictionary.String("Element", "code"));
                 element.InnerHtml = content.Trim();
                 if (dictionary.ContainsKey("Language"))
                 {

@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Extensions;
-using AngleSharp.Parser.Html;
-using Wyam.Common;
-using Wyam.Common.Modules;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using Wyam.Common.Execution;
 using Wyam.Common.Meta;
-using Wyam.Common.Util;
+using Wyam.Common.Modules;
+using IDocument = Wyam.Common.Documents.IDocument;
 
 namespace Wyam.Html
 {
@@ -116,7 +111,7 @@ namespace Wyam.Html
         }
 
         /// <inheritdoc />
-        public IEnumerable<Common.Documents.IDocument> Execute(IReadOnlyList<Common.Documents.IDocument> inputs, IExecutionContext context)
+        public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
             if (string.IsNullOrWhiteSpace(_metadataKey))
             {

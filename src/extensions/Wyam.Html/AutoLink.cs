@@ -1,23 +1,16 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Extensions;
-using AngleSharp.Html;
-using AngleSharp.Parser.Html;
-using Wyam.Common;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using Wyam.Common.Configuration;
-using Wyam.Common.Modules;
 using Wyam.Common.Execution;
+using Wyam.Common.Modules;
 using Wyam.Common.Tracing;
 using Wyam.Common.Util;
-using AngleSharp;
 
 namespace Wyam.Html
 {
@@ -183,7 +176,7 @@ namespace Wyam.Html
                     IHtmlDocument htmlDocument;
                     using (Stream stream = input.GetStream())
                     {
-                        htmlDocument = parser.Parse(stream);
+                        htmlDocument = parser.ParseDocument(stream);
                     }
                     foreach (IElement element in htmlDocument.QuerySelectorAll(_querySelector).Where(t => !t.Ancestors<IHtmlAnchorElement>().Any()))
                     {

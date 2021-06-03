@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AngleSharp.Dom.Html;
-using AngleSharp.Extensions;
+using AngleSharp.Dom;
 using AngleSharp.Html;
-using AngleSharp.Parser.Html;
-using Wyam.Common.Documents;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using Wyam.Common.Execution;
 using Wyam.Common.JavaScript;
 using Wyam.Common.Modules;
+using Wyam.Common.Tracing;
 using Wyam.Common.Util;
-using Trace = Wyam.Common.Tracing.Trace;
+using IDocument = Wyam.Common.Documents.IDocument;
 
 namespace Wyam.Highlight
 {
@@ -99,9 +99,9 @@ namespace Wyam.Highlight
                     {
                         using (Stream stream = input.GetStream())
                         {
-                            using (IHtmlDocument htmlDocument = parser.Parse(stream))
+                            using (IHtmlDocument htmlDocument = parser.ParseDocument(stream))
                             {
-                                foreach (AngleSharp.Dom.IElement element in htmlDocument.QuerySelectorAll(_codeQuerySelector))
+                                foreach (IElement element in htmlDocument.QuerySelectorAll(_codeQuerySelector))
                                 {
                                     // Don't highlight anything that potentially is already highlighted
                                     if (element.ClassList.Contains("hljs"))
@@ -145,7 +145,7 @@ namespace Wyam.Highlight
             }
         }
 
-        internal static void HighlightElement(IJavaScriptEnginePool enginePool, AngleSharp.Dom.IElement element)
+        internal static void HighlightElement(IJavaScriptEnginePool enginePool, IElement element)
         {
             using (IJavaScriptEngine engine = enginePool.GetEngine())
             {
