@@ -129,7 +129,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{9B01F618-6
 		build.ps1 = build.ps1
 		BUILDING.md = BUILDING.md
 		CONTRIBUTING.md = CONTRIBUTING.md
-		daveaglick.ruleset = daveaglick.ruleset
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md

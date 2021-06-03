@@ -37,3 +37,4 @@ config.wyam.dll
 .*crunch*.local.xml
 /_NCrunch_Wyam
 .vscode
+.idea
