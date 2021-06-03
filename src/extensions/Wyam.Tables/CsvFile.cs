@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -18,13 +19,15 @@ namespace Wyam.Tables
         public static IEnumerable<IEnumerable<string>> GetAllRecords(TextReader reader, string delimiter = null)
         {
             List<IEnumerable<string>> records = new List<IEnumerable<string>>();
-            Configuration configuration = delimiter == null ? new Configuration { HasHeaderRecord = false } : new Configuration { HasHeaderRecord = false, Delimiter = delimiter };
+            CsvConfiguration configuration = delimiter == null
+                ? new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false }
+                : new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, Delimiter = delimiter };
 
             using (CsvReader csv = new CsvReader(reader, configuration))
             {
                 while (csv.Read())
                 {
-                    string[] currentRecord = csv.Context.Record;
+                    string[] currentRecord = csv.Parser.Record;
                     records.Add(currentRecord);
                 }
             }
@@ -46,7 +49,8 @@ namespace Wyam.Tables
                 return;
             }
 
-            CsvWriter csv = new CsvWriter(writer, new Configuration { QuoteAllFields = true });
+            CsvConfiguration configuration = new CsvConfiguration(CultureInfo.InvariantCulture) { ShouldQuote = (args) => true };
+            CsvWriter csv = new CsvWriter(writer, configuration);
             {
                 foreach (IEnumerable<string> row in records)
                 {
@@ -54,6 +58,7 @@ namespace Wyam.Tables
                     {
                         csv.WriteField(cell ?? string.Empty);
                     }
+
                     csv.NextRecord();
                 }
             }
