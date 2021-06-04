@@ -12,7 +12,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Buildalyzer.Workspaces" Version="2.4.0" />
+    <PackageReference Include="Buildalyzer.Workspaces" Version="2.6.0" />
     <PackageReference Include="ConcurrentHashSet" Version="1.0.2" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.6.0" />
   </ItemGroup>

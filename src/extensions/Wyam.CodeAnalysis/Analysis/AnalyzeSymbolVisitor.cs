@@ -153,7 +153,7 @@ namespace Wyam.CodeAnalysis.Analysis
         {
             // Only visit the original definition until we're finished
             INamedTypeSymbol originalDefinition = GetOriginalSymbolDefinition(symbol);
-            if (!_finished && originalDefinition != symbol)
+            if (!_finished && !originalDefinition.Equals(symbol, SymbolEqualityComparer.Default))
             {
                 VisitNamedType(originalDefinition);
                 return;
@@ -602,7 +602,7 @@ namespace Wyam.CodeAnalysis.Analysis
 
         private IReadOnlyList<IDocument> GetDerivedTypes(INamedTypeSymbol symbol) =>
             _namedTypes
-                .Where(x => x.Key.BaseType != null && GetOriginalSymbolDefinition(x.Key.BaseType).Equals(GetOriginalSymbolDefinition(symbol)))
+                .Where(x => x.Key.BaseType != null && GetOriginalSymbolDefinition(x.Key.BaseType).Equals(GetOriginalSymbolDefinition(symbol), SymbolEqualityComparer.Default))
                 .Select(x => x.Value)
                 .ToImmutableArray();
 

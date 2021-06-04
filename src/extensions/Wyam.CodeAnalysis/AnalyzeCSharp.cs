@@ -564,7 +564,7 @@ namespace Wyam.CodeAnalysis
                 else
                 {
                     Trace.Verbose($"Creating workspace project for {projectFile.Path.FullPath}");
-                    ProjectAnalyzer analyzer = manager.GetProject(projectFile.Path.FullPath);
+                    ProjectAnalyzer analyzer = (ProjectAnalyzer)manager.GetProject(projectFile.Path.FullPath);
                     if (context.Bool(CodeAnalysisKeys.OutputBuildLog))
                     {
                         analyzer.AddBinaryLogger();
@@ -607,7 +607,7 @@ namespace Wyam.CodeAnalysis
                         {
                             analyzer.AddBinaryLogger();
                         }
-                        return ReadWorkspace.CompileProjectAndTrace(analyzer, log);
+                        return ReadWorkspace.CompileProjectAndTrace((ProjectAnalyzer)analyzer, log);
                     })
                     .Where(x => x != null)
                     .ToArray();

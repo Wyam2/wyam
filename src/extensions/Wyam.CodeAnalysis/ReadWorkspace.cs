@@ -91,7 +91,7 @@ namespace Wyam.CodeAnalysis
             Common.Tracing.Trace.Verbose($"Building project {analyzer.ProjectFile.Path}");
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            AnalyzerResult result = analyzer.Build().FirstOrDefault();
+            AnalyzerResult result = (AnalyzerResult)analyzer.Build().FirstOrDefault();
             sw.Stop();
             Common.Tracing.Trace.Verbose($"Project {analyzer.ProjectFile.Path} built in {sw.ElapsedMilliseconds} ms");
             if (result?.Succeeded != true)

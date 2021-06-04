@@ -62,7 +62,7 @@ namespace Wyam.CodeAnalysis
             {
                 LogWriter = log
             });
-            ProjectAnalyzer analyzer = manager.GetProject(file.Path.FullPath);
+            ProjectAnalyzer analyzer = (ProjectAnalyzer)manager.GetProject(file.Path.FullPath);
             if (context.Bool(CodeAnalysisKeys.OutputBuildLog))
             {
                 analyzer.AddBinaryLogger();
