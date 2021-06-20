@@ -1,19 +1,26 @@
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
-    "version": "0.1.0",
+    "version": "2.0.0",
     "command": "build.cmd",
-    "showOutput": "always",
     "tasks": [
         {
-            "taskName": "build",
+            "label": "build",
+            "command": "build.cmd",
             "args": [
                 "-target",
                 "Build"
             ],
-            "showOutput": "always",
-            "isBuildCommand": true,
-            "suppressTaskName": true
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
         }
     ]
 }

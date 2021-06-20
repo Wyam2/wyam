@@ -26,8 +26,9 @@
 
 #addin "Cake.FileHelpers"
 #addin "Octokit"
-#tool "nuget:?package=NUnit.ConsoleRunner&version=3.7.0"
-#tool "nuget:?package=NuGet.CommandLine&version=4.9.2"
+#tool "nuget:?package=NUnit.ConsoleRunner&version=3.12.0"
+#tool "nuget:?package=NuGet.CommandLine&version=5.9.1"
+#tool "nuget:?package=chocolatey&version=0.10.14"
 #tool "AzurePipelines.TestLogger&version=1.0.2"
 
 using Octokit;
@@ -48,8 +49,8 @@ var isRunningOnUnix = IsRunningOnUnix();
 var isRunningOnWindows = IsRunningOnWindows();
 var isRunningOnBuildServer = !string.IsNullOrEmpty(EnvironmentVariable("AGENT_NAME")); // See https://github.com/cake-build/cake/issues/1684#issuecomment-397682686
 var isPullRequest = !string.IsNullOrWhiteSpace(EnvironmentVariable("SYSTEM_PULLREQUEST_PULLREQUESTID"));  // See https://github.com/cake-build/cake/issues/2149
-var buildNumber = TFBuild.Environment.Build.Number.Replace('.', '-');
-var branch = TFBuild.Environment.Repository.Branch;
+var buildNumber = "0"; //isLocal ? "0" : TFBuild.Environment.Build.Number.Replace('.', '-');
+var branch = "develop"; //isLocal ? "develop" : TFBuild.Environment.Repository.Branch;
 
 var releaseNotes = ParseReleaseNotes("./ReleaseNotes.md");
 
@@ -94,8 +95,8 @@ Task("Patch-Assembly-Info")
     {
         var file = "./SolutionInfo.cs";
         CreateAssemblyInfo(file, new AssemblyInfoSettings {
-            Product = "Wyam",
-            Copyright = "Copyright \xa9 Wyam Contributors",
+            Product = "Wyam2",
+            Copyright = $"Copyright {DateTime.Now.Year} \xa9 Wyam2 Contributors",
             Version = version,
             FileVersion = version,
             InformationalVersion = semVersion
@@ -210,25 +211,24 @@ Task("Create-Theme-Packages")
         foreach (var themeDirectory in themeDirectories)
         {
             string[] segments = themeDirectory.Segments;
-            string id = "Wyam." + segments[segments.Length - 2] + "." + segments[segments.Length - 1];
+            string id = "Wyam2." + segments[segments.Length - 2] + "." + segments[segments.Length - 1];
             NuGetPack(new NuGetPackSettings
             {
                 Id = id,
                 Version = semVersion,
                 Title = id,
-                Authors = new [] { "Dave Glick" },
-                Owners = new [] { "Dave Glick", "wyam" },
-                Description = "A theme for the Wyam " + segments[segments.Length - 2] + " recipe.",
-                ProjectUrl = new Uri("https://wyam.io"),
-                IconUrl = new Uri("https://wyam.io/assets/img/logo-square-64.png"),
-                LicenseUrl = new Uri("https://github.com/Wyamio/Wyam/blob/master/LICENSE"),
-                Copyright = "Copyright 2017",
-                Tags = new [] { "Wyam", "Theme", "Static", "StaticContent", "StaticSite" },
+                Authors = new [] { "Simona Avornicesei", "Wyam2", "and contributors" },
+                Description = "A theme for the Wyam2 " + segments[segments.Length - 2] + " recipe.",
+                ProjectUrl = new Uri("https://wyam2.github.io"),
+                IconUrl = new Uri("https://github.com/Wyam2/assets/raw/master/logo-square-64.png"),
+                LicenseUrl = new Uri("https://github.com/Wyam2/assets/raw/master/LICENSE"),
+                Copyright = $"Copyright {DateTime.Now.Year} © Wyam2 Contributors",
+                Tags = new [] { "Wyam", "Wyam2", "Theme", "Static", "StaticContent", "StaticSite", "Documentation" },
                 RequireLicenseAcceptance = false,
                 Symbols = false,
                 Repository = new NuGetRepository {
                     Type = "git",
-                    Url = "https://github.com/Wyamio/Wyam.git"
+                    Url = "https://github.com/Wyam2/Wyam.git"
                 },
                 Files = new []
                 {
@@ -271,6 +271,7 @@ Task("Create-AllModules-Package")
         NuGetPack(nuspec, new NuGetPackSettings
         {
             Version = semVersion,
+            Copyright = $"Copyright {DateTime.Now.Year} © Wyam2 Contributors",
             BasePath = nuspec.GetDirectory(),
             OutputDirectory = nugetRoot,
             Symbols = false,
@@ -301,7 +302,12 @@ Task("Create-Tools-Package")
                 { 
                     Source = pattern,
                     Target = "tools\\netcoreapp2.1"
-                } 
+                },
+                new NuSpecContent
+                {
+                    Source = System.IO.Path.Combine(nuspec.GetDirectory().FullPath, "..\\..\\..\\assets\\wyam-square-128.png"),
+                    Target = ""
+                }
             }
         });
     });

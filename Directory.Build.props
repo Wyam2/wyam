@@ -10,14 +10,17 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Authors>Dave Glick, Other Awesome Contributors</Authors>
-    <PackageLicenseUrl>https://github.com/Wyamio/Wyam/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageIconUrl>https://wyam.io/Content/images/logo-square-64.png</PackageIconUrl>
-    <PackageProjectUrl>https://wyam.io</PackageProjectUrl>
+    <Authors>Simona Avornicesei, Wyam2, and contributors</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>wyam-square-128.png</PackageIcon>
+    <PackageIconUrl>https://github.com/Wyam2/assets/raw/master/logo-square-128.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Wyam2/wyam.git</RepositoryUrl>
+    <PackageProjectUrl>https://wyam2.github.io</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright © Wyam Contributors</Copyright>
+    <Copyright>Copyright © Wyam2 Contributors</Copyright>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -31,5 +34,8 @@
     <Compile Include="..\..\..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\assets\wyam-square-128.png" Pack="true" PackagePath=""/>
   </ItemGroup>
 </Project>

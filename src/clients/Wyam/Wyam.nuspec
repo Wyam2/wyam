@@ -1,21 +1,22 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Wyam</id>
+    <id>Wyam2</id>
     <version>$version$</version>
-    <title>Wyam</title>
-    <authors>Dave Glick</authors>
-    <owners>Dave Glick, wyam</owners>
-    <licenseUrl>https://github.com/Wyamio/Wyam/blob/master/LICENSE</licenseUrl>
-    <iconUrl>https://wyam.io/Content/images/logo-square-64.png</iconUrl>
-    <projectUrl>https://wyam.io</projectUrl>
-    <repository type="git" url="https://github.com/Wyamio/Wyam.git" />
+    <title>Wyam2</title>
+    <authors>Simona Avornicesei, Wyam2, and contributors</authors>
+    <license type="expression">MIT</license>
+    <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-square-128.png</iconUrl>
+    <icon>wyam-square-128.png</icon>
+    <projectUrl>https://wyam2.github.io</projectUrl>
+    <repository type="git" url="https://github.com/Wyam2/Wyam.git" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Wyam is a simple to use, highly modular, and extremely configurable static content generator. This is a tools package that contains the Wyam CLI.</description>
-    <copyright>Copyright 2017</copyright>
-    <tags>Wyam Static StaticContent StaticSite Blog BlogEngine</tags>
+    <description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This is a tools package that contains the Wyam CLI.</description>
+    <copyright>$copyright$</copyright>
+    <tags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</tags>
   </metadata>
   <files>
     <file src="bin\$configuration$\netcoreapp2.1\publish\*" target="tools\netcoreapp2.1" />
+    <file src="..\..\..\assets\wyam-square-128.png" target="" />
   </files>
 </package>

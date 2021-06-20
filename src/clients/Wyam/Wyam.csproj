@@ -3,8 +3,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
-    <PackageId>Wyam.Tool</PackageId>
-    <ToolCommandName>wyam</ToolCommandName>
+    <PackageId>Wyam2</PackageId>
+    <ToolCommandName>wyam2</ToolCommandName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\Wyam.Configuration\Wyam.Configuration.csproj" />
@@ -20,6 +20,9 @@
       <HintPath>..\..\..\lib\System.CommandLine\System.CommandLine.dll</HintPath>
     </Reference>
   </ItemGroup>
+<!--   <ItemGroup>
+    <None Include="..\..\..\assets\wyam-square-128.png" Pack="true" PackagePath=""/>
+  </ItemGroup> -->
   <Target Name="SignBuild" Condition="'$(OS)' == 'Windows_NT' AND '$(SIGNTOOL)' != '' AND $(WYAM_CERTPASS) != '' AND !($(DesignTimeBuild) == true OR $(BuildingProject) != true)" AfterTargets="AfterBuild">
     <!-- https://www.digicert.com/code-signing/signcode-signtool-command-line.htm -->
     <PropertyGroup>

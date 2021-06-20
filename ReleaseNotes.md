@@ -1,3 +1,25 @@
+# 3.0.0
+- first release of Wyam2, as a drop-in replacement for Wyam
+- [Refactoring] Update ConcurrentHashSet to v1.1.0
+- [Refactoring] Update SharpZipLib to v1.3.2 
+- [Refactoring] Update XmpCore to v6.1.10.1 and MetadataExtractor to v2.5.0
+- [Refactoring] Update StyleCop.Analyzers to v1.1.118 and Roslynator.Analyzers to v3.2.0
+- [Refactoring] Update Shouldly to v4.0.3
+- [Refactoring] Update NSubstitute to v4.2.2 (thus upgrading Castle.Core to v4.4.1)
+- [Refactoring] Update Autofixture to v4.5.1
+- [Refactoring] Update NUnit to v3.13.2 and NUnit3TestAdapter to v4.0.0
+- [Refactoring] Update Buildalyzer.Workspaces to v2.6.0
+- [Refactoring] Update Google.Api to v1.52.0
+- [Refactoring] Update NuGet to 5.9.1
+- [Refactoring] Update Newtonsoft.Json to v13.0.1
+- [Refactoring] Update CsvHelper to v27.1.0
+- [Refactoring] Update EPPlus to latest LGPL version 4.5.3.3
+- [Refactoring] Update Cake to v1.1.0
+- [Refactoring] Update AngleSharp to v0.16.0
+- [Refactoring] Update Cake.Wyam NuGet package icon to the new Cake-Contrib logo for Cake addins (#22, thanks @augustoproiete)
+- [Refactoring] Cake.Wyam: Add cake-addin tag to NuGet package(#21, thanks @augustoproiete)
+- [Refactoring] Update Cake.Wyam to target Cake v1.0.0 (#19, thanks @augustoproiete)
+
 # 2.2.9
 
 - [Fix] Updated to latest Buildalyzer (#865)

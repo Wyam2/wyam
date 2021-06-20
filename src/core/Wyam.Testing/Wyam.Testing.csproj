@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Wyam is a simple to use, highly modular, and extremely configurable static content generator. This library provides utility classes to make testing easier.</Description>
-    <PackageTags>Wyam Static StaticContent StaticSite Blog BlogEngine</PackageTags>
-    <RepositoryUrl>https://github.com/Wyamio/Wyam.git</RepositoryUrl>
+    <PackageId>Wyam2.Testing</PackageId>
+    <Description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This library provides utility classes to make testing easier.</Description>
+    <PackageTags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</PackageTags>
+    <RepositoryUrl>https://github.com/Wyam2/Wyam.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
