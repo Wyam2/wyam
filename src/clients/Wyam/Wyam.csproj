@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
-    <PackageId>Wyam2</PackageId>
+    <PackageId>Wyam2.Tool</PackageId>
     <ToolCommandName>wyam2</ToolCommandName>
   </PropertyGroup>
   <ItemGroup>

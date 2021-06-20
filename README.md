@@ -3,15 +3,14 @@ A continuation of the awesome project [Wyam](https://github.com/Wyamio/Wyam) cre
 
 
 # Wyam
-[![Join the chat at https://gitter.im/Wyamio/Wyam](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Wyamio/Wyam?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Wyam is a simple to use, highly modular, and extremely configurable static content generator that can be used to generate web sites, produce documentation, create ebooks, and much more. Since everything is configured by chaining together flexible modules (that you can even write yourself), the only limits to what it can create are your imagination.
 
-The easiest way to get started is to install as a .NET Core global tool and use a [recipe and theme](https://wyam.io/recipes).
+The easiest way to get started is to install as a .NET Core global tool and use a [recipe and theme](https://wyam.github.io/recipes).
 
 1. Download and install Wyam as a global tool:
 
-    `dotnet tool install -g Wyam.Tool`
+    `dotnet tool install -g Wyam2.Tool`
 
 2. Scaffold a new blog:
 
@@ -23,9 +22,9 @@ The easiest way to get started is to install as a .NET Core global tool and use 
 
     `wyam --recipe Blog --theme CleanBlog`
 
-To go deeper, read more about the [underlying concepts](https://wyam.io/docs/concepts) and then read about [configuration files](https://wyam.io/docs/usage/configuration) and the [available command line arguments](https://wyam.io/docs/usage/command-line). Then check out the full list of [modules](https://wyam.io/modules).
+To go deeper, read more about the [underlying concepts](https://wyam2.github.io/docs/concepts) and then read about [configuration files](https://wyam2.github.io/docs/usage/configuration) and the [available command line arguments](https://wyam2.github.io/docs/usage/command-line). Then check out the full list of [modules](https://wyam2.github.io/modules).
 
-For more information see [Wyam.io](https://wyam.io).
+For more information see [Wyam2](https://wyam2.github.io).
 
 ## Acknowledgements
 
