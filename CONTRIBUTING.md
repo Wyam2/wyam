@@ -1,4 +1,4 @@
-Thanks for your interest in getting involved with Wyam! This project was always envisioned as a community effort. Any contributions you're able to make are **greatly appreciated**.
+Thanks for your interest in getting involved with Wyam2! This project was always envisioned as a community effort. Any contributions you're able to make are **greatly appreciated**.
 
 # Where To Start?
 
@@ -16,21 +16,21 @@ Build instructions are in the `BUILDING.md` file at the root of the repository.
 
 # Submitting Code
 
-If you would like to submit code to Wyam, please follow the guidelines below. If your change is small, go ahead and submit a pull request and any questions can be discussed in the request. If it's a larger change, you should probably open an issue first so that it can be discussed before you start spending time coding.
+If you would like to submit code to Wyam2, please follow the guidelines below. If your change is small, go ahead and submit a pull request and any questions can be discussed in the request. If it's a larger change, you should probably open an issue first so that it can be discussed before you start spending time coding.
 
-Also note that most code contributions are going to be related to module development. If that's the case for your contribution, then please read [this article on module development](https://wyam.io/docs/extensibility/writing-a-module) first.
+Also note that most code contributions are going to be related to module development. If that's the case for your contribution, then please read [this article on module development](https://wyam2.github.io/docs/extensibility/writing-a-module) first.
 
 ## Making Changes
 
-[Fork](http://help.github.com/forking/) the Wyam repository on GitHub. Please do your work in feature branches based on `develop`. `develop` is the main development branch and is where all code is pushed before making a release.
+[Fork](http://help.github.com/forking/) the Wyam2 repository on GitHub. Please do your work in feature branches based on `main`. `main` is the main development branch and is where all code is pushed before making a release.
 
 ## Handling Updates from Upstream/Master
 
-While you're working away in your branch it's quite possible that your upstream master (most likely the canonical Wyam repository) may be updated. If this happens you should rebase your local branch to pull in the changes. If you're working on a long running feature then you may want to do this quite often, rather than run the risk of potential merge issues further down the line.
+While you're working away in your branch it's quite possible that your upstream master (most likely the canonical Wyam2 repository) may be updated. If this happens you should rebase your local branch to pull in the changes. If you're working on a long running feature then you may want to do this quite often, rather than run the risk of potential merge issues further down the line.
 
 ## Sending a Pull Request
 
-While working on your feature you may well create several branches, which is fine, but before you send a pull request you should ensure that you have rebased back to a single feature branch. When you're ready to go you should confirm that you are up to date and rebased with upstream/master (see above).
+While working on your feature you may well create several branches, which is fine, but before you send a pull request you should ensure that you have rebased back to a single feature branch. When you're ready to go you should confirm that you are up to date and rebased with upstream/main (see above).
 
 ## Style Guidelines
 
@@ -82,10 +82,10 @@ If there are any questions about how to format test code just take a look at the
 
 # Updating Documentation
 
-Making updates to the Wyam documentation is just as helpful as writing code (if not more helpful). The Wyam documentation exists in the [Wyam.Web repository](https://github.com/Wyamio/Wyam.Web). Fork and clone the repository as you would the main code repository, but make any changes in the `master` branch. Submit your changes as a pull request. Once it's accepted, the site will automatically rebuild and redeploy. 
+Making updates to the Wyam documentation is just as helpful as writing code (if not more helpful). The Wyam documentation exists in the [docs repository](https://github.com/Wyam2/docs). Fork and clone the repository as you would the main code repository, but make any changes in the `main` branch. Submit your changes as a pull request. Once it's accepted, the site will automatically rebuild and redeploy. 
 
 # License
-By contributing to Wyam, you assert that:
+By contributing to Wyam2, you assert that:
 
 * The contribution is your own original work.
 * You have the right to assign the copyright for the work (it is not owned by your employer, or you have been given copyright assignment in writing).

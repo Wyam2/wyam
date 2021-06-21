@@ -1,10 +1,11 @@
-A continuation of the awesome project [Wyam](https://github.com/Wyamio/Wyam) created by [Dave Glick](https://github.com/daveaglick) since it's the only open-source, cross-platform .NET documentation project that I know of, except docFX. For Windows-only there is also [Sandcastle](https://github.com/EWSoftware/SHFB).
+A continuation of the awesome project [Wyam](https://github.com/Wyamio/Wyam) created by [Dave Glick](https://github.com/daveaglick) since it's the only open-source, cross-platform .NET documentation project that I know of, except [docFX](https://github.com/dotnet/docfx). 
+For Windows-only there is also [Sandcastle](https://github.com/EWSoftware/SHFB).
 ---
 
 
-# Wyam
+# Wyam2
 
-Wyam is a simple to use, highly modular, and extremely configurable static content generator that can be used to generate web sites, produce documentation, create ebooks, and much more. Since everything is configured by chaining together flexible modules (that you can even write yourself), the only limits to what it can create are your imagination.
+Wyam2 is a simple to use, highly modular, and extremely configurable static content generator that can be used to generate web sites, produce documentation, create ebooks, and much more. Since everything is configured by chaining together flexible modules (that you can even write yourself), the only limits to what it can create are your imagination.
 
 The easiest way to get started is to install as a .NET Core global tool and use a [recipe and theme](https://wyam.github.io/recipes).
 
@@ -14,17 +15,33 @@ The easiest way to get started is to install as a .NET Core global tool and use 
 
 2. Scaffold a new blog:
 
-    `wyam new --recipe Blog`
+    `wyam2 new --recipe Blog`
 
 3. Edit the scaffolded files.
 
 4. Build the blog with a theme:
 
-    `wyam --recipe Blog --theme CleanBlog`
+    `wyam2 --recipe Blog --theme CleanBlog`
 
 To go deeper, read more about the [underlying concepts](https://wyam2.github.io/docs/concepts) and then read about [configuration files](https://wyam2.github.io/docs/usage/configuration) and the [available command line arguments](https://wyam2.github.io/docs/usage/command-line). Then check out the full list of [modules](https://wyam2.github.io/modules).
 
 For more information see [Wyam2](https://wyam2.github.io).
+
+
+## Contributing
+For more details about how you can help this project, see [this](CONTRIBUTING.md).
+
+For details on building this project, see [this](BUILDING.md).
+
+
+## History
+- up to v2.2.9 
+    - builds are provided by original project, [Wyam](https://github.com/Wyamio/Wyam)
+    - dotnet tool is `Wyam.Tool` and `wyam`
+- from v3.0.0
+    - builds are provided by this fork [Wyam2](https://github.com/Wyam2/Wyam)
+    - dotnet tool is called `Wyam2.Tool` and `wyam2`
+
 
 ## Acknowledgements
 

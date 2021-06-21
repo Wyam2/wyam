@@ -1,5 +1,8 @@
 # 3.0.0
 - first release of Wyam2, as a drop-in replacement for Wyam
+    - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
+    - wyam was renamed to wyam2 `wyam2 new --recipe Blog`
+- [DevOps] Build: NuGet pack errors NU5125 (licenceUrl) and NU5048 (iconUrl) (#6)
 - [Refactoring] Update ConcurrentHashSet to v1.1.0
 - [Refactoring] Update SharpZipLib to v1.3.2 
 - [Refactoring] Update XmpCore to v6.1.10.1 and MetadataExtractor to v2.5.0
