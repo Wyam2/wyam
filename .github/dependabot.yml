@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 5
+  commit-message:
+    include: "scope"
+  ignore:
+  - dependency-name: EPPlus
+    versions:
+    - "> 4.5.3.3"
+  - dependency-name: Buildalyzer.Workspaces
+    versions:
+    - "> 2.6.0"
