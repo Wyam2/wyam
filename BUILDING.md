@@ -25,6 +25,10 @@ or run directly the Powershell script `build.ps1`:
 .\build.ps1 -Target Run-Unit-Tests
 .\build.ps1 -Verbosity diagnostic
 ```
+and pass custom cake parameters:
+```
+.\build.ps1 -Target Create-Packages -Verbosity diagnostic -CakeParams "--gittag=v3.0.0" | Out-File 'build.log'
+```
 
 ## From Visual Studio
 

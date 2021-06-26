@@ -2,11 +2,8 @@
 // SIGNTOOL (to sign the executable)
 
 // The following environment variables need to be set for Publish target:
-// WYAM_NUGET_API_KEY
-// WYAM_GITHUB_TOKEN
-
-// The following environment variables need to be set for Publish-MyGet target:
-// MYGET_API_KEY
+// NUGET_API_KEY
+// GITHUB_ACCESS_TOKEN
 
 // The following environment variables need to be set for Publish-Chocolatey target:
 // CHOCOLATEY_API_KEY
@@ -17,21 +14,24 @@
 // - Push to develop and fast-forward merge to master
 // - Switch to master
 // - Wait for CI to complete build and publish to MyGet
-// - Run a local prerelease build of Wyam.Web to verify release (`build -Script "prerelease.cake"` from Wyam.Web folder)
+// - Run a local prerelease build of docs repo to verify release (`build -Script "prerelease.cake"` from docs folder)
 // - Run a Publish build with Cake (`build -target Publish`)
 // - No need to add a version tag to the repo - added by GitHub on publish
 // - Switch back to develop branch
-// - Add a blog post to Wyam.Web about the release
-// - Run a build on Wyam.Web from CI to verify final release (first make sure NuGet Gallery has updated packages by searching for "wyam")
+// - Add a blog post to docs repo about the release
+// - Run a build on docs repo from CI to verify final release (first make sure NuGet Gallery has updated packages by searching for "wyam2")
 
 #addin "Cake.FileHelpers"
 #addin "Octokit"
+#addin "System.Text.RegularExpressions"
+#addin nuget:?package=Cake.Git
 #tool "nuget:?package=NUnit.ConsoleRunner&version=3.12.0"
 #tool "nuget:?package=NuGet.CommandLine&version=5.9.1"
 #tool "nuget:?package=chocolatey&version=0.10.14"
-#tool "AzurePipelines.TestLogger&version=1.0.2"
+#tool "AzurePipelines.TestLogger&version=1.1.0"
 
 using Octokit;
+using System.Text.RegularExpressions;
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -39,6 +39,8 @@ using Octokit;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+bool isNightlyBuild = Argument<bool>("nightly", false);
+string gitTag = Argument<string>("gittag", string.Empty);
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -47,20 +49,116 @@ var configuration = Argument("configuration", "Release");
 var isLocal = BuildSystem.IsLocalBuild;
 var isRunningOnUnix = IsRunningOnUnix();
 var isRunningOnWindows = IsRunningOnWindows();
-var isRunningOnBuildServer = !string.IsNullOrEmpty(EnvironmentVariable("AGENT_NAME")); // See https://github.com/cake-build/cake/issues/1684#issuecomment-397682686
-var isPullRequest = !string.IsNullOrWhiteSpace(EnvironmentVariable("SYSTEM_PULLREQUEST_PULLREQUESTID"));  // See https://github.com/cake-build/cake/issues/2149
-var buildNumber = "0"; //isLocal ? "0" : TFBuild.Environment.Build.Number.Replace('.', '-');
-var branch = "develop"; //isLocal ? "develop" : TFBuild.Environment.Repository.Branch;
+
+var isAzurePipelines = BuildSystem.AzurePipelines.IsRunningOnAzurePipelines;
+var isGitHubAction = BuildSystem.GitHubActions.IsRunningOnGitHubActions;
+
+var isRunningOnBuildServer = isAzurePipelines || isGitHubAction;
+var isPullRequest = false;
+var pullRequestId = 0;
+var pullRequestNumber = 0;
+var buildId = "0";
+var buildNumber = "0";
+var branch = GitBranchCurrent(DirectoryPath.FromString(".")).FriendlyName;
+var sha = GitBranchCurrent(DirectoryPath.FromString(".")).Tip.Sha;
+
+//AZDO does the PR builds
+if(isAzurePipelines)
+{
+    isPullRequest = BuildSystem.AzurePipelines.Environment.PullRequest.IsPullRequest;
+    pullRequestId =  BuildSystem.AzurePipelines.Environment.PullRequest.Id;
+    pullRequestNumber = BuildSystem.AzurePipelines.Environment.PullRequest.Number;
+    buildId = BuildSystem.AzurePipelines.Environment.Build.Id.ToString();
+    buildNumber =  BuildSystem.AzurePipelines.Environment.Build.Number;
+    branch = BuildSystem.AzurePipelines.Environment.Repository.SourceBranchName;
+    sha = BuildSystem.AzurePipelines.Environment.Repository.SourceVersion;
+}
+//GHA does the nightly and release builds
+else if(isGitHubAction)
+{
+    isPullRequest = BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest;
+    buildId = BuildSystem.GitHubActions.Environment.Workflow.RunId;
+    buildNumber =  BuildSystem.GitHubActions.Environment.Workflow.RunNumber.ToString();
+    branch = BuildSystem.GitHubActions.Environment.Workflow.Ref;
+    sha = BuildSystem.GitHubActions.Environment.Workflow.Sha;
+}
+
+var versionPrefix = string.Empty;
+var versionSuffix = string.Empty;
+var semVersion = string.Empty;
 
 var releaseNotes = ParseReleaseNotes("./ReleaseNotes.md");
+//git tag was not provided from command line => not a release so take the release notes version
+if(string.IsNullOrEmpty(gitTag))
+{
+    versionPrefix = releaseNotes.Version.ToString();
 
-var version = releaseNotes.Version.ToString();
-var semVersion = version + (isLocal ? string.Empty : string.Concat("-build-", buildNumber));
+    if(releaseNotes.RawVersionLine.ToLowerInvariant().Contains("unreleased"))
+    {
+        versionSuffix = $"build";
+        versionSuffix += isAzurePipelines 
+                        ? $"z.{buildNumber}"
+                        : (isGitHubAction ? $"gh.{buildNumber}" : string.Empty);
+    }
+    if(isNightlyBuild)
+    {
+        versionSuffix = $"nightly.{DateTime.Now.ToString("yyyyMMdd")}";
+    }
 
+    semVersion = $"{versionPrefix}-{versionSuffix.Replace('.', '-')}";
+}
+else
+{
+    //extract numeric version from git tag
+    Regex regEx = new Regex(@"(?:(\d+)\.)?(?:(\d+)\.\d+)", RegexOptions.Compiled);
+    Match version = regEx.Match(gitTag);
+    if(version.Success)
+    {
+        semVersion = version.Value;
+        versionPrefix = version.Value;
+    }
+}
+var informalVersion = semVersion + $"-{branch}-{sha}";
+
+Information($@"Build information
+---------------------------------------
+    isLocal: {isLocal}
+    isNightly: {isNightlyBuild}
+    isAzurePipelines: {isAzurePipelines}
+    isGitHubAction: {isGitHubAction}
+    isPullRequest: {isPullRequest}
+    pullRequestId: {pullRequestId}
+    pullRequestNumber: {pullRequestNumber}
+    buildId: {buildId}
+    buildNumber: {buildNumber}
+    branch: {branch}
+    sha: {sha}
+    git tag: {gitTag}
+    semVersion: {semVersion}
+    informalVersion: {informalVersion}
+");
+
+//AssemblyVersion and FileVersion default to the value of $(Version) without the suffix. For example, if $(Version) is 1.2.3-beta.4, then the value would be 1.2.3. - see https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#assemblyinfo-properties
 var msBuildSettings = new DotNetCoreMSBuildSettings()
-    .WithProperty("Version", semVersion)
-    .WithProperty("AssemblyVersion", version)
-    .WithProperty("FileVersion", version);
+    .WithProperty("Product", "Wyam2")
+    .WithProperty("Copyright", $"Copyright {DateTime.Now.Year} \xa9 Wyam2 Contributors")
+    .WithProperty("SourceRevisionId", sha)
+    //.WithProperty("VersionPrefix", versionPrefix)
+    //.WithProperty("VersionSuffix", versionSuffix)
+    //.WithProperty("Version", semVersion)
+    //.WithProperty("Configuration", configuration)
+    //.SetVersion(semVersion)
+    .SetVersionPrefix(versionPrefix)
+    .SetConfiguration(configuration);
+
+if(string.IsNullOrEmpty(versionPrefix))
+{
+    msBuildSettings.SetVersion(semVersion);
+};
+if(!string.IsNullOrEmpty(versionSuffix))
+{
+    msBuildSettings.SetVersionSuffix(versionSuffix);
+};
 
 var buildDir = Directory("./src/clients/Wyam/bin") + Directory(configuration);
 var buildResultDir = Directory("./build");
@@ -89,22 +187,7 @@ Task("Clean")
         CleanDirectories(new DirectoryPath[] { buildDir, buildResultDir, binDir, nugetRoot, chocoRoot });
     });
 
-Task("Patch-Assembly-Info")
-    .IsDependentOn("Clean")
-    .Does(() =>
-    {
-        var file = "./SolutionInfo.cs";
-        CreateAssemblyInfo(file, new AssemblyInfoSettings {
-            Product = "Wyam2",
-            Copyright = $"Copyright {DateTime.Now.Year} \xa9 Wyam2 Contributors",
-            Version = version,
-            FileVersion = version,
-            InformationalVersion = semVersion
-        });
-    });
-
 Task("Restore-Packages")
-    .IsDependentOn("Patch-Assembly-Info")
     .Does(() =>
     {
         DotNetCoreRestore("./Wyam.sln", new DotNetCoreRestoreSettings
@@ -125,7 +208,7 @@ Task("Build")
         });
     });
 
-Task("Publish-Client")
+Task("Publish-Wyam-Client")
     .IsDependentOn("Build")
     .Does(() =>
     {
@@ -133,7 +216,8 @@ Task("Publish-Client")
         {
             Configuration = configuration,
             NoBuild = true,
-            NoRestore = true
+            NoRestore = true,
+            MSBuildSettings = msBuildSettings
         });
     });
 
@@ -150,8 +234,11 @@ Task("Run-Unit-Tests")
         if (isRunningOnBuildServer)
         {
             testSettings.Filter = "TestCategory!=ExcludeFromBuildServer";
-            testSettings.Logger = "AzurePipelines";
-            testSettings.TestAdapterPath = GetDirectories($"./tools/AzurePipelines.TestLogger.*/contentFiles/any/any").First();
+            if(isAzurePipelines)
+            {
+                testSettings.Logger = "AzurePipelines";
+                testSettings.TestAdapterPath = GetDirectories($"./tools/AzurePipelines.TestLogger.*/contentFiles/any/any").First();
+            }
         }
 
         Information($"Running tests in {project}");
@@ -159,16 +246,16 @@ Task("Run-Unit-Tests")
     })
     .DeferOnError();
 
-Task("Copy-Files")
-    .IsDependentOn("Publish-Client")
+Task("Copy-Wyam-Client")
+    .IsDependentOn("Publish-Wyam-Client")
     .Does(() =>
     {
         CopyDirectory(buildDir.Path.FullPath + "/netcoreapp2.1/publish", binDir);
         CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, binDir);
     });
 
-Task("Zip-Files")
-    .IsDependentOn("Copy-Files")
+Task("Zip-Wyam-Client")
+    .IsDependentOn("Copy-Wyam-Client")
     .Does(() =>
     {
         var zipPath = buildResultDir + File(zipFile);
@@ -176,9 +263,9 @@ Task("Zip-Files")
         Zip(binDir, zipPath, files);
     });
 
-Task("Create-Library-Packages")
+Task("Create-Wyam-Packages")
     .IsDependentOn("Build")
-    .IsDependentOn("Publish-Client")
+    .IsDependentOn("Publish-Wyam-Client")
     .Does(() =>
     {        
         // Get the set of projects to package
@@ -280,7 +367,7 @@ Task("Create-AllModules-Package")
     });
     
 Task("Create-Tools-Package")
-    .IsDependentOn("Publish-Client")
+    .IsDependentOn("Publish-Wyam-Client")
     .WithCriteria(() => isRunningOnWindows)
     .Does(() =>
     {        
@@ -313,7 +400,7 @@ Task("Create-Tools-Package")
     });
 
 Task("Create-Chocolatey-Package")
-    .IsDependentOn("Copy-Files")
+    .IsDependentOn("Copy-Wyam-Client")
     .WithCriteria(() => isRunningOnWindows)
     .Does(() => {
         var nuspecFile = GetFiles("./src/clients/Chocolatey/*.nuspec").FirstOrDefault();
@@ -324,40 +411,82 @@ Task("Create-Chocolatey-Package")
         });
     });
     
-Task("Publish-MyGet")
+Task("Publish-AzureFeed")
     .IsDependentOn("Create-Packages")
-    .WithCriteria(() => !isLocal)
+    .WithCriteria(() => isAzurePipelines)
     .WithCriteria(() => !isPullRequest)
     .WithCriteria(() => isRunningOnWindows)
-    .WithCriteria(() => branch == "develop")
+    .WithCriteria(() => branch == "main")
     .Does(() =>
     {
-        // Resolve the API key.
-        var apiKey = EnvironmentVariable("MYGET_API_KEY");
-        if (string.IsNullOrEmpty(apiKey))
+        // Get the access token
+        var accessToken = EnvironmentVariable("SYSTEM_ACCESSTOKEN");
+        if (string.IsNullOrEmpty(accessToken))
         {
-            throw new InvalidOperationException("Could not resolve MyGet API key.");
+            throw new InvalidOperationException("Could not resolve SYSTEM_ACCESSTOKEN.");
         }
+
+        // Add the authenticated feed source
+        NuGetAddSource(
+            "VSTS",
+            "https://pkgs.dev.azure.com/Wyam2/_packaging/Wyam2/nuget/v3/index.json",
+            new NuGetSourcesSettings
+            {
+                UserName = "VSTS",
+                Password = accessToken
+            });
 
         foreach (var nupkg in GetFiles(nugetRoot.Path.FullPath + "/*.nupkg"))
         {
             NuGetPush(nupkg, new NuGetPushSettings 
             {
-                Source = "https://www.myget.org/F/wyam/api/v2/package",
-                ApiKey = apiKey,
-                Timeout = TimeSpan.FromSeconds(600)
+                Source = "VSTS",
+                ApiKey = "VSTS"
+            });
+        }
+    });
+
+Task("Publish-GitHubFeed")
+    .IsDependentOn("Create-Packages")
+    .WithCriteria(() => isGitHubAction)
+    .WithCriteria(() => !isPullRequest)
+    .WithCriteria(() => isRunningOnWindows)
+    .WithCriteria(() => branch == "main")
+    .Does(() =>
+    {
+        // Get the access token
+        var accessToken = EnvironmentVariable("GH_ACCESS_TOKEN");
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            throw new InvalidOperationException("Could not resolve GH_ACCESS_TOKEN.");
+        }
+
+        // Add the authenticated feed source
+        NuGetAddSource(
+            "GitHub",
+            "https://nuget.pkg.github.com/Wyam2/index.json",
+            new NuGetSourcesSettings
+            {
+                Password = accessToken
+            });
+
+        foreach (var nupkg in GetFiles(nugetRoot.Path.FullPath + "/*.nupkg"))
+        {
+            NuGetPush(nupkg, new NuGetPushSettings 
+            {
+                Source = "GitHub",
+                ApiKey = accessToken
             });
         }
     });
     
-Task("Publish-Packages")
+Task("Publish-NuGetFeed")
     .IsDependentOn("Create-Packages")
-    .WithCriteria(() => isLocal)
     .WithCriteria(() => isRunningOnWindows)
-    // TODO: Add criteria that makes sure this is the master branch
+    .WithCriteria(() => branch == "main")
     .Does(() =>
     {
-        var apiKey = EnvironmentVariable("WYAM_NUGET_API_KEY");
+        var apiKey = EnvironmentVariable("NUGET_API_KEY");
         if (string.IsNullOrEmpty(apiKey))
         {
             throw new InvalidOperationException("Could not resolve NuGet API key.");
@@ -373,10 +502,10 @@ Task("Publish-Packages")
         }
     });
 
-Task("Publish-Chocolatey-Package")
+Task("Publish-ChocolateyFeed")
     .IsDependentOn("Create-Chocolatey-Package")
-    .WithCriteria(()=> isLocal)
     .WithCriteria(() => isRunningOnWindows)
+    .WithCriteria(() => branch == "main")
     .Does(()=> 
     {
         var chocolateyApiKey = EnvironmentVariable("CHOCOLATEY_API_KEY");
@@ -395,28 +524,28 @@ Task("Publish-Chocolatey-Package")
     });
 
 Task("Publish-Release")
-    .IsDependentOn("Zip-Files")
-    .WithCriteria(() => isLocal)
+    .IsDependentOn("Zip-Wyam-Client")
     .WithCriteria(() => isRunningOnWindows)
-    // TODO: Add criteria that makes sure this is the master branch
+    .WithCriteria(() => branch == "main")
+    .WithCriteria(() => !string.IsNullOrEmpty(gitTag))
     .Does(() =>
     {
-        var githubToken = EnvironmentVariable("WYAM_GITHUB_TOKEN");
+        var githubToken = EnvironmentVariable("GH_ACCESS_TOKEN");
         if (string.IsNullOrEmpty(githubToken))
         {
             throw new InvalidOperationException("Could not resolve Wyam GitHub token.");
-        }
+        };
         
-        var github = new GitHubClient(new ProductHeaderValue("WyamCakeBuild"))
+        var github = new GitHubClient(new ProductHeaderValue("Wyam2 wyam release"))
         {
             Credentials = new Credentials(githubToken)
         };
-        var release = github.Repository.Release.Create("Wyamio", "Wyam", new NewRelease("v" + semVersion) 
+        var release = github.Repository.Release.Create("Wyam2", "Wyam", new NewRelease(gitTag) 
         {
-            Name = semVersion,
+            Name = gitTag,
             Body = string.Join(Environment.NewLine, releaseNotes.Notes) + Environment.NewLine + Environment.NewLine
-                + @"### Please see https://wyam.io/docs/usage/obtaining for important notes about downloading and installing.",
-            TargetCommitish = "master"
+                + @"### Please see https://wyam2.github.io/docs/usage/obtaining for important notes about downloading and installing.",
+            TargetCommitish = sha
         }).Result; 
         
         var zipPath = buildResultDir + File(zipFile);
@@ -425,13 +554,42 @@ Task("Publish-Release")
             var releaseAsset = github.Repository.Release.UploadAsset(release, new ReleaseAssetUpload(zipFile, "application/zip", zipStream, null)).Result;
         }
     });
+
+Task("Tag-Release-Documentation")
+    .WithCriteria(() => branch == "main")
+    .WithCriteria(() => !string.IsNullOrEmpty(gitTag))
+    .Does(() =>
+    {
+        var githubToken = EnvironmentVariable("GH_ACCESS_TOKEN");
+        if (string.IsNullOrEmpty(githubToken))
+        {
+            throw new InvalidOperationException("Could not resolve Wyam2 GitHub token.");
+        };
+        
+        var github = new GitHubClient(new ProductHeaderValue("Wyam2 wyam tag docs"))
+        {
+            Credentials = new Credentials(githubToken)
+        };
+
+        var tag = new NewTag {
+            Message = $"Wyam2 {gitTag} release",
+            Tag = gitTag,
+            Object = sha,
+            Type = TaggedType.Commit,
+            Tagger = new Committer("Wyam GitHub Actions", "wyam2.action@github.com", DateTimeOffset.Now)  
+        };
+
+        var result = github.Git.Tag.Create("Wyam2", "docs", tag).Result;
+        Information("Created tag {0} for Wyam2 docs at {1}", result.Tag, result.Sha);
+    });
+
     
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
 Task("Create-Packages")
-    .IsDependentOn("Create-Library-Packages")
+    .IsDependentOn("Create-Wyam-Packages")
     .IsDependentOn("Create-Theme-Packages")   
     .IsDependentOn("Create-AllModules-Package")    
     .IsDependentOn("Create-Tools-Package")
@@ -439,20 +597,24 @@ Task("Create-Packages")
     
 Task("Package")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Zip-Files")
+    .IsDependentOn("Zip-Wyam-Client")
     .IsDependentOn("Create-Packages");
 
 Task("Default")
-    .IsDependentOn("Package");    
+    .IsDependentOn("Package");
+
+Task("CI")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Publish-AzureFeed");
+
+//builds, generates the nuget packages and deploy them to GitHub feed
+Task("Nightly")
+    .IsDependentOn("Publish-GitHubFeed");
 
 Task("Publish")
-    .IsDependentOn("Publish-Packages")
-    .IsDependentOn("Publish-Chocolatey-Package")
+    .IsDependentOn("Publish-NuGetFeed")
+    .IsDependentOn("Publish-ChocolateyFeed")
     .IsDependentOn("Publish-Release");
-    
-Task("BuildServer")
-    .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Publish-MyGet");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

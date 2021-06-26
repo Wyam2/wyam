@@ -5,7 +5,8 @@ Param
     [String]$ToolsProj = "$ToolsDir/build.csproj",
     [String]$Script = "$PSScriptRoot/build.cake",
     [String]$Target = 'Default',
-    [String]$Verbosity = 'normal'
+    [String]$Verbosity = 'normal',
+    [String]$CakeParams = ''
 )
 
 $CAKE_DIR = "$ToolsDir/Cake.CoreCLR.$CakeVersion"
@@ -30,7 +31,7 @@ if (!(Test-Path $CAKE_DLL))
 }
 else
 {
-    dotnet "$CAKE_DLL" "$Script" --target="$Target" --verbosity="$Verbosity"
+    dotnet "$CAKE_DLL" "$Script" --target="$Target" --verbosity="$Verbosity" $CakeParams
 }
 
 exit $LASTEXITCODE

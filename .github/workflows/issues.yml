@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: danhellem/github-actions-issue-to-work-item@master
         env:
-          ado_token: "${{ secrets.ADO_PERSONAL_ACCESS_TOKEN }}"
-          github_token: "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"
+          ado_token: "${{ secrets.AZDO_ACCESS_TOKEN }}"
+          github_token: "${{ secrets.GH_ACCESS_TOKEN }}"
           ado_organization: "Wyam2"
           ado_project: "wyam"
           ado_area_path: "wyam\\core"

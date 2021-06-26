@@ -1,4 +1,4 @@
-# 3.0.0
+# 3.0.0 (:unlock: Unreleased)
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog`
