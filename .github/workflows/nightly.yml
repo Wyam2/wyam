@@ -2,7 +2,7 @@ name: Wyam2 nightly build
 
 on:
   schedule:
-    - cron '0 0 * * *'
+    - cron: '0 0 * * *'
 
 env:
   # Stop wasting time caching packages
