@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build and test
-        run: build.ps1 -Target Run-Unit-Tests
+        run: ./build.ps1 -Target Run-Unit-Tests
         shell: pwsh
   release:
     runs-on: windows-latest
@@ -30,7 +30,7 @@ jobs:
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
         shell: bash
       - name: Publish app
-        run: build.ps1 -Target Publish-Release -gittag={{env.TAG}}
+        run: ./build.ps1 -Target Publish-Release -gittag={{env.TAG}}
         shell: pwsh
       - name: Trigger documentation build
         uses: peter-evans/repository-dispatch@v1
