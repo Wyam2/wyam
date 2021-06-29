@@ -1,3 +1,5 @@
+[![Wyam2 build](https://github.com/Wyam2/wyam/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/build.yml)  [![Wyam2 nightly build](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml)
+
 A continuation of the awesome project [Wyam](https://github.com/Wyamio/Wyam) created by [Dave Glick](https://github.com/daveaglick) since it's the only open-source, cross-platform .NET documentation project that I know of, except [docFX](https://github.com/dotnet/docfx). 
 For Windows-only there is also [Sandcastle](https://github.com/EWSoftware/SHFB).
 ---
