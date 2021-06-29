@@ -4,7 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "sunday"
     commit-message:
+      prefix: "GHA"
       include: "scope"
     labels:
       - ":game_die: dependencies"
@@ -13,8 +15,9 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+      day: "sunday"
     commit-message:
+      prefix: "nuget"
       include: "scope"
     labels:
       - ":game_die: dependencies"
