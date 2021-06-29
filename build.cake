@@ -98,7 +98,7 @@ if(string.IsNullOrEmpty(gitTag))
         versionSuffix = $"build";
         versionSuffix += isAzurePipelines 
                         ? $"z.{buildNumber}"
-                        : (isGitHubAction ? $"gh.{buildNumber}" : string.Empty);
+                        : (isGitHubAction ? $"gh.{buildId}" : string.Empty);
     }
     if(isNightlyBuild)
     {
