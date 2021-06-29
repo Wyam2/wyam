@@ -1,0 +1,60 @@
+- #bot
+  name: ":robot: bot"
+  color: "69cde9"
+  description: ""
+- #bug
+  name: "bug"
+  color: "#d73a4a"
+  description: "Something isn't working"
+- # dependencies
+  name: ":game_die: dependencies"
+  color: "0366d6"
+  description: ""
+- #devops
+  name: "devops"
+  color: "#2F4C7D"
+  description: "Build process or infrastructure changes"
+- #documentation
+  name: "documentation"
+  color: "#0075ca"
+  description: "Improvements or additions to documentation"
+- #duplicate
+  name: "duplicate"
+  color: "#cfd3d7"
+  description: "This issue or pull request already exists"
+- #enhancement
+  name: "enhancement"
+  color: "#a2eeef"
+  description: "Improvements to existing features"
+- # feature request
+  name: ":bulb: feature request"
+  color: "0e8a16"
+  description: "New feature or request"
+- #good first issue
+  name: "good first issue"
+  color: "#7057ff"
+  description: "Good for newcomers"
+- #help wanted
+  name: "help wanted"
+  color: "#008672"
+  description: "Extra attention is needed"
+- #invalid
+  name: "invalid"
+  color: "#e4e669"
+  description: "This doesn't seem right"
+- #question
+  name: "question"
+  color: "#d876e3"
+  description: "Further information is requested"
+- # sponsor
+  name: ":sparkling_heart: sponsor"
+  color: "fedbf0"
+  description: ""
+- # stale
+  name: ":skull: stale"
+  color: "237da0"
+  description: ""
+- #wontfix
+  name: "wontfix"
+  color: "#ffffff"
+  description: "This will not be worked on"
