@@ -55,6 +55,7 @@
   color: "237da0"
   description: ""
 - #wontfix
-  name: "wontfix"
+  name: ":coffin: wontfix"
   color: "#ffffff"
   description: "This will not be worked on"
+  from_name: "wontfix"

@@ -30,6 +30,3 @@ jobs:
       - name: Build and test
         run: ./build.ps1 -Target Run-Unit-Tests
         shell: pwsh
-      - name: Create packages
-        run: ./build.ps1 -Target Create-Packages
-        shell: pwsh

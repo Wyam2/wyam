@@ -2,7 +2,7 @@ name: Wyam2 nightly build
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '30 0 * * *'
 
 env:
   # Stop wasting time caching packages
@@ -33,7 +33,7 @@ jobs:
       GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
     steps:
       - name: Nightly pack
-        run: ./build.ps1 -Target Nightly
+        run: build.ps1 -Target Nightly
         shell: pwsh
       - name: Upload Artifact
         uses: actions/upload-artifact@v2

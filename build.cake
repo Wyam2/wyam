@@ -166,6 +166,11 @@ var nugetRoot = buildResultDir + Directory("nuget");
 var chocoRoot = buildResultDir + Directory("choco");
 var binDir = buildResultDir + Directory("bin");
 
+CreateDirectory(buildResultDir);
+CreateDirectory(nugetRoot);
+CreateDirectory(chocoRoot);
+CreateDirectory(binDir);
+
 var zipFile = "Wyam-v" + semVersion + ".zip";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -406,8 +411,8 @@ Task("Create-Chocolatey-Package")
         var nuspecFile = GetFiles("./src/clients/Chocolatey/*.nuspec").FirstOrDefault();
         ChocolateyPack(nuspecFile, new ChocolateyPackSettings {
             Version = semVersion,
-            OutputDirectory = "./build/choco",
-            WorkingDirectory = "./build"
+            OutputDirectory = chocoRoot.Path.FullPath,
+            WorkingDirectory = buildResultDir.Path.FullPath
         });
     });
     
