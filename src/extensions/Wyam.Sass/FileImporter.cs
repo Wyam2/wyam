@@ -21,7 +21,7 @@ namespace Wyam.Sass
             _importPathFunc = importPathFunc;
         }
 
-        public bool TryImport(string requestedFile, string parentPath, out string scss, out string map)
+        public bool TryImport(ref string requestedFile, string parentPath, out string scss, out string map)
         {
             scss = null;
             map = null;

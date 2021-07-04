@@ -13,6 +13,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SharpScss" Version="1.4.0" />
+    <PackageReference Include="SharpScss" Version="2.0.0" />
   </ItemGroup>
 </Project>
