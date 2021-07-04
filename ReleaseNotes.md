@@ -2,6 +2,7 @@
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog
+- [Refactoring] Update dotless.Core to v1.6.7
 - [Refactoring] Update SharpScss to v2.0.0
 - [Refactoring] Update ReflectionMagic to v4.1.0
 - [Refactoring] Update Polly to v7.2.2

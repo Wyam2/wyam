@@ -13,7 +13,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="dotless.Core" Version="0.0.1" />
+    <PackageReference Include="dotless.Core" Version="1.6.7" />
     <PackageReference Include="ReflectionMagic" Version="4.1.0" />
   </ItemGroup>
 </Project>
