@@ -36,6 +36,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Razor;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -54,6 +55,7 @@ namespace Wyam.Razor
             CSharpCompiler csharpCompiler,
             Action<RoslynCompilationContext> compilationCallback,
             IList<CompiledViewDescriptor> precompiledViews,
+            IMemoryCache cache,
             ILogger logger)
             : base(
                   fileProvider,
@@ -61,6 +63,7 @@ namespace Wyam.Razor
                   csharpCompiler,
                   compilationCallback,
                   precompiledViews,
+                  cache,
                   logger)
         {
         }

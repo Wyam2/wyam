@@ -36,6 +36,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Razor;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -100,6 +101,7 @@ namespace Wyam.Razor
             serviceCollection
                 .AddSingleton(parameters.FileSystem)
                 .AddSingleton<FileSystemFileProvider>()
+                .AddSingleton<IMemoryCache>(x => new MemoryCache(new MemoryCacheOptions()))
                 .AddSingleton<ILoggerFactory, TraceLoggerFactory>()
                 .AddSingleton<DiagnosticSource, SilentDiagnosticSource>()
                 .AddSingleton<IHostingEnvironment, HostingEnvironment>()

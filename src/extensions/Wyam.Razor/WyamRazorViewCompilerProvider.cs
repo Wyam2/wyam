@@ -36,6 +36,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Razor;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -57,19 +58,21 @@ namespace Wyam.Razor
         private readonly IRazorViewEngineFileProviderAccessor _fileProviderAccessor;
         private readonly CSharpCompiler _csharpCompiler;
         private readonly RazorViewEngineOptions _viewEngineOptions;
+        private readonly IMemoryCache _cache;
         private readonly ILogger<RazorViewCompiler> _logger;
         private readonly Func<IViewCompiler> _createCompiler;
         private object _initializeLock = new object();
         private bool _initialized;
         private IViewCompiler _compiler;
 
-        public WyamRazorViewCompilerProvider(ApplicationPartManager applicationPartManager, RazorProjectEngine razorProjectEngine, IRazorViewEngineFileProviderAccessor fileProviderAccessor, CSharpCompiler csharpCompiler, IOptions<RazorViewEngineOptions> viewEngineOptionsAccessor, ILoggerFactory loggerFactory)
+        public WyamRazorViewCompilerProvider(ApplicationPartManager applicationPartManager, RazorProjectEngine razorProjectEngine, IRazorViewEngineFileProviderAccessor fileProviderAccessor, CSharpCompiler csharpCompiler, IOptions<RazorViewEngineOptions> viewEngineOptionsAccessor, IMemoryCache cache, ILoggerFactory loggerFactory)
         {
             _applicationPartManager = applicationPartManager;
             _razorProjectEngine = razorProjectEngine;
             _fileProviderAccessor = fileProviderAccessor;
             _csharpCompiler = csharpCompiler;
             _viewEngineOptions = viewEngineOptionsAccessor.Value;
+            _cache = cache;
             _logger = loggerFactory.CreateLogger<RazorViewCompiler>();
             _createCompiler = new Func<IViewCompiler>(CreateCompiler);
         }
@@ -87,7 +90,10 @@ namespace Wyam.Razor
         {
             ViewsFeature feature = new ViewsFeature();
             _applicationPartManager.PopulateFeature<ViewsFeature>(feature);
-            return (IViewCompiler)new WyamRazorViewCompiler(_fileProviderAccessor.FileProvider, _razorProjectEngine, _csharpCompiler, _viewEngineOptions.CompilationCallback, feature.ViewDescriptors, (ILogger)_logger);
+ 
+#pragma warning disable 612, 618
+            return (IViewCompiler)new WyamRazorViewCompiler(_fileProviderAccessor.FileProvider, _razorProjectEngine, _csharpCompiler, _viewEngineOptions.CompilationCallback, feature.ViewDescriptors, _cache, (ILogger)_logger);
+#pragma warning disable 612, 618
         }
     }
 }
