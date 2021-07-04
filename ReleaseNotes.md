@@ -2,6 +2,10 @@
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog`
+- [Refactoring] Update Google.Apis.YouTube.v3 to v1.52.0.2343
+- [Refactoring] Update Microsoft.AspNetCore.WebSockets to v2.2.1
+- [Refactoring] Update YamlDotNet to v5.1.0
+- [DevOps] Added build, nightly, dependabot labels sync, AZDO issues sync and CodeQL GitHub actions
 - [DevOps] Build: NuGet pack errors NU5125 (licenceUrl) and NU5048 (iconUrl) (#6)
 - [Refactoring] Update ConcurrentHashSet to v1.1.0
 - [Refactoring] Update SharpZipLib to v1.3.2 
