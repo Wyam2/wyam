@@ -152,7 +152,7 @@ namespace Wyam.Html
                 Trace.Verbose($"Downloading resource from {uri} to {path.FullPath}");
 
                 // Retry with exponential backoff links. This helps with websites like GitHub that will give us a 429 -- TooManyRequests.
-                RetryPolicy<HttpResponseMessage> retryPolicy = Policy
+                AsyncPolicy<HttpResponseMessage> retryPolicy = Policy
                     .Handle<HttpRequestException>()
                     .OrResult<HttpResponseMessage>(r => r.StatusCode == TooManyRequests)
                     .WaitAndRetryAsync(MaxAbsoluteLinkRetry, attempt => TimeSpan.FromSeconds(0.1 * Math.Pow(2, attempt)));

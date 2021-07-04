@@ -277,7 +277,7 @@ namespace Wyam.Html
         private static async Task<bool> ValidateAbsoluteLink(Uri uri, HttpMethod method, IExecutionContext context)
         {
             // Retry with exponential backoff links. This helps with websites like GitHub that will give us a 429 -- TooManyRequests.
-            RetryPolicy<HttpResponseMessage> retryPolicy = Policy
+            AsyncPolicy<HttpResponseMessage> retryPolicy = Policy
                 .Handle<HttpRequestException>()
                 .OrResult<HttpResponseMessage>(r => r.StatusCode == TooManyRequests)
                 .WaitAndRetryAsync(MaxAbsoluteLinkRetry, attempt => TimeSpan.FromSeconds(0.1 * Math.Pow(2, attempt)));
