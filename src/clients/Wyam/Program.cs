@@ -39,9 +39,6 @@ namespace Wyam
             // Output version info
             Trace.Information($"Wyam version {Engine.Version}");
 
-            // It's not a serious console app unless there's some ASCII art
-            OutputLogo();
-
             // Make sure we're not running under Mono
             if (Type.GetType("Mono.Runtime") != null)
             {
@@ -73,27 +70,6 @@ namespace Wyam
 
             // Run the command
             return (int)command.Run(preprocessor);
-        }
-
-        private void OutputLogo()
-        {
-            Console.WriteLine(@"
-                ,@@@@@@p
-              ,@@@@@@@@@@g
-            z@@@@@@@@@@@@@@@
-          g@@@@@@@@@@@@@@@@@@@,
-        g@@@@@@@@@@@@@@@@@@@@@@@,
-      ,@@@@@@@@@@@@@@@@@@@@@@@@@@@
-     ,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-     $@@@@@@@@@@@@@@@@@@@@@@@@@@@@@c
-     @@@@@@@@@@@@@@@@@@@@@@@@B@@@@@@
-     @@@@@@@@@@@@@@@@@@@@@@@  j@@@@@
-     $@@@@@@@@@@@@@@@@@@@@@F  #@@@@`
-      $@@@@@@@@@@@@@@@@@@P   g@@@@P
-       %@@@@@@@@@@@@@     ,g@@@@@P
-        3@@@@@@@@@@@@@@@@@@@@@@B`
-          `%@@@@@@@@@@@@@@@@@P
-             `*%RB@@@@@RRP`");
         }
     }
 }
