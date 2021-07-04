@@ -2,6 +2,7 @@
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog`
+- [Refactoring] Update Microsoft.NET.Test.Sdk to v16.10.0
 - [Refactoring] Update NuGet to 5.10.0
 - [Refactoring] Update Google.Apis.YouTube.v3 to v1.52.0.2343
 - [Refactoring] Update Microsoft.AspNetCore.WebSockets to v2.2.1
