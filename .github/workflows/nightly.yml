@@ -37,7 +37,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Nightly pack
-        run: build.ps1 -Target Nightly
+        run: ./build.ps1 -Target Nightly
         shell: pwsh
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
