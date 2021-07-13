@@ -2,6 +2,7 @@
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog
+- [Refactoring] Update Markdig to v0.25.0
 - [Refactoring] Update SixLabors.ImageSharp to v1.0.3
 - [Refactoring] Update Google.Apis.YouTube.v3 to v1.52.0.2366
 - [Refactoring] Update CsvHelper to v27.1.1
