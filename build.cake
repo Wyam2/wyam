@@ -70,8 +70,8 @@ if(isAzurePipelines)
     pullRequestNumber = BuildSystem.AzurePipelines.Environment.PullRequest.Number;
     buildId = BuildSystem.AzurePipelines.Environment.Build.Id.ToString();
     buildNumber =  BuildSystem.AzurePipelines.Environment.Build.Number;
-    branch = BuildSystem.AzurePipelines.Environment.Repository.SourceBranchName;
-    sha = BuildSystem.AzurePipelines.Environment.Repository.SourceVersion;
+    //branch = BuildSystem.AzurePipelines.Environment.Repository.SourceBranchName;
+    //sha = BuildSystem.AzurePipelines.Environment.Repository.SourceVersion;
 }
 //GHA does the nightly and release builds
 else if(isGitHubAction)
@@ -79,8 +79,8 @@ else if(isGitHubAction)
     isPullRequest = BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest;
     buildId = BuildSystem.GitHubActions.Environment.Workflow.RunId;
     buildNumber =  BuildSystem.GitHubActions.Environment.Workflow.RunNumber.ToString();
-    branch = BuildSystem.GitHubActions.Environment.Workflow.Ref;
-    sha = BuildSystem.GitHubActions.Environment.Workflow.Sha;
+    //branch = BuildSystem.GitHubActions.Environment.Workflow.Ref;
+    //sha = BuildSystem.GitHubActions.Environment.Workflow.Sha;
 }
 
 var versionPrefix = string.Empty;
