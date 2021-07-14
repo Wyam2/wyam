@@ -136,10 +136,10 @@ namespace Wyam.Markdown.Tests
             {
                 // Given
                 const string input = @"Apple
-:   Pomaceous fruit of plants of the genus Malus in 
+:   Pomaceous fruit of plants of the genus Malus in
     the family Rosaceae.";
                 const string output = @"<p>Apple
-:   Pomaceous fruit of plants of the genus Malus in 
+:   Pomaceous fruit of plants of the genus Malus in
 the family Rosaceae.</p>
 ";
                 TestExecutionContext context = new TestExecutionContext();
@@ -158,11 +158,11 @@ the family Rosaceae.</p>
             {
                 // Given
                 const string input = @"Apple
-:   Pomaceous fruit of plants of the genus Malus in 
+:   Pomaceous fruit of plants of the genus Malus in
     the family Rosaceae.";
                 const string output = @"<dl>
 <dt>Apple</dt>
-<dd>Pomaceous fruit of plants of the genus Malus in 
+<dd>Pomaceous fruit of plants of the genus Malus in
 the family Rosaceae.</dd>
 </dl>
 ";
