@@ -21,14 +21,17 @@
 // - Add a blog post to docs repo about the release
 // - Run a build on docs repo from CI to verify final release (first make sure NuGet Gallery has updated packages by searching for "wyam2")
 
-#addin "Cake.FileHelpers"
-#addin "Octokit"
-#addin "System.Text.RegularExpressions"
-#addin nuget:?package=Cake.Git
-#tool "nuget:?package=NUnit.ConsoleRunner&version=3.12.0"
-#tool "nuget:?package=NuGet.CommandLine&version=5.9.1"
-#tool "nuget:?package=chocolatey&version=0.10.14"
-#tool "AzurePipelines.TestLogger&version=1.1.0"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.FileHelpers&version=4.0.1"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Octokit&version=0.50.0"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=System.Text.RegularExpressions&version=4.3.1"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Incubator&version=6.0.0"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Git&version=1.0.1"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=GitHubActionsTestLogger&version=1.2.0"
+
+#tool "nuget:https://api.nuget.org/v3/index.json?package=NUnit.ConsoleRunner&version=3.12.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=NuGet.CommandLine&version=5.9.1"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.10.14"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=AzurePipelines.TestLogger&version=1.1.0"
 
 using Octokit;
 using System.Text.RegularExpressions;
@@ -39,7 +42,6 @@ using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-bool isNightlyBuild = Argument<bool>("nightly", false);
 string gitTag = Argument<string>("gittag", string.Empty);
 
 //////////////////////////////////////////////////////////////////////
@@ -54,6 +56,7 @@ var isAzurePipelines = BuildSystem.AzurePipelines.IsRunningOnAzurePipelines;
 var isGitHubAction = BuildSystem.GitHubActions.IsRunningOnGitHubActions;
 
 var isRunningOnBuildServer = isAzurePipelines || isGitHubAction;
+var isNightlyBuild = target == "Nightly";
 var isPullRequest = false;
 var pullRequestId = 0;
 var pullRequestNumber = 0;
@@ -70,17 +73,19 @@ if(isAzurePipelines)
     pullRequestNumber = BuildSystem.AzurePipelines.Environment.PullRequest.Number;
     buildId = BuildSystem.AzurePipelines.Environment.Build.Id.ToString();
     buildNumber =  BuildSystem.AzurePipelines.Environment.Build.Number;
-    //branch = BuildSystem.AzurePipelines.Environment.Repository.SourceBranchName;
-    //sha = BuildSystem.AzurePipelines.Environment.Repository.SourceVersion;
 }
 //GHA does the nightly and release builds
 else if(isGitHubAction)
 {
     isPullRequest = BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest;
+    if(isPullRequest)
+    {
+        //On PRs, GITHUB_REF takes the format refs/pull/:prNumber/merge
+        string prNumber = EnvironmentVariable<string>("GITHUB_REF", "0").Replace("refs/pull/:", string.Empty).Replace("/merge", string.Empty);
+        int.TryParse(prNumber, out pullRequestId);
+    }
     buildId = BuildSystem.GitHubActions.Environment.Workflow.RunId;
     buildNumber =  BuildSystem.GitHubActions.Environment.Workflow.RunNumber.ToString();
-    //branch = BuildSystem.GitHubActions.Environment.Workflow.Ref;
-    //sha = BuildSystem.GitHubActions.Environment.Workflow.Sha;
 }
 
 var versionPrefix = string.Empty;
@@ -93,16 +98,17 @@ if(string.IsNullOrEmpty(gitTag))
 {
     versionPrefix = releaseNotes.Version.ToString();
 
-    if(releaseNotes.RawVersionLine.ToLowerInvariant().Contains("unreleased"))
+    if(isPullRequest)
     {
-        versionSuffix = $"build";
-        versionSuffix += isAzurePipelines 
-                        ? $"z.{buildNumber}"
-                        : (isGitHubAction ? $"gh.{buildId}" : string.Empty);
+        versionSuffix = $"pr.{pullRequestId}";
     }
-    if(isNightlyBuild)
+    else if(isNightlyBuild)
     {
         versionSuffix = $"nightly.{DateTime.Now.ToString("yyyyMMdd")}";
+    }
+    else if(releaseNotes.RawVersionLine.ToLowerInvariant().Contains("unreleased"))
+    {
+        versionSuffix = $"unstable.{DateTime.Now.ToString("yyyyMMddHHmm")}";
     }
 
     semVersion = $"{versionPrefix}-{versionSuffix.Replace('.', '-')}";
@@ -114,11 +120,15 @@ else
     Match version = regEx.Match(gitTag);
     if(version.Success)
     {
-        semVersion = version.Value;
+        semVersion = gitTag;
         versionPrefix = version.Value;
+        if(gitTag.Contains("-"))
+        {
+            versionSuffix = gitTag.Substring(gitTag.IndexOf("-") +1);
+        }
     }
 }
-var informalVersion = semVersion + $"-{branch}-{sha}";
+var informalVersion = $"{semVersion}.Branch.{branch}.Sha.{sha}";
 
 Information($@"Build information
 ---------------------------------------
@@ -138,16 +148,21 @@ Information($@"Build information
     informalVersion: {informalVersion}
 ");
 
+//Just to have the proper MSBuild props when building and testing locally
+if (FileExists(".local.Build.props"))
+{
+    var file = File(".local.Build.props");
+    XmlPoke(file, "/Project/PropertyGroup/SourceRevisionId", sha);
+    XmlPoke(file, "/Project/PropertyGroup/Version", semVersion);
+    XmlPoke(file, "/Project/PropertyGroup/VersionPrefix", versionPrefix);
+    XmlPoke(file, "/Project/PropertyGroup/VersionSuffix", versionSuffix);
+}
+
 //AssemblyVersion and FileVersion default to the value of $(Version) without the suffix. For example, if $(Version) is 1.2.3-beta.4, then the value would be 1.2.3. - see https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#assemblyinfo-properties
 var msBuildSettings = new DotNetCoreMSBuildSettings()
     .WithProperty("Product", "Wyam2")
     .WithProperty("Copyright", $"Copyright {DateTime.Now.Year} \xa9 Wyam2 Contributors")
     .WithProperty("SourceRevisionId", sha)
-    //.WithProperty("VersionPrefix", versionPrefix)
-    //.WithProperty("VersionSuffix", versionSuffix)
-    //.WithProperty("Version", semVersion)
-    //.WithProperty("Configuration", configuration)
-    //.SetVersion(semVersion)
     .SetVersionPrefix(versionPrefix)
     .SetConfiguration(configuration);
 

@@ -9,7 +9,7 @@ For Windows-only there is also [Sandcastle](https://github.com/EWSoftware/SHFB).
 
 Wyam2 is a simple to use, highly modular, and extremely configurable static content generator that can be used to generate web sites, produce documentation, create ebooks, and much more. Since everything is configured by chaining together flexible modules (that you can even write yourself), the only limits to what it can create are your imagination.
 
-The easiest way to get started is to install as a .NET Core global tool and use a [recipe and theme](https://wyam.github.io/recipes).
+The easiest way to get started is to install as a .NET Core global tool and use a [recipe and theme](https://wyam2.github.io/recipes).
 
 1. Download and install Wyam as a global tool:
 
