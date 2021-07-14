@@ -40,3 +40,4 @@ config.wyam.dll
 /_NCrunch_Wyam
 .vscode
 .idea
+.local.Build.props
