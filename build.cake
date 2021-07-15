@@ -474,6 +474,12 @@ Task("Publish-GitHubFeed")
     .WithCriteria(() => branch == "main")
     .Does(() =>
     {
+        //Get the user name
+        var userName = EnvironmentVariable("GH_USERNAME");
+        if (string.IsNullOrEmpty(userName))
+        {
+            throw new InvalidOperationException("Could not resolve GH_USERNAME.");
+        }
         // Get the access token
         var accessToken = EnvironmentVariable("GH_ACCESS_TOKEN");
         if (string.IsNullOrEmpty(accessToken))
@@ -487,6 +493,7 @@ Task("Publish-GitHubFeed")
             "https://nuget.pkg.github.com/Wyam2/index.json",
             new NuGetSourcesSettings
             {
+                UserName = userName,
                 Password = accessToken
             });
 
