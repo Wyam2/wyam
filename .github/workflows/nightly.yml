@@ -19,15 +19,13 @@ jobs:
     outputs:
       should_run: ${{ steps.should_run.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v2
-
-      - id: should_run
-        continue-on-error: false
-        name: check commits less than a day that had changes in src or theme folders
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: check commits less than a day that had changes in src or theme folders
+        id: should_run
+        continue-on-error: true
         run: test $(git log --pretty="format:" --since="1 days ago" --name-only | grep -c -e '^src' -e '^themes' ) -eq 0 && echo "::set-output name=should_run::false"
   build:
-    needs: check_date
-    if: ${{ needs.check_date.outputs.should_run != 'false' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
