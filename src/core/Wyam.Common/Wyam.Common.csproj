@@ -6,6 +6,5 @@
     <PackageTags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</PackageTags>
     <RepositoryUrl>https://github.com/Wyam2/Wyam.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
 </Project>
