@@ -26,7 +26,7 @@
 #addin "nuget:https://api.nuget.org/v3/index.json?package=System.Text.RegularExpressions&version=4.3.1"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Incubator&version=6.0.0"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Git&version=1.0.1"
-#addin "nuget:https://api.nuget.org/v3/index.json?package=GitHubActionsTestLogger&version=1.2.0"
+//#addin "nuget:https://api.nuget.org/v3/index.json?package=GitHubActionsTestLogger&version=1.2.0"
 
 #tool "nuget:https://api.nuget.org/v3/index.json?package=NUnit.ConsoleRunner&version=3.12.0"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=NuGet.CommandLine&version=5.9.1"
@@ -101,6 +101,10 @@ if(string.IsNullOrEmpty(gitTag))
     if(isPullRequest)
     {
         versionSuffix = $"pr.{pullRequestId}";
+    }
+    else if(isLocal)
+    {
+        versionSuffix= $"pre";
     }
     else if(isNightlyBuild)
     {
@@ -425,7 +429,7 @@ Task("Create-Chocolatey-Package")
     .Does(() => {
         var nuspecFile = GetFiles("./src/clients/Chocolatey/*.nuspec").FirstOrDefault();
         ChocolateyPack(nuspecFile, new ChocolateyPackSettings {
-            Version = semVersion,
+            Version = isLocal ? $"{versionPrefix}-pre" : semVersion,
             OutputDirectory = chocoRoot.Path.FullPath,
             WorkingDirectory = buildResultDir.Path.FullPath
         });

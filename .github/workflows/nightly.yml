@@ -13,7 +13,21 @@ env:
   PROJECT_NAME: Wyam2
 
 jobs:
+  check_date:
+    runs-on: ubuntu-latest
+    name: Check last day commits that touched src or theme folders
+    outputs:
+      should_run: ${{ steps.should_run.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: should_run
+        continue-on-error: false
+        name: check commits less than a day that had changes in src or theme folders
+        run: test $(git log --pretty="format:" --since="1 days ago" --name-only | grep -c -e '^src' -e '^themes' ) -eq 0 && echo "::set-output name=should_run::false"
   build:
+    needs: check_date
+    if: ${{ needs.check_date.outputs.should_run != 'false' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -27,7 +41,8 @@ jobs:
         run: ./build.ps1 -Target Run-Unit-Tests
         shell: pwsh
   nightly:
-    needs: build
+    needs: [check_date, build]
+    if: ${{ needs.check_date.outputs.should_run != 'false' }}
     runs-on: windows-latest
     env:
       GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
