@@ -35,12 +35,12 @@ namespace Wyam.Configuration
             PackageId = packageId;
         }
 
-        public static readonly KnownTheme BlogTemplate = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam.Blog.BlogTemplate");
-        public static readonly KnownTheme CleanBlog = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam.Blog.CleanBlog");
-        public static readonly KnownTheme Phantom = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam.Blog.Phantom");
-        public static readonly KnownTheme SolidState = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam.Blog.SolidState");
-        public static readonly KnownTheme Stellar = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam.Blog.Stellar");
-        public static readonly KnownTheme Trophy = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam.Blog.Trophy");
-        public static readonly KnownTheme Samson = new KnownTheme(nameof(KnownRecipe.Docs), null, "Wyam.Docs.Samson");
+        public static readonly KnownTheme BlogTemplate = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam2.Blog.BlogTemplate");
+        public static readonly KnownTheme CleanBlog = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam2.Blog.CleanBlog");
+        public static readonly KnownTheme Phantom = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam2.Blog.Phantom");
+        public static readonly KnownTheme SolidState = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam2.Blog.SolidState");
+        public static readonly KnownTheme Stellar = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam2.Blog.Stellar");
+        public static readonly KnownTheme Trophy = new KnownTheme(nameof(KnownRecipe.Blog), null, "Wyam2.Blog.Trophy");
+        public static readonly KnownTheme Samson = new KnownTheme(nameof(KnownRecipe.Docs), null, "Wyam2.Docs.Samson");
     }
 }
