@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Check last day commits that touched src or theme folders
     outputs:
-      should_run: ${{ steps.should_run.outputs.should_run }}
+      create_nightlies: ${{ steps.should_run.outputs.create_nightlies }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: check commits less than a day that had changes in src or theme folders
         id: should_run
         continue-on-error: true
-        run: test $(git log --pretty="format:" --since="1 days ago" --name-only | grep -c -e '^src' -e '^themes' ) -eq 0 && echo "::set-output name=should_run::false"
+        run: test $(git log --pretty="format:" --since="2 days ago" --name-only | grep -c -e '^src' -e '^themes' ) -eq 0 && echo "::set-output name=create_nightlies::false" || echo "::set-output name=create_nightlies::true"
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -40,7 +40,7 @@ jobs:
         shell: pwsh
   nightly:
     needs: [check_date, build]
-    if: ${{ needs.check_date.outputs.should_run != 'false' }}
+    if: ${{ needs.check_date.outputs.create_nightlies != 'false' }}
     runs-on: windows-latest
     env:
       GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
