@@ -1,7 +1,5 @@
 ﻿<Project> 
   <PropertyGroup>
-    <Product>Wyam2</Product>
-    <Copyright>Copyright $([System.DateTime]::Now.Year) \xa9 Wyam2 Contributors</Copyright>
     <SourceRevisionId></SourceRevisionId>
     <Version></Version>
     <VersionPrefix></VersionPrefix>

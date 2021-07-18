@@ -62,8 +62,45 @@ var pullRequestId = 0;
 var pullRequestNumber = 0;
 var buildId = "0";
 var buildNumber = "0";
-var branch = GitBranchCurrent(DirectoryPath.FromString(".")).FriendlyName;
-var sha = GitBranchCurrent(DirectoryPath.FromString(".")).Tip.Sha;
+var branch = "main";
+var sha = "00000000";
+
+//There are cases when Cake.Git fails due to LibGit2Sharp / LibGit2Sharp.NativeBinaries type initialization errors
+try{
+    branch = GitBranchCurrent(DirectoryPath.FromString(".")).FriendlyName;
+    sha = GitBranchCurrent(DirectoryPath.FromString(".")).Tip.Sha;
+}
+catch(Exception ex)
+{
+    Warning($"Cake.Git failed to retrieve current branch and sha because {ex}");
+    Information("Using git log to retrieve current branch and sha because Cake.Git failed");
+
+    var procSettings = new ProcessSettings{ 
+        Arguments = ProcessArgumentBuilder.FromString(@"log -n 1 --pretty=format:""%D, %H, %h"""),
+        WorkingDirectory = DirectoryPath.FromString("."),
+        RedirectStandardOutput = true,
+        RedirectStandardError = true
+    };
+
+    using(var process = StartAndReturnProcess("git", procSettings))
+    {
+        process.WaitForExit();
+        int exitCode = process.GetExitCode();
+        if(exitCode != 0)
+        {
+            throw new CakeException($"git {procSettings.Arguments.RenderSafe()} returned ({exitCode}) because {process.GetStandardError()}");
+        }
+        List<string> output = process.GetStandardOutput().ToList();
+        if(output is null || output.Count() == 0)
+        {
+            throw new CakeException($"git {procSettings.Arguments.RenderSafe()} returned no output to be parsed");
+        }
+
+        string[] shards = output.ElementAt(0).Split(new string[] {"HEAD -> ", ", "}, StringSplitOptions.RemoveEmptyEntries);
+        branch = shards[0];
+        sha    = shards[2];
+    }
+}
 
 //AZDO does the PR builds
 if(isAzurePipelines)
@@ -163,13 +200,17 @@ if (FileExists(".local.Build.props"))
 }
 
 //AssemblyVersion and FileVersion default to the value of $(Version) without the suffix. For example, if $(Version) is 1.2.3-beta.4, then the value would be 1.2.3. - see https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#assemblyinfo-properties
+//ContinuousIntegrationBuild prop. is required for SourceLink (deterministic build), see https://github.com/clairernovotny/DeterministicBuilds and https://devblogs.microsoft.com/nuget/introducing-source-code-link-for-nuget-packages/
 var msBuildSettings = new DotNetCoreMSBuildSettings()
-    .WithProperty("Product", "Wyam2")
-    .WithProperty("Copyright", $"Copyright {DateTime.Now.Year} \xa9 Wyam2 Contributors")
+    .WithProperty("ContinuousIntegrationBuild", "true")//cake build should always be deterministic
     .WithProperty("SourceRevisionId", sha)
     .SetVersionPrefix(versionPrefix)
     .SetConfiguration(configuration);
 
+if(isLocal || (isGitHubAction && isNightlyBuild)) //embed pdb when running locally and when running the nightly build from GHA
+{
+    msBuildSettings.WithProperty("DebugType", "embedded");
+}
 if(string.IsNullOrEmpty(versionPrefix))
 {
     msBuildSettings.SetVersion(semVersion);
@@ -334,7 +375,7 @@ Task("Create-Theme-Packages")
                 IconUrl = new Uri("https://github.com/Wyam2/assets/raw/master/logo-square-64.png"),
                 LicenseUrl = new Uri("https://github.com/Wyam2/assets/raw/master/LICENSE"),
                 Copyright = $"Copyright {DateTime.Now.Year} © Wyam2 Contributors",
-                Tags = new [] { "Wyam", "Wyam2", "Theme", "Static", "StaticContent", "StaticSite", "Documentation" },
+                Tags = new [] { "Wyam", "Wyam2", "Theme", "Static", "StaticContent", "StaticSite", "Blog", "BlogEngine", "Documentation" },
                 RequireLicenseAcceptance = false,
                 Symbols = false,
                 Repository = new NuGetRepository {

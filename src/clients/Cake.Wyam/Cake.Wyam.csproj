@@ -1,13 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Cake.Wyam2</PackageId>
-    <Description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This library contains an addin for Cake for interacting with Wyam.</Description>
-    <PackageTags>Cake Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine cake-addin</PackageTags>
-    <RepositoryUrl>https://github.com/Wyam2/Wyam.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/addin/cake-contrib-addin-medium.png</PackageIconUrl>
+    <Description>$(Wyam2Description) This library contains an addin for Cake for interacting with Wyam.</Description>
+    <PackageTags>Cake cake-addin $(PackageTags)</PackageTags>
     <PackageIcon>cake-contrib-addin-medium.png</PackageIcon>
+    <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/addin/cake-contrib-addin-medium.png</PackageIconUrl>
     <NoWarn>$(NoWarn);NU5048</NoWarn>
   </PropertyGroup>
   <ItemGroup>

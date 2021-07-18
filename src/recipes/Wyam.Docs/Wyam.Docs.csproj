@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Wyam2.Docs</PackageId>
-    <Description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This library contains the docs recipe.</Description>
-    <PackageTags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</PackageTags>
-    <RepositoryUrl>https://github.com/Wyam2/Wyam.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <Description>$(Wyam2Description) This library contains the docs recipe.</Description>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\core\Wyam.Common\Wyam.Common.csproj">

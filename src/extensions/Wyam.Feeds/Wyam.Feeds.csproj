@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Wyam2.Feeds</PackageId>
-    <Description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This library provides support for feeds and syndication including RSS and Atom.</Description>
-    <PackageTags>Wyam Wyam2 Static StaticContent StaticSite RSS Atom Syndication</PackageTags>
-    <RepositoryUrl>https://github.com/Wyam2/Wyam.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <Description>$(Wyam2Description) This library provides support for feeds and syndication including RSS and Atom.</Description>
+    <PackageTags>$(PackageTags) StaticSite RSS Atom Syndication</PackageTags>
   </PropertyGroup>  
   <ItemGroup>
     <ProjectReference Include="..\..\core\Wyam.Common\Wyam.Common.csproj">
