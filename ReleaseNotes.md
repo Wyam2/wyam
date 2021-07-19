@@ -2,6 +2,8 @@
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog
+- [Refactoring] Update System.Data.SqlClient to v4.8.2
+- [Refactoring] Update System.Reflection.TypeExtensions to v4.7.0
 - [Fix] Could not reference Wyam.Common namespace with nuget (#1)
 - [Refactoring] Update Markdig to v0.25.0
 - [Refactoring] Update SixLabors.ImageSharp to v1.0.3
