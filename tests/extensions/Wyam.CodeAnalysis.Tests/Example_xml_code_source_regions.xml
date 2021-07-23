@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<project name="nant" default="help">
+    <!-- #region Example 1 -->
+    <property name="hello" value="you!" />
+    <!-- #endregion -->
+    
+    <!-- #region Example 2 -->
+    <target name="hello">
+        <echo>hello ${hello}</echo>
+    </target>
+    <!-- #endregion -->
+</project>

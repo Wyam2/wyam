@@ -18,5 +18,33 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <None Remove="Included_xml_tag.xml" />
+    <Content Include="Included_xml_tag.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Example_CodeSource.xml" />
+    <Content Include="Example_xml_code_source.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Example_CodeSource_Regions.xml" />
+    <Content Include="Example_xml_code_source_regions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Example_sql_code_source.sql" />
+    <Content Include="Example_sql_code_source.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Compile Remove="Example_cs_code_source.cs" />
+    <Content Include="Example_cs_code_source.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Compile Remove="Example_cs_code_source_regions.cs" />
+    <Content Include="Example_cs_code_source_regions.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Example_sql_code_source_regions.sql" />
+    <Content Include="Example_sql_code_source_regions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
