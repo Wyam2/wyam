@@ -3,8 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
@@ -147,6 +149,7 @@ namespace Wyam.CodeAnalysis.Analysis
                             {
                                 _processActions.Add(() => OtherComments = otherElements.ToImmutableDictionary(x => x.Key, GetOtherComments));
                             }
+
                             return otherElements.Select(x => x.Key);
                         }
                     }
@@ -171,8 +174,10 @@ namespace Wyam.CodeAnalysis.Analysis
                     {
                         processAction();
                     }
+
                     _processActions = null;
                 }
+
                 return this;
             }
         }
@@ -189,6 +194,7 @@ namespace Wyam.CodeAnalysis.Analysis
             {
                 root = root.Elements().First();
             }
+
             return root;
         }
 
@@ -309,12 +315,14 @@ namespace Wyam.CodeAnalysis.Analysis
                                             inherit = false;
                                             break;
                                         }
+
                                         if (inheritedElementCref != null && inheritedElementCref == rootElement.Attribute("cref")?.Value)
                                         {
                                             // Don't inherit if the cref attribute is the same
                                             inherit = false;
                                             break;
                                         }
+
                                         if (inheritedElementName != null && inheritedElementName == rootElement.Attribute("name")?.Value)
                                         {
                                             // Don't inherit if the name attribute is the same
@@ -322,6 +330,7 @@ namespace Wyam.CodeAnalysis.Analysis
                                             break;
                                         }
                                     }
+
                                     if (inherit)
                                     {
                                         root.Add(inheritedElement);
@@ -390,6 +399,7 @@ namespace Wyam.CodeAnalysis.Analysis
             {
                 Trace.Warning($"Could not parse <seealso> XML documentation comments for {_symbol.Name}: {ex.Message}");
             }
+
             return ImmutableArray<string>.Empty;
         }
 
@@ -411,6 +421,7 @@ namespace Wyam.CodeAnalysis.Analysis
             {
                 Trace.Warning($"Could not parse <{elementName}> XML documentation comments for {_symbol.Name}: {ex.Message}");
             }
+
             return string.Empty;
         }
 
@@ -420,28 +431,30 @@ namespace Wyam.CodeAnalysis.Analysis
             try
             {
                 return elements.Select(element =>
-                {
-                    string link = null;
-                    string name = keyIsCref
-                        ? GetRefNameAndLink(element, out link)
-                        : (element.Attribute("name")?.Value ?? string.Empty);
-                    if (validNames?.Contains(name) == false)
                     {
-                        return null;
-                    }
-                    ProcessChildElements(element);
-                    AddCssClasses(element);
-                    XmlReader reader = element.CreateReader();
-                    reader.MoveToContent();
-                    return new ReferenceComment(name, link, reader.ReadInnerXml());
-                })
-                .Where(x => x != null)
-                .ToImmutableArray();
+                        string link = null;
+                        string name = keyIsCref
+                            ? GetRefNameAndLink(element, out link)
+                            : (element.Attribute("name")?.Value ?? string.Empty);
+                        if (validNames?.Contains(name) == false)
+                        {
+                            return null;
+                        }
+
+                        ProcessChildElements(element);
+                        AddCssClasses(element);
+                        XmlReader reader = element.CreateReader();
+                        reader.MoveToContent();
+                        return new ReferenceComment(name, link, reader.ReadInnerXml());
+                    })
+                    .Where(x => x != null)
+                    .ToImmutableArray();
             }
             catch (Exception ex)
             {
                 Trace.Warning($"Could not parse <{elementName}> XML documentation comments for {_symbol.Name}: {ex.Message}");
             }
+
             return ImmutableArray<ReferenceComment>.Empty;
         }
 
@@ -464,6 +477,7 @@ namespace Wyam.CodeAnalysis.Analysis
             {
                 Trace.Warning($"Could not parse other XML documentation comments for {_symbol.Name}: {ex.Message}");
             }
+
             return ImmutableArray<OtherComment>.Empty;
         }
 
@@ -505,6 +519,15 @@ namespace Wyam.CodeAnalysis.Analysis
                     return name;
                 }
             }
+
+            //check for langword
+            string langword = element.Attribute("langword")?.Value;
+            if (langword != null)
+            {
+                link = null;
+                return langword;
+            }
+
             link = null;
             return cref?.Substring(cref.IndexOf(':') + 1) ?? string.Empty;
         }
@@ -543,13 +566,16 @@ namespace Wyam.CodeAnalysis.Analysis
             ProcessChildCElements(parentElement);
             ProcessChildListElements(parentElement);
             ProcessChildParaElements(parentElement);
+            ProcessChildNoteElements(parentElement);
             ProcessChildParamrefAndTypeparamrefElements(parentElement, "paramref");
             ProcessChildParamrefAndTypeparamrefElements(parentElement, "typeparamref");
             ProcessChildSeeElements(parentElement);
+            ProcessChildHtmlElements(parentElement);
         }
 
         // CDATA
         // Should escape all CDATA content and remove the CDATA element
+
         private void ProcessDescendantCdataElements(XElement parentElement)
         {
             // Take them one at a time in case we erase one during the processing
@@ -563,20 +589,48 @@ namespace Wyam.CodeAnalysis.Analysis
 
         // <code>
         // Wrap with <pre> and trim margins off each line
+
         private void ProcessChildCodeElements(XElement parentElement)
         {
             foreach (XElement codeElement in parentElement.Elements("code").ToList())
             {
+                // Language attribute support
+                XAttribute languageAttribute = codeElement.Attribute("language");
+                if (languageAttribute != null)
+                {
+                    AddCssClasses(codeElement, $"language-{languageAttribute.Value.ToLowerInvariant()}");
+                    languageAttribute?.Remove();
+                }
+                
                 // Get all the lines of the code element
+                List<string> lines = null;
+                
+                XAttribute sourceAttribute = codeElement.Attribute("source");
+                if (sourceAttribute != null)
+                {
+                    XAttribute regionAttribute = codeElement.Attribute("region");
+                    lines = ProcessCodeSourceFile(sourceAttribute.Value, regionAttribute?.Value);
+
+                    using (XmlWriter writer = codeElement.CreateWriter())
+                    {
+                        writer.WriteString(string.Join("\n", lines));
+                        writer.Flush();
+                    }
+
+                    sourceAttribute.Remove();
+                    regionAttribute?.Remove();
+                }
+                
                 XmlReader reader = codeElement.CreateReader();
                 reader.MoveToContent();
-                List<string> lines = reader.ReadInnerXml().Split(new[] { "\n", "\r\n" }, StringSplitOptions.None).ToList();
+                lines = reader.ReadInnerXml().Split(new[] { "\n", "\r\n" }, StringSplitOptions.None).ToList();
 
                 // Trim start and end lines
                 while (lines[0].Trim()?.Length == 0)
                 {
                     lines.RemoveAt(0);
                 }
+
                 while (lines[lines.Count - 1].Trim()?.Length == 0)
                 {
                     lines.RemoveAt(lines.Count - 1);
@@ -592,22 +646,62 @@ namespace Wyam.CodeAnalysis.Analysis
                     padding = Math.Min(padding, line.TakeWhile(x => tabs ? x == '\t' : x == ' ').Count());
                 }
 
-                // Remove the padding, replacing the nodes in the original element to preserve any attributes
-                if (padding > 0)
-                {
-                    string newInnerXml = string.Join(
+                // Remove the padding if needed, replacing the nodes in the original element to preserve any attributes
+                string newInnerXml = string.Join(
                         "\n",
-                        lines.Select(x => padding < x.Length ? x.Substring(padding) : string.Empty));
-                    XElement newCodeElement = XElement.Parse($"<code>{newInnerXml}</code>");
-                    codeElement.ReplaceNodes(newCodeElement.Nodes().Cast<object>().ToArray());
-                }
+                        padding > 0
+                            ? lines.Select(x => padding < x.Length ? x.Substring(padding) : string.Empty)
+                            : lines);
+                XElement newCodeElement = XElement.Parse($"<code>{newInnerXml}</code>");
+                codeElement.ReplaceNodes(newCodeElement.Nodes().Cast<object>().ToArray());
 
                 // Wrap with pre
                 codeElement.ReplaceWith(new XElement("pre", codeElement));
             }
         }
 
+        /// <summary>
+        /// Reads all lines of a file contained in the given <paramref name="regionDelimiter">region</paramref>
+        /// </summary>
+        /// <param name="sourcePath">Path to the file containing source code</param>
+        /// <param name="regionDelimiter">Name of a VB.NET #Region or a C# #region</param>
+        private List<string> ProcessCodeSourceFile(string sourcePath, string regionDelimiter)
+        {
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                return new List<string>();
+            }
+            
+            //sourcePath is relative to current analyzed assembly
+            string fullSourcePath = string.Empty;
+            if (!Path.IsPathRooted(sourcePath))
+            {
+                fullSourcePath = Path.Combine((_compilation.Options.XmlReferenceResolver as XmlFileResolver).BaseDirectory, sourcePath);
+            }
+            else
+            {
+                fullSourcePath = sourcePath;
+            }
+
+            if (!File.Exists(fullSourcePath))
+            {
+                return new List<string>();
+            }
+            
+            List<string> codeLines = File.ReadAllLines(fullSourcePath, Encoding.UTF8).ToList();
+            if (string.IsNullOrEmpty(regionDelimiter))
+            {
+                return codeLines;
+            }
+            
+            return codeLines.SkipWhile(l => !(l.Contains($"#region {regionDelimiter}") || l.Contains($"#Region \"{regionDelimiter}\"")))
+                .Skip(1)
+                .TakeWhile(l => !(l.Contains($"#endregion") || l.Contains($"#End Region")))
+                .ToList();
+        }
+
         // <c>
+
         private void ProcessChildCElements(XElement parentElement)
         {
             foreach (XElement cElement in parentElement.Elements("c").ToList())
@@ -617,6 +711,7 @@ namespace Wyam.CodeAnalysis.Analysis
         }
 
         // <list>
+
         private void ProcessChildListElements(XElement parentElement)
         {
             foreach (XElement listElement in parentElement.Elements("list").ToList())
@@ -626,44 +721,14 @@ namespace Wyam.CodeAnalysis.Analysis
                 {
                     ProcessListElementTable(listElement, typeAttribute);
                 }
+                else if (typeAttribute?.Value == "definition")
+                {
+                    ProcessListElementDefinition(listElement, typeAttribute);
+                }
                 else
                 {
                     ProcessListElementList(listElement, typeAttribute);
                 }
-            }
-        }
-
-        private void ProcessListElementList(XElement listElement, XAttribute typeAttribute)
-        {
-            // Number or bullet
-            if (typeAttribute?.Value == "number")
-            {
-                listElement.Name = "ol";
-            }
-            else
-            {
-                listElement.Name = "ul";
-            }
-            typeAttribute?.Remove();
-
-            // Replace children
-            foreach (XElement itemElement in listElement.Elements("listheader")
-                .Concat(listElement.Elements("item")).ToList())
-            {
-                foreach (XElement termElement in itemElement.Elements("term").ToList())
-                {
-                    termElement.Name = "span";
-                    AddCssClasses(termElement, "term");
-                    ProcessChildElements(termElement);
-                }
-                foreach (XElement descriptionElement in itemElement.Elements("description").ToList())
-                {
-                    descriptionElement.Name = "span";
-                    AddCssClasses(descriptionElement, "description");
-                    ProcessChildElements(descriptionElement);
-                }
-
-                itemElement.Name = "li";
             }
         }
 
@@ -685,7 +750,70 @@ namespace Wyam.CodeAnalysis.Analysis
             }
         }
 
-        // <para>
+        private void ProcessListElementDefinition(XElement listElement, XAttribute typeAttribute)
+        {
+            listElement.Name = "dl";
+            typeAttribute?.Remove();
+            
+            foreach (XElement itemElement in listElement.Elements("item").ToList())
+            {
+                foreach (XElement termElement in itemElement.Elements("term"))
+                {
+                    termElement.Name = "dt";
+                    AddCssClasses(termElement, "term");
+                    ProcessChildElements(termElement);
+                }
+
+                foreach (XElement descriptionElement in itemElement.Elements("description"))
+                {
+                    descriptionElement.Name = "dd";
+                    AddCssClasses(descriptionElement, "description");
+                    ProcessChildElements(descriptionElement);
+                }
+                
+                itemElement.ReplaceWith(itemElement.Descendants());
+            }
+        }
+
+        private void ProcessListElementList(XElement listElement, XAttribute typeAttribute)
+        {
+            // Number or bullet
+            if (typeAttribute?.Value == "number")
+            {
+                listElement.Name = "ol";
+            }
+            else
+            {
+                listElement.Name = "ul";
+            }
+
+            typeAttribute?.Remove();
+
+            // Replace children
+            foreach (XElement itemElement in listElement.Elements("listheader")
+                .Concat(listElement.Elements("item")).ToList())
+            {
+                foreach (XElement termElement in itemElement.Elements("term").ToList())
+                {
+                    termElement.Name = "span";
+                    AddCssClasses(termElement, "term");
+                    ProcessChildElements(termElement);
+                }
+
+                foreach (XElement descriptionElement in itemElement.Elements("description").ToList())
+                {
+                    descriptionElement.Name = "span";
+                    AddCssClasses(descriptionElement, "description");
+                    ProcessChildElements(descriptionElement);
+                }
+
+                itemElement.Name = "li";
+            }
+        }
+
+        /// <summary>
+        ///  Processes &lt;para&gt;
+        /// </summary>
         private void ProcessChildParaElements(XElement parentElement)
         {
             foreach (XElement paraElement in parentElement.Elements("para").ToList())
@@ -695,7 +823,23 @@ namespace Wyam.CodeAnalysis.Analysis
             }
         }
 
-        // <paramref>, <typeparamref>
+        private void ProcessChildNoteElements(XElement parentElement)
+        {
+            foreach (XElement noteElement in parentElement.Elements("note").ToList())
+            {
+                noteElement.Name = "div";
+                
+                XAttribute typeAttribute = noteElement.Attribute("type");
+                AddCssClasses(noteElement, typeAttribute?.Value ?? "note");
+                typeAttribute?.Remove();
+                
+                ProcessChildElements(noteElement);
+            }
+        }
+
+        /// <summary>
+        /// Processes &lt;paramref&gt; and &lt;typeparamref&gt;
+        /// </summary>
         private void ProcessChildParamrefAndTypeparamrefElements(XElement parentElement, string elementName)
         {
             foreach (XElement paramrefElement in parentElement.Elements(elementName).ToList())
@@ -707,7 +851,9 @@ namespace Wyam.CodeAnalysis.Analysis
             }
         }
 
-        // <see>
+        /// <summary>
+        /// Processes ;lt;see&gt;
+        /// </summary>
         private void ProcessChildSeeElements(XElement parentElement)
         {
             foreach (XElement seeElement in parentElement.Elements("see").ToList())
@@ -715,6 +861,29 @@ namespace Wyam.CodeAnalysis.Analysis
                 string link;
                 string name = GetRefNameAndLink(seeElement, out link);
                 seeElement.ReplaceWith(XElement.Parse(link ?? $"<code>{WebUtility.HtmlEncode(name)}</code>"));
+            }
+        }
+
+        /// <summary>
+        /// Processes &lt;b&gt;&lt;/b&gt; and &lt;i&gt;&lt;/i&gt; tags
+        /// </summary>
+        /// <remarks>
+        /// Known tags are b (bold) and i(italics) and their content is processed for XML comments.
+        /// Unknown tags like u or html mark tag to not get their content processed for XML comments.
+        /// </remarks>
+        private void ProcessChildHtmlElements(XElement parentElement)
+        {
+            //<b> renders to <strong></strong> and might have XML comments tags inside
+            foreach (XElement boldElement in parentElement.Elements("b").ToList())
+            {
+                boldElement.Name = "strong";
+                ProcessChildElements(boldElement);
+            }
+
+            // <i> renders to <i></i> and might have XML comments tags inside
+            foreach (XElement boldElement in parentElement.Elements("i").ToList())
+            {
+                ProcessChildElements(boldElement);
             }
         }
     }
