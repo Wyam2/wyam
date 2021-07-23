@@ -139,20 +139,19 @@ if(string.IsNullOrEmpty(gitTag))
     {
         versionSuffix = $"pr.{pullRequestId}";
     }
-    else if(isLocal)
-    {
-        versionSuffix= $"pre";
-    }
     else if(isNightlyBuild)
     {
         versionSuffix = $"nightly.{DateTime.Now.ToString("yyyyMMdd")}";
     }
-    else if(releaseNotes.RawVersionLine.ToLowerInvariant().Contains("unreleased"))
+    else
     {
-        versionSuffix = $"unstable.{DateTime.Now.ToString("yyyyMMddHHmm")}";
+        versionSuffix= $"pre.{buildNumber}";
     }
 
-    semVersion = $"{versionPrefix}-{versionSuffix.Replace('.', '-')}";
+    string abbrevSha = sha;
+    if(sha.Length > 9) abbrevSha = sha.Substring(0, 9);
+    
+    semVersion = $"{versionPrefix}-{versionSuffix}+{abbrevSha}";
 }
 else
 {
@@ -231,7 +230,7 @@ CreateDirectory(nugetRoot);
 CreateDirectory(chocoRoot);
 CreateDirectory(binDir);
 
-var zipFile = "Wyam-v" + semVersion + ".zip";
+var zipFile = $"Wyam2-v{semVersion}.zip";
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
