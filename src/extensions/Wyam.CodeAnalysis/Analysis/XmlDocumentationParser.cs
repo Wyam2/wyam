@@ -49,6 +49,9 @@ namespace Wyam.CodeAnalysis.Analysis
         public IReadOnlyList<string> SeeAlso { get; private set; }
             = ImmutableArray<string>.Empty;
 
+        public IReadOnlyList<RevisionComment> RevisionHistory { get; private set; }
+            = ImmutableArray<RevisionComment>.Empty;
+
         public IReadOnlyDictionary<string, IReadOnlyList<OtherComment>> OtherComments { get; private set; }
             = ImmutableDictionary<string, IReadOnlyList<OtherComment>>.Empty;
 
@@ -94,6 +97,19 @@ namespace Wyam.CodeAnalysis.Analysis
                             if (seeAlsoElements.Count > 0)
                             {
                                 _processActions.Add(() => SeeAlso = GetSeeAlsoHtml(seeAlsoElements));
+                            }
+                            
+                            //Also clear revision history after parsing the revision history blocks that do not have <i>visible</i> attribute set to false
+                            List<XElement> revisionHistoryElements = root.Descendants("revisionHistory")
+                                                                        .Where(r => r.Attribute("visible")?.Value != "false")
+                                                                        .ToList().Select(x =>
+                            {
+                                x.Remove();
+                                return x;
+                            }).ToList();
+                            if (revisionHistoryElements.Count > 0)
+                            {
+                                _processActions.Add(() => RevisionHistory = GetRevisionComments(revisionHistoryElements));
                             }
 
                             // All other top-level elements as individual actions so we don't process those elements if they don't exist
@@ -456,6 +472,41 @@ namespace Wyam.CodeAnalysis.Analysis
             }
 
             return ImmutableArray<ReferenceComment>.Empty;
+        }
+
+        private IReadOnlyList<RevisionComment> GetRevisionComments(IEnumerable<XElement> elements)
+        {
+            try
+            {
+                return elements
+                        .Descendants("revision")
+                        .OrderByDescending(r => r.Attribute("version")?.Value)
+                        .Select(element =>
+                        {
+                            if (element.Attribute("visible")?.Value == "false")
+                            {
+                                return null;
+                            }
+                            
+                            string date = element.Attribute("date")?.Value;
+                            string version = element.Attribute("version")?.Value;
+                            string author = element.Attribute("author")?.Value;
+                            
+                            ProcessChildElements(element);
+                            AddCssClasses(element);
+                            XmlReader reader = element.CreateReader();
+                            reader.MoveToContent();
+                            return new RevisionComment(date, version, author, reader.ReadInnerXml());
+                        })
+                        .Where(r => r != null)
+                        .ToImmutableArray();
+            }
+            catch (Exception ex)
+            {
+                Trace.Warning($"Could not parse <seealso> XML documentation comments for {_symbol.Name}: {ex.Message}");
+            }
+
+            return ImmutableArray<RevisionComment>.Empty;
         }
 
         private IReadOnlyList<OtherComment> GetOtherComments(IEnumerable<XElement> elements)
