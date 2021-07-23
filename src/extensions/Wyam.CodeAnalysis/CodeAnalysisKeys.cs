@@ -358,6 +358,13 @@ namespace Wyam.CodeAnalysis
         /// </summary>
         /// <type><c>IReadOnlyList&lt;string&gt;</c></type>
         public const string SeeAlso = nameof(SeeAlso);
+        
+        /// <summary>
+        /// This is available for documents in the initial result set (<see cref="IsResult"/> is <c>true</c>) and contains
+        /// a collection of all<c>revision</c> XML documentation comments for this symbol with their date, version, author, and rendered HTML description.
+        /// </summary>
+        /// <type><see cref="IReadOnlyList{RevisionComment}"/></type>
+        public const string RevisionHistory = nameof(RevisionHistory);
 
         /// <summary>
         /// This is available for documents in the initial result set (<see cref="IsResult"/> is <c>true</c>) and contains

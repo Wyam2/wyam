@@ -162,7 +162,6 @@ namespace Wyam.CodeAnalysis.Tests
                 methodDocument.List<OtherComment>("BarComments")[0].Html.ShouldBe<string>("Calculates the sum of <span name=\"a\" class=\"paramref\">a</span> and <span name=\"b\" class=\"paramref\">b</span>");
             }
             
-            [Ignore("In a separate commit")]
             [Test]
             public void OtherComments_SandcastleSpecificElements()
             {
@@ -204,7 +203,7 @@ namespace Wyam.CodeAnalysis.Tests
                     d => d.List<OtherComment>("ThreadsafetyComments").Count.ShouldBe(1),
                     d => d.List<OtherComment>("ThreadsafetyComments")[0].Attributes["static"].ShouldBe("true"),
                     d => d.List<OtherComment>("ThreadsafetyComments")[0].Attributes["instance"].ShouldBe("false"),
-                    d => d.List<OtherComment>("RevisionHistoryComments")[0].Html.ShouldBe("something"));
+                    d => d.List<RevisionComment>("RevisionHistory").Count.ShouldBe(1));
             }
 
             [Test]
