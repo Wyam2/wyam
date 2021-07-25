@@ -8,6 +8,7 @@ SolutionInfo.cs
 [Pp]ackages/
 [Tt]ools/
 ![Tt]ools/packages.config
+[Rr]eports/
 nuget.exe
 *.com
 *.class
@@ -27,6 +28,7 @@ ipch
 *.sdf
 *.opensdf
 *.pdb
+.local.Build.props
 /*.~vsd
 *UpgradeWizard*
 .vs/*
@@ -38,6 +40,7 @@ config.wyam.dll
 *.ncrunch*
 .*crunch*.local.xml
 /_NCrunch_Wyam
-.vscode
-.idea
-.local.Build.props
+.vscode/
+.idea/
+.sonar/
+.config/

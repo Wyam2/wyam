@@ -26,10 +26,16 @@
 #addin "nuget:https://api.nuget.org/v3/index.json?package=System.Text.RegularExpressions&version=4.3.1"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Incubator&version=6.0.0"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Git&version=1.0.1"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Sonar&version=1.1.25"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Microsoft.Extensions.FileSystemGlobbing&version=2.2.0.0"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.FileSet&version=2.0.0"
 //#addin "nuget:https://api.nuget.org/v3/index.json?package=GitHubActionsTestLogger&version=1.2.0"
 
-#tool "nuget:https://api.nuget.org/v3/index.json?package=NUnit.ConsoleRunner&version=3.12.0"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=NuGet.CommandLine&version=5.9.1"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=NUnit.ConsoleRunner&version=3.12.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=OpenCover&version=4.7.1221"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=ReportGenerator&version=4.8.12"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=dotnet-sonarscanner&version=5.2.2"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.10.14"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=AzurePipelines.TestLogger&version=1.1.0"
 
@@ -42,7 +48,13 @@ using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-string gitTag = Argument<string>("gittag", string.Empty);
+string gitTag = Argument<string>("git-tag", string.Empty);
+
+var sonarUrl   = Argument<string>("sonar-url", "https://sonarcloud.io");
+var sonarProjectKey = Argument<string>("sonar-key", "Wyam2_wyam");
+var sonarProjectName = Argument<string>("sonar-name", "wyam");
+var sonarOrganization = Argument<string>("sonar-org", "wyam2");
+var sonarToken = EnvironmentVariable("SONAR_TOKEN") ?? Argument<string>("sonar-token", "");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -57,6 +69,7 @@ var isGitHubAction = BuildSystem.GitHubActions.IsRunningOnGitHubActions;
 
 var isRunningOnBuildServer = isAzurePipelines || isGitHubAction;
 var isNightlyBuild = target == "Nightly";
+var isCodeQualityBuild = (target == "CodeQuality" || target == "SonarQube");
 var isPullRequest = false;
 var pullRequestId = 0;
 var pullRequestNumber = 0;
@@ -224,11 +237,13 @@ var buildResultDir = Directory("./build");
 var nugetRoot = buildResultDir + Directory("nuget");
 var chocoRoot = buildResultDir + Directory("choco");
 var binDir = buildResultDir + Directory("bin");
+var reportsDir = MakeAbsolute(Directory("./reports"));
 
 CreateDirectory(buildResultDir);
 CreateDirectory(nugetRoot);
 CreateDirectory(chocoRoot);
 CreateDirectory(binDir);
+CreateDirectory(reportsDir);
 
 var zipFile = $"Wyam2-v{semVersion}.zip";
 
@@ -249,6 +264,7 @@ Task("Clean")
     .Does(() =>
     {
         CleanDirectories(new DirectoryPath[] { buildDir, buildResultDir, binDir, nugetRoot, chocoRoot });
+        DeleteFiles($"{reportsDir}/*.*");
     });
 
 Task("Restore-Packages")
@@ -260,7 +276,27 @@ Task("Restore-Packages")
         });
     });
 
+Task("Sonar-Begin")
+    .Does(() => {
+
+        //full debug if doing a code quality analysis
+        msBuildSettings.ArgumentCustomization = arg => arg.AppendSwitch("/p:DebugType","=","Full");
+
+        SonarBegin(new SonarBeginSettings{
+            Url = sonarUrl,
+            Organization = sonarOrganization,
+            Key = sonarProjectKey,
+            Name = sonarProjectName,
+            Login = sonarToken,
+            Branch = branch,
+            Version = versionPrefix + (string.IsNullOrEmpty(gitTag) ? "-pre" : string.Empty),
+            OpenCoverReportsPath = reportsDir.ToString() + "/*.opencover.xml",
+            NUnitReportsPath = reportsDir.ToString() + "/*.Tests.xml"
+        });
+    });
+
 Task("Build")
+    .IsDependentOn("Clean")
     .IsDependentOn("Restore-Packages")
     .Does(() =>
     {
@@ -272,20 +308,7 @@ Task("Build")
         });
     });
 
-Task("Publish-Wyam-Client")
-    .IsDependentOn("Build")
-    .Does(() =>
-    {
-        DotNetCorePublish("./src/clients/Wyam/Wyam.csproj", new DotNetCorePublishSettings
-        {
-            Configuration = configuration,
-            NoBuild = true,
-            NoRestore = true,
-            MSBuildSettings = msBuildSettings
-        });
-    });
-
-Task("Run-Unit-Tests")
+Task("Run-Tests")
     .IsDependentOn("Build")
     .DoesForEach(GetFiles("./tests/**/*.csproj"), project =>
     {
@@ -309,6 +332,131 @@ Task("Run-Unit-Tests")
         DotNetCoreTest(MakeAbsolute(project).ToString(), testSettings);
     })
     .DeferOnError();
+
+Task("Run-Tests-With-Coverage")
+    .IsDependentOn("Build")
+    .Does(() =>
+    {
+        bool success = true;
+
+        DotNetCoreTestSettings testSettings = new DotNetCoreTestSettings()
+        {
+            NoBuild = true,
+            NoRestore = true,
+            NoLogo = true,
+            Configuration = configuration
+        };
+        testSettings.Filter = "TestCategory!=ExcludeFromBuildServer"; //or else it will never complete
+
+        if(isAzurePipelines)
+        {
+            testSettings.Logger = "AzurePipelines";
+            testSettings.TestAdapterPath = GetDirectories($"./tools/AzurePipelines.TestLogger.*/contentFiles/any/any").First();
+        };
+
+        OpenCoverSettings openCoverSettings = new OpenCoverSettings
+        {
+            OldStyle = true, //ONLY use this option if you are encountering MissingMethodException like errors when the code is run under OpenCover
+            MergeByHash = true,
+            ArgumentCustomization = arg => arg.Append("-coverbytest:*.Tests.dll")
+                                              .Append("-filter\":+[Wyam.*]* +[Cake.Wyam]* +[Wyam]* -[*Wyam*.Tests]*\"")
+                                              .Append("-returntargetcode:100"),
+            HandleExitCode = exitCode => 
+            {
+                if(exitCode > 100)
+                {
+                    Error($"OpenCover failed with code {(exitCode - 100)}");
+                    return false;
+                }
+                else
+                {
+                    Error($"dotnet test failed with code {exitCode}");
+                    return true;
+                }
+            }
+        };
+
+        var testProjects = GetFiles("./tests/**/*.csproj");
+        foreach (var project in testProjects)
+        {
+            try
+            {
+                string projectName = project.GetFilenameWithoutExtension().ToString();
+
+                testSettings.ArgumentCustomization = arg => arg.Append($"-- NUnit.TestOutputXml=\"{reportsDir}\"");
+
+                Information($"Running tests and calculating coverage in {project}");
+                OpenCover(context => context.DotNetCoreTest(MakeAbsolute(project).ToString(), testSettings),
+                          reportsDir + File($"{projectName}.opencover.xml"), 
+                          openCoverSettings);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                Error("There was an error while running the tests", ex);
+            }
+        }
+
+        if (success == false)
+        {
+            throw new CakeException("There was an error while running the tests");
+        }
+    });
+
+Task("Coverage-Report")
+    .Does(() => 
+    {
+        if(DirectoryExists($"{reportsDir}/coverage_html"))
+        {
+            CleanDirectory($"{reportsDir}/coverage_html");
+        }
+        else
+        {
+            CreateDirectory($"{reportsDir}/coverage_html");
+        }
+
+        var coverageFiles = GetFileSet(
+            patterns: new string[] { "*.opencover.xml" }, 
+            caseSensitive: false,
+            basePath: reportsDir
+        );
+        if(coverageFiles == null || coverageFiles.Count == 0)
+        {
+            Error("No coverage files found for generating coverage report");
+            return;
+        }
+
+        ReportGenerator(GlobPattern.FromString(reportsDir.ToString() + "/*.opencover.xml"), 
+                        reportsDir + Directory("coverage_html"),
+                        new ReportGeneratorSettings(){
+                            HistoryDirectory = reportsDir + Directory("coverage_history"),
+                            ReportTypes = {ReportGeneratorReportType.Html, ReportGeneratorReportType.HtmlSummary},
+                            SourceDirectories = { Directory("./src")},
+                            AssemblyFilters = {"+Wyam.*", "+Cake.Wyam", "+Wyam", "-*.Tests"},
+                            ArgumentCustomization = arg => arg.AppendQuoted("-title: Wyam2 code coverage")
+                                                              .AppendQuoted($"-tag:{semVersion}")
+                        });
+    });
+
+Task("Sonar-End")
+    .Does(() => {
+        SonarEnd(new SonarEndSettings{
+            Login = sonarToken
+        });
+    });
+
+Task("Publish-Wyam-Client")
+    .IsDependentOn("Build")
+    .Does(() =>
+    {
+        DotNetCorePublish("./src/clients/Wyam/Wyam.csproj", new DotNetCorePublishSettings
+        {
+            Configuration = configuration,
+            NoBuild = true,
+            NoRestore = true,
+            MSBuildSettings = msBuildSettings
+        });
+    });
 
 Task("Copy-Wyam-Client")
     .IsDependentOn("Publish-Wyam-Client")
@@ -469,7 +617,7 @@ Task("Create-Chocolatey-Package")
     .Does(() => {
         var nuspecFile = GetFiles("./src/clients/Chocolatey/*.nuspec").FirstOrDefault();
         ChocolateyPack(nuspecFile, new ChocolateyPackSettings {
-            Version = isLocal ? $"{versionPrefix}-pre" : semVersion,
+            Version = string.IsNullOrEmpty(gitTag) ? $"{versionPrefix}.{DateTime.Now.ToString("yyyyMMdd")}" : versionPrefix,
             OutputDirectory = chocoRoot.Path.FullPath,
             WorkingDirectory = buildResultDir.Path.FullPath
         });
@@ -664,28 +812,45 @@ Task("Create-Packages")
     .IsDependentOn("Create-Theme-Packages")   
     .IsDependentOn("Create-AllModules-Package")    
     .IsDependentOn("Create-Tools-Package")
-    .IsDependentOn("Create-Chocolatey-Package");
+    .IsDependentOn("Create-Chocolatey-Package")
+    .Does(() => { Information("Ran Create-Packages target"); });
     
 Task("Package")
-    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Tests")
     .IsDependentOn("Zip-Wyam-Client")
-    .IsDependentOn("Create-Packages");
+    .IsDependentOn("Create-Packages")
+    .Does(() => { Information("Ran Package target"); });
 
 Task("Default")
-    .IsDependentOn("Package");
+    .IsDependentOn("Package")
+    .Does(() => { Information("Ran Default target"); });
+
+Task("CodeQuality")
+    .IsDependentOn("Run-Tests-With-Coverage")
+    .IsDependentOn("Coverage-Report")
+    .Does(() => { Information("Ran CodeQuality target"); });
+
+Task("SonarQube")
+    .IsDependentOn("Sonar-Begin")
+    .IsDependentOn("Run-Tests-With-Coverage")
+    .IsDependentOn("Sonar-End")
+    .Does(() => { Information("Ran SonarQube target"); });
 
 Task("CI")
-    .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Publish-AzureFeed");
+    .IsDependentOn("Run-Tests")
+    .IsDependentOn("Publish-AzureFeed")
+    .Does(() => { Information("Ran CI target"); });
 
 //builds, generates the nuget packages and deploy them to GitHub feed
 Task("Nightly")
-    .IsDependentOn("Publish-GitHubFeed");
+    .IsDependentOn("Publish-GitHubFeed")
+    .Does(() => { Information("Ran Nightly target"); });
 
 Task("Publish")
     .IsDependentOn("Publish-NuGetFeed")
     .IsDependentOn("Publish-ChocolateyFeed")
-    .IsDependentOn("Publish-Release");
+    .IsDependentOn("Publish-Release")
+    .Does(() => { Information("Ran Publish target"); });
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
