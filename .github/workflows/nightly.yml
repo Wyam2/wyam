@@ -58,3 +58,58 @@ jobs:
         with:
           name: nupkg
           path: ./build/choco/*.nupkg
+  housekeeping:
+    needs: [nightly]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove oldest nightly - batch1
+        uses: smartsquaregmbh/delete-old-packages@v0.3.1
+        with:
+          keep: 2
+          names: |
+            Wyam2
+            Wyam2.All
+            Cake.Wyam2
+            Wyam2.Configuration
+            Wyam2.Core
+            Wyam2.Common
+            Wyam2.AmazonWebServices
+            Wyam2.CodeAnalysis
+            Wyam2.Feeds
+            Wyam2.GitHub
+            Wyam2.Hosting
+            Wyam2.Minification
+            Wyam2.Highlight
+            Wyam2.Images
+            Wyam2.Markdown
+            Wyam2.Html
+            Wyam2.Less
+            Wyam2.Json
+            Wyam2.SearchIndex
+            Wyam2.Tables
+      - name: Remove oldest nightly - batch2
+        uses: smartsquaregmbh/delete-old-packages@v0.3.1
+        with:
+          keep: 2
+          names: |
+            Wyam2.Blog
+            Wyam2.Blog.BlogTemplate
+            Wyam2.Blog.SolidState
+            Wyam2.Blog.CleanBlog
+            Wyam2.Blog.Phantom
+            Wyam2.Blog.Stellar
+            Wyam2.Blog.Trophy
+            Wyam2.Docs.Samson
+            Wyam2.Docs
+            Wyam2.Web
+            Wyam2.Razor
+            Wyam2.YouTube
+            Wyam2.Xmp
+            Wyam2.Yaml
+            Wyam2.Tool
+            Wyam2.Sass
+            Wyam2.Testing
+            Wyam2.Testing.Javascript
+
+
