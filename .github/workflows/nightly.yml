@@ -36,7 +36,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build and test
-        run: ./build.ps1 -Target Run-Unit-Tests
+        run: ./build.ps1 -Target Run-Tests
         shell: pwsh
   nightly:
     needs: [check_date, build]
