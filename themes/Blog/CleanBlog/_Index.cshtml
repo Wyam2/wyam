@@ -34,23 +34,37 @@
                 </div>       
             }
         }
-        <ul class="pager">
-            <li class="previous">                
+        <nav aria-label="Index navigation">
+            <ul class="pagination justify-content-center">
                 @if(Model.Bool(Keys.HasPreviousPage))
                 {
-                    <a href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))"><span aria-hidden="true">&larr;</span> Newer</a>
-                }                
-            </li>
-            <li class="next">
+                    <li class="page-item">
+                        <a class="page-link" href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))"><span aria-hidden="true">&larr;</span> Newer</a>
+                    </li>
+                } 
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a>
+                    </li>
+                }
                 @if(Model.Bool(Keys.HasNextPage))
                 {
-                    <a href="@(Context.GetLink(Model.Document(Keys.NextPage)))">Older <span aria-hidden="true">&rarr;</span></a>
+                    <li class="page-item">
+                        <a class="page-link" href="@(Context.GetLink(Model.Document(Keys.NextPage)))">Older <span aria-hidden="true">&rarr;</span></a>
+                    </li>
                 }
-            </li>
-        </ul>
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Older</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     </div>
     <div class="col-sm-4 sidebar">
-        <hr class="visible-xs-block" />
+        <hr class="hidden-xs-down hidden-md-up" />
 
         @if(Documents[Blog.Tags].Any())
         {

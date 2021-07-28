@@ -1,35 +1,29 @@
 /*!
- * Clean Blog v1.0.0 (http://startbootstrap.com)
- * Copyright 2014 Start Bootstrap
- * Licensed under Apache 2.0 (https://github.com/IronSummitMedia/startbootstrap/blob/gh-pages/LICENSE)
- */
-
-// Navigation Scripts to Show Header on Scroll-Up
-jQuery(document).ready(function($) {
-    var MQL = 1170;
-
-    //primary navigation slide-in effect
-    if ($(window).width() > MQL) {
-        var headerHeight = $('.navbar-custom').height();
-        $(window).on('scroll', {
-                previousTop: 0
-            },
-            function() {
-                var currentTop = $(window).scrollTop();
-                //check if user is scrolling up
-                if (currentTop < this.previousTop) {
-                    //if scrolling up...
-                    if (currentTop > 0 && $('.navbar-custom').hasClass('is-fixed')) {
-                        $('.navbar-custom').addClass('is-visible');
-                    } else {
-                        $('.navbar-custom').removeClass('is-visible is-fixed');
-                    }
-                } else {
-                    //if scrolling down...
-                    $('.navbar-custom').removeClass('is-visible');
-                    if (currentTop > headerHeight && !$('.navbar-custom').hasClass('is-fixed')) $('.navbar-custom').addClass('is-fixed');
-                }
-                this.previousTop = currentTop;
-            });
-    }
-});
+* Start Bootstrap - Clean Blog v6.0.4 (https://startbootstrap.com/theme/clean-blog)
+* Copyright 2013-2021 Start Bootstrap
+* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-clean-blog/blob/master/LICENSE)
+*/
+window.addEventListener('DOMContentLoaded', () => {
+    let scrollPos = 0;
+    const mainNav = document.getElementById('mainNav');
+    const headerHeight = mainNav.clientHeight;
+    window.addEventListener('scroll', function() {
+        const currentTop = document.body.getBoundingClientRect().top * -1;
+        if ( currentTop < scrollPos) {
+            // Scrolling Up
+            if (currentTop > 0 && mainNav.classList.contains('is-fixed')) {
+                mainNav.classList.add('is-visible');
+            } else {
+                console.log(123);
+                mainNav.classList.remove('is-visible', 'is-fixed');
+            }
+        } else {
+            // Scrolling Down
+            mainNav.classList.remove(['is-visible']);
+            if (currentTop > headerHeight && !mainNav.classList.contains('is-fixed')) {
+                mainNav.classList.add('is-fixed');
+            }
+        }
+        scrollPos = currentTop;
+    });
+})

@@ -10,12 +10,12 @@
     {
         <h2 class="subheading">@Lead</h2>
     }            
-    <div class="meta">        
+    <span class="meta">        
         @if (Published != default(DateTime))
         {
             <text>Published on @Published.ToLongDateString(Context)<br></text>
         }
-    </div>
+    </span>
     @if (Tags != null)
     {
         <div class="tags">

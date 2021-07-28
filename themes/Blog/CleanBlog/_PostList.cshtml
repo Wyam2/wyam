@@ -5,9 +5,11 @@
     {
         string lead = post.String(BlogKeys.Lead);
         
-        <div class="post-list">
+        <!-- Post preview-->
+        <div class="post-preview">
             <a href="@Context.GetLink(post)">
-                <h3 class="post-title">@post.WithoutSettings.String(BlogKeys.Title)</h3>
+                <h2 class="post-title">@post.WithoutSettings.String(BlogKeys.Title)</h2>
+                <h3 class="post-title">@post.WithoutSettings.String(BlogKeys.Description)</h3>
                 @if(!string.IsNullOrWhiteSpace(lead))
                 {
                     <h4 class="post-subtitle">@lead</h4>
@@ -18,6 +20,8 @@
             {
                 @Html.Raw(post.String(BlogKeys.Excerpt))
             }            
-        </div>   
+        </div>
+        <!-- Divider-->
+        <hr class="my-4" />   
     }
 }
