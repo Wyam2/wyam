@@ -12,8 +12,10 @@
 	<head>
 		<title>@PageTitle</title>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="@Context.GetLink("/assets/css/main.css")" />
+		<noscript><link rel="stylesheet" href="@Context.GetLink("assets/css/noscript.css")" /></noscript>
+		<link rel="stylesheet" href="@Context.GetLink("/assets/css/override.css")" />
 
 		<meta name="description" content="@Context.String(BlogKeys.Description)" />
 		@if (Context.String(BlogKeys.RssPath) != null) {
@@ -39,7 +41,7 @@
 		
 	</head>
 
-	<body>
+	<body class="is-preload">
 		<!-- Wrapper -->
 		<div id="wrapper">
 
@@ -87,9 +89,9 @@
 	<script src="@Context.GetLink("/assets/js/jquery.min.js")"></script>
 	<script src="@Context.GetLink("/assets/js/jquery.scrollex.min.js")"></script>
 	<script src="@Context.GetLink("/assets/js/jquery.scrolly.min.js")"></script>
-	<script src="@Context.GetLink("/assets/js/skel.min.js")"></script>
+	<script src="@Context.GetLink("/assets/js/browser.min.js")"></script>
+	<script src="@Context.GetLink("/assets/js/breakpoints.min.js")"></script>
 	<script src="@Context.GetLink("/assets/js/util.js")"></script>
-	<!--[if lte IE 8]><script src="@Context.GetLink("/assets/js/ie/respond.min.js")"></script><![endif]-->
 	<script src="@Context.GetLink("/assets/js/main.js")"></script>
 
 	</body>
