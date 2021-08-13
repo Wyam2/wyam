@@ -22,6 +22,7 @@
 ul.actions.wrapped{
 	flex-wrap: wrap;
 }
+
 /* required for proper display of follow icons in footer */
 ul.actions > li > .icon > .label
 {

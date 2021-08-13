@@ -1,7 +1,7 @@
 Title: All Tags
 ---
 <div class="row">
-    <div class="8u 12u$(medium)">
+    <div class="col-8 col-12-medium">
         @Html.Partial("_PostList", Model.DocumentList(Keys.PageDocuments).OrderByDescending(x => x.Get<DateTime>(BlogKeys.Published)))
 
         <nav>
@@ -29,8 +29,8 @@ Title: All Tags
         </nav>
     </div>
     
-    <div class="4u 12u$(medium)">
-        <ul class="icons">
+    <div class="col-4 col-12-medium">
+        <ul class="actions wrapped">
             @foreach (IDocument tagDocument in Documents[Blog.Tags]
                 .GroupBy(x => x.String(BlogKeys.Tag)).Select(x => x.Where(p => p.Get<int>(Keys.CurrentPage) == 1).First())
                 .OrderByDescending(x => x.Get<int>(Keys.TotalItems)))

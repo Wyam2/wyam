@@ -3,7 +3,7 @@
 }
 
 <div class="row">
-    <div class="8u 12u$(medium)">
+    <div class="col-8 col-12-medium">
         @{
             foreach(IDocument doc in Model.DocumentList(Keys.PageDocuments))
             {                
@@ -45,9 +45,9 @@
             </ul>
         }
     </div>
-    <div class="4u 12u$(medium)">
+    <div class="col-4 col-12-medium">
         <h5>Tags</h5>
-        <ul class="icons">
+        <ul class="actions wrapped">
             @foreach (IDocument tagDocument in Documents[Blog.Tags]
                 .GroupBy(x => x.String(BlogKeys.Tag)).Select(x => x.Where(p => p.Get<int>(Keys.CurrentPage) == 1).First())
                 .OrderByDescending(x => x.Get<int>(Keys.TotalItems)).Take(10))
