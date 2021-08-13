@@ -96,7 +96,7 @@
 			}
 		}
 
-		@include breakpoint(small) {
+		@include breakpoint('<=small') {
 			.inner {
 				max-height: 100%;
 				overflow-y: auto;

@@ -8,7 +8,7 @@ Title: All Tags
         string tag = Model.String(BlogKeys.Tag).ToLowerInvariant().Replace(' ', '-');
         tag = tag.StartsWith(".") ? tag.Substring(1) : tag;
     }
-    <ul class="actions">              
+    <ul class="pagination">              
             @if(Model.Bool(Keys.HasPreviousPage))
             {
                 <li>
@@ -16,7 +16,7 @@ Title: All Tags
                         string previousPage = Model.Get<int>(Keys.CurrentPage) == 2
                             ? $"/tags/{tag}.html" : $"/tags/{tag}{Model.Get<int>(Keys.CurrentPage) - 1}";
                     }
-                    <a href="@previousPage"><span aria-hidden="true">&larr;</span> Newer</a>
+                    <a class="page" href="@previousPage"><span aria-hidden="true">&larr;</span> Newer</a>
                 </li>
             }              
             @if(Model.Bool(Keys.HasNextPage))
@@ -25,7 +25,7 @@ Title: All Tags
                     @{
                         string nextPage = $"/tags/{tag}{Model.Get<int>(Keys.CurrentPage) + 1}";
                     }
-                    <a href="@nextPage">Older <span aria-hidden="true">&rarr;</span></a>
+                    <a class="page" href="@nextPage">Older <span aria-hidden="true">&rarr;</span></a>
                 </li>
             }
     </ul>
@@ -40,7 +40,7 @@ Title: All Tags
             {
                 string tagName = tagDocument.String(BlogKeys.Tag);
                 string postCount = tagDocument.String(Keys.TotalItems);
-                string buttonStyle = tagName == Model.String(BlogKeys.Tag) ? "special" : "";
+                string buttonStyle = tagName == Model.String(BlogKeys.Tag) ? "primary" : "";
                 <a role="button" href="@Context.GetLink(tagDocument)" class="button small @buttonStyle">@tagName (@postCount)</a>
             }
         </div>

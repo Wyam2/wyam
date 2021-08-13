@@ -48,11 +48,14 @@
 			}
 		}
 
-		@include breakpoint(large) {
+		@include breakpoint('<=large') {
 			> header {
 				@include padding(5em, 0, (4em, 0, _size(wrapper-edges, large) * 0.5, 0));
 
 				background-color:		_palette(bg);
+
+				background-image:		linear-gradient(to top, transparentize(_palette(bg), 0.2), transparentize(_palette(bg), 0.2)),
+										url('../../images/bg.jpg');
 
 				background-size:		auto,
 										cover;
@@ -64,7 +67,7 @@
 			}
 		}
 
-		@include breakpoint(medium) {
+		@include breakpoint('<=medium') {
 			> header {
 				@include padding(7em, 3em, (4em, 0, _size(wrapper-edges, medium) * 0.5, 0));
 
@@ -82,7 +85,7 @@
 			}
 		}
 
-		@include breakpoint(small) {
+		@include breakpoint('<=small') {
 			> header {
 				@include padding(3.75em, 2em, (2.75em, 0, _size(wrapper-edges, small) * 0.5, 0));
 
@@ -205,7 +208,7 @@
 			}
 		}
 
-		@include breakpoint(medium) {
+		@include breakpoint('<=medium') {
 			margin: _size(wrapper-edges, medium) 0;
 
 			&:before, &:after {
@@ -240,7 +243,7 @@
 			}
 		}
 
-		@include breakpoint(small) {
+		@include breakpoint('<=small') {
 			margin: _size(wrapper-edges, small) 0;
 
 			&:before, &:after {
@@ -278,7 +281,7 @@
 			}
 		}
 
-		@include breakpoint(xsmall) {
+		@include breakpoint('<=xsmall') {
 			&.spotlight {
 				.inner {
 					display: block;
@@ -292,7 +295,7 @@
 			}
 		}
 
-		@include breakpoint(xxsmall) {
+		@include breakpoint('<=xxsmall') {
 			.inner {
 				@include padding(2em, 1.5em);
 			}

@@ -14,8 +14,10 @@
 	<head>
 		<title>@PageTitle</title>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="@Context.GetLink("/assets/sass/main.css")" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="@Context.GetLink("/assets/css/main.css")" />
+		<link rel="stylesheet" href="@Context.GetLink("/assets/css/noscript.css")" />
+		<link rel="stylesheet" href="@Context.GetLink("/assets/css/override.css")" />
 		@if(Model.ContainsKey(BlogKeys.Image))
 		{
 			<style>
@@ -31,67 +33,65 @@
 		}
         @Html.Partial("_Head")
 	</head>
-	<body>
+	<body class="is-preload">
 
 		<!-- Page Wrapper -->
-			<div id="page-wrapper">
-				
-				<!-- Header -->
-				<header id="header">
-					<h1><a href="@Context.GetLink("/")">@Context.String(BlogKeys.Title)</a></h1>
-					<nav>
-						<a href="#menu">Menu</a>
-					</nav>
-				</header>
-
-				<!-- Menu -->
-				<nav id="menu">
-					<div class="inner">
-						<h2>Menu</h2>
-						<ul class="links">
-							@Html.Partial("_Navbar")
-						</ul>
-						<a href="#" class="close">Close</a>
-					</div>
+		<div id="page-wrapper">
+			
+			<!-- Header -->
+			<header id="header" class="alt">
+				<h1><a href="@Context.GetLink("/")">@Context.String(BlogKeys.Title)</a></h1>
+				<nav>
+					<a href="#menu">Menu</a>
 				</nav>
+			</header>
 
-				@if(IsSectionDefined("Header"))
-				{
-					@RenderSection("Header")
-				}
-				else
-				{
-					@Html.Partial("_Header")                                           
-				}
+			<!-- Menu -->
+			<nav id="menu">
+				<div class="inner">
+					<h2>Menu</h2>
+					<ul class="links">
+						@Html.Partial("_Navbar")
+					</ul>
+					<a href="#" class="close">Close</a>
+				</div>
+			</nav>
 
-				<!-- Main -->
-				<section id="wrapper">
-					<section class="wrapper style2">
-						<div class="inner">
-							@RenderBody()
-						</div>
-					</section>
-				
-					@if(IsSectionDefined("Sections"))
-					{
-						@RenderSection("Sections")
-					}
+			@if(IsSectionDefined("Header"))
+			{
+				@RenderSection("Header")
+			}
+			else
+			{
+				@Html.Partial("_Header")                                           
+			}
+
+			<!-- Main -->
+			<section id="wrapper">
+				<section class="wrapper style2">
+					<div class="inner">
+						@RenderBody()
+					</div>
 				</section>
-				
-				<!-- Footer -->
-                <footer id="footer">
-                    @Html.Partial("_Footer")
-                </footer>
-			</div>
+			
+				@if(IsSectionDefined("Sections"))
+				{
+					@RenderSection("Sections")
+				}
+			</section>
+			
+			<!-- Footer -->
+			<section id="footer">
+				@Html.Partial("_Footer")
+			</footer>
+		</div>
 
 		<!-- Scripts -->
-			<script src="@Context.GetLink("assets/js/skel.min.js")"></script>
-			<script src="@Context.GetLink("assets/js/jquery.min.js")"></script>
-			<script src="@Context.GetLink("assets/js/jquery.scrollex.min.js")"></script>
-			<script src="@Context.GetLink("assets/js/util.js")"></script>
-            <!--[if lte IE 8]><script src="@Context.GetLink("/assets/js/ie/respond.min.js")"></script><![endif]-->
-            <script src="@Context.GetLink("/assets/js/main.js")"></script>
-
+		<script src="@Context.GetLink("/assets/js/jquery.min.js")"></script>
+		<script src="@Context.GetLink("/assets/js/jquery.scrollex.min.js")"></script>
+		<script src="@Context.GetLink("/assets/js/browser.min.js")"></script>
+		<script src="@Context.GetLink("/assets/js/breakpoints.min.js")"></script>
+		<script src="@Context.GetLink("/assets/js/util.js")"></script>
+		<script src="@Context.GetLink("/assets/js/main.js")"></script>
 	</body>
-
 </html>

@@ -38,14 +38,14 @@
 			}
 		}
 
-		@include breakpoint(medium) {
+		@include breakpoint('<=medium') {
 			article {
 				margin: (_size(section-spacing, medium) * 0.5) _size(section-spacing, medium) (_size(section-spacing, medium) * 0.5) 0;
 				width: calc(50% - #{_size(section-spacing, medium) * 0.5});
 			}
 		}
 
-		@include breakpoint(small) {
+		@include breakpoint('<=small') {
 			article {
 				@include padding(1.5em, 1.5em);
 				margin: (_size(section-spacing, small) * 0.5) _size(section-spacing, small) (_size(section-spacing, small) * 0.5) 0;
@@ -60,7 +60,7 @@
 			}
 		}
 
-		@include breakpoint(xsmall) {
+		@include breakpoint('<=xsmall') {
 			display: block;
 
 			article {
