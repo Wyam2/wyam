@@ -1,0 +1,30 @@
+/* pagination */
+.pager {
+	margin: 20px 0 0;
+	padding-left: 0;
+	text-align: center;
+	list-style: none;
+}
+
+.pager li {
+	display: inline;
+}
+
+.pager .previous > a, .pager .previous > span {
+	float: left;
+}
+
+.pager .next > a, .pager .next > span {
+	float: right;
+}
+
+/* required for proper display of tags */
+ul.actions.wrapped{
+	flex-wrap: wrap;
+}
+
+/* required for proper display of follow icons in footer */
+ul.actions > li > .icon > .label
+{
+	display: inherit;
+}
