@@ -1,0 +1,5 @@
+/* required for proper display of follow icons in footer */
+ul.actions > li > .icon > .label
+{
+	display: inherit;
+}
