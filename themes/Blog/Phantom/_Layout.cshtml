@@ -10,13 +10,13 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html lang="en">
-
 	<head>
 		<title>@PageTitle</title>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />		
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />		
         <link href="@Context.GetLink("/assets/css/highlight.css")" rel="stylesheet">
 		<link rel="stylesheet" href="@Context.GetLink("/assets/css/main.css")" />
+		<noscript><link rel="stylesheet" href="@Context.GetLink("/assets/css/noscript.css")" /></noscript>
         <link href="@Context.GetLink("/assets/css/override.css")" rel="stylesheet" />
 
 		<meta name="description" content="@Context.String(BlogKeys.Description)" />
@@ -37,15 +37,12 @@
 		<meta property="og:image" content="@Blog.Image" /> *@
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="@Context.GetLink(Model, true)" />
-		<!-- TODO: More social graph meta tags -->
-
-        <script src="@Context.GetLink("/assets/js/highlight.pack.js")"></script>   
+		<!-- TODO: More social graph meta tags -->  
 		
         @Html.Partial("_Head")
-		
 	</head>
 
-	<body>
+	<body class="is-preload">
 		<!-- Wrapper -->
 		<div id="wrapper">
 
@@ -55,6 +52,7 @@
 
 					<!-- Logo -->
 					<a href="/" class="logo">
+						<span class="symbol"></span>
 						<span class="title">@Context.String(BlogKeys.Title)</span>
 					</a>
 
@@ -105,17 +103,16 @@
 			</footer>
 
 		</div>
-		
-		@Html.Partial("_Scripts")
 
 		<!-- Scripts -->
-		<script>hljs.initHighlightingOnLoad();</script>
 		<script src="@Context.GetLink("/assets/js/jquery.min.js")"></script>
-		<script src="@Context.GetLink("/assets/js/skel.min.js")"></script>
+		<script src="@Context.GetLink("/assets/js/browser.min.js")"></script>
+		<script src="@Context.GetLink("/assets/js/breakpoints.min.js")"></script>
 		<script src="@Context.GetLink("/assets/js/util.js")"></script>
-		<!--[if lte IE 8]><script src="@Context.GetLink("/assets/js/ie/respond.min.js")"></script><![endif]-->
 		<script src="@Context.GetLink("/assets/js/main.js")"></script>
+		<script src="@Context.GetLink("/assets/js/highlight.min.js")"></script>
 
+		@Html.Partial("_Scripts")
+        <script>hljs.highlightAll();</script>
 	</body>
-
 </html>
