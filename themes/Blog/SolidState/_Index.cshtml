@@ -37,17 +37,17 @@ else
         }
     </section>
 }
-<ul class="actions">           
+<ul class="pagination">           
     @if(Model.Bool(Keys.HasPreviousPage))
     {
         <li>
-            <a href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))" class="button"><span aria-hidden="true">&larr;</span> Newer</a>
+            <a class="page" href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))"><span aria-hidden="true">&larr;</span> Newer</a>
         </li>
     }    
     @if(Model.Bool(Keys.HasNextPage))
     {
         <li>
-            <a href="@(Context.GetLink(Model.Document(Keys.NextPage)))" class="button">Older <span aria-hidden="true">&rarr;</span></a>
+            <a class="page" href="@(Context.GetLink(Model.Document(Keys.NextPage)))" class="button">Older <span aria-hidden="true">&rarr;</span></a>
         </li>
     }
 </ul>
@@ -71,7 +71,7 @@ else
                 <br />
                 <ul class="actions">
                     <li>
-                        <a href="@Context.GetLink("tags/index.html")" class="button">View All Tags &rarr;</a>
+                        <a class="button" href="@Context.GetLink("tags/index.html")">View All Tags &rarr;</a>
                     </li>
                 </ul>
             </div>
