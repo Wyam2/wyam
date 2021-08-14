@@ -31,19 +31,6 @@ namespace Wyam.Core.JavaScript
         /// </summary>
         internal Action ReturnEngineToPool { private get; set; }
 
-        /// <summary>
-        /// Increase engine usage count by one.
-        /// </summary>
-        internal void IncreaseUsageCount()
-        {
-            UsageCount++;
-        }
-
-        /// <summary>
-        /// Gets the number of times this engine has been used.
-        /// </summary>
-        public int UsageCount { get; private set; } = 0;
-
         /// <inheritdoc />
         public string Name
         {
