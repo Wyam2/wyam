@@ -23,11 +23,82 @@ namespace Wyam.Common.JavaScript
         string Version { get; }
 
         /// <summary>
+        /// Gets a value that indicates if the JavaScript engine supports script pre-compilation.
+        /// </summary>
+        bool SupportsScriptPrecompilation
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a value that indicates if the JavaScript engine supports script interruption.
+        /// </summary>
+        bool SupportsScriptInterruption
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a value that indicates if the JavaScript engine supports garbage collection.
+        /// </summary>
+        bool SupportsGarbageCollection
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Creates a pre-compiled script from JavaScript code.
+        /// </summary>
+        /// <param name="code">JavaScript code</param>
+        /// <returns>A pre-compiled script that can be executed by different instances of JavaScript engine</returns>
+        IPrecompiledJavaScript Precompile(string code);
+
+        /// <summary>
+        /// Creates a pre-compiled script from JavaScript code.
+        /// </summary>
+        /// <param name="code">JavaScript code</param>
+        /// <param name="documentName">Document name</param>
+        /// <returns>A pre-compiled script that can be executed by different instances of JavaScript engine</returns>
+        IPrecompiledJavaScript Precompile(string code, string documentName);
+
+        /// <summary>
+        /// Creates a pre-compiled script from JavaScript file.
+        /// </summary>
+        /// <param name="path">Path to the JavaScript file</param>
+        /// <param name="encoding">Text encoding</param>
+        /// <returns>A pre-compiled script that can be executed by different instances of JavaScript engine</returns>
+        IPrecompiledJavaScript PrecompileFile(string path, Encoding encoding = null);
+
+        /// <summary>
+        /// Creates a pre-compiled script from embedded JavaScript resource
+        /// </summary>
+        /// <param name="resourceName">The case-sensitive resource name without the namespace of the specified type</param>
+        /// <param name="type">The type, that determines the assembly and whose namespace is used to scope the resource name</param>
+        /// <returns>A pre-compiled script that can be executed by different instances of JavaScript engine</returns>
+        IPrecompiledJavaScript PrecompileResource(string resourceName, Type type);
+
+        /// <summary>
+        /// Creates a pre-compiled script from embedded JavaScript resource.
+        /// </summary>
+        /// <param name="resourceName">The case-sensitive resource name</param>
+        /// <param name="assembly">The assembly, which contains the embedded resource</param>
+        /// <returns>A pre-compiled script that can be executed by different instances of JavaScript engine</returns>
+        IPrecompiledJavaScript PrecompileResource(string resourceName, Assembly assembly);
+
+        /// <summary>
         /// Evaluates an expression.
         /// </summary>
         /// <param name="expression">JavaScript expression.</param>
         /// <returns>Result of the expression.</returns>
         object Evaluate(string expression);
+
+        /// <summary>
+        /// Evaluates an expression.
+        /// </summary>
+        /// <param name="expression">JavaScript expression</param>
+        /// <param name="documentName">Document name</param>
+        /// <returns>Result of the expression</returns>
+        object Evaluate(string expression, string documentName);
 
         /// <summary>
         /// Evaluates an expression.
@@ -38,10 +109,32 @@ namespace Wyam.Common.JavaScript
         T Evaluate<T>(string expression);
 
         /// <summary>
+        /// Evaluates an expression.
+        /// </summary>
+        /// <typeparam name="T">Type of result</typeparam>
+        /// <param name="expression">JavaScript expression</param>
+        /// <param name="documentName">Document name</param>
+        /// <returns>Result of the expression</returns>
+        T Evaluate<T>(string expression, string documentName);
+
+        /// <summary>
         /// Executes JavaScript code.
         /// </summary>
         /// <param name="code">The JavaScript code to execute.</param>
         void Execute(string code);
+
+        /// <summary>
+        /// Executes a JavaScript code.
+        /// </summary>
+        /// <param name="code">JavaScript code</param>
+        /// <param name="documentName">Document name</param>
+        void Execute(string code, string documentName);
+
+        /// <summary>
+        /// Executes a pre-compiled script.
+        /// </summary>
+        /// <param name="precompiledScript">A pre-compiled script that can be executed by different instances of JavaScript engine</param>
+        void Execute(IPrecompiledJavaScript precompiledScript);
 
         /// <summary>
         /// Executes code from JavaScript file.
@@ -83,7 +176,7 @@ namespace Wyam.Common.JavaScript
         T CallFunction<T>(string functionName, params object[] args);
 
         /// <summary>
-        /// Сhecks for the existence of a variable.
+        /// Checks for the existence of a variable.
         /// </summary>
         /// <param name="variableName">Variable name.</param>
         /// <returns><c>true</c> if the variable exists, otherwise <c>false</c>.</returns>
@@ -135,5 +228,15 @@ namespace Wyam.Common.JavaScript
         /// methods are bound to the type's static members.
         /// </remarks>
         void EmbedHostType(string itemName, Type type);
+
+        /// <summary>
+        /// Interrupts script execution and causes the JavaScript engine to throw an exception.
+        /// </summary>
+        void Interrupt();
+
+        /// <summary>
+        /// Performs a full garbage collection.
+        /// </summary>
+        void CollectGarbage();
     }
 }

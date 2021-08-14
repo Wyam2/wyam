@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wyam.Common.JavaScript
 {
@@ -27,14 +23,27 @@ namespace Wyam.Common.JavaScript
         IJavaScriptEngine GetEngine(TimeSpan? timeout = null);
 
         /// <summary>
-        /// Disposes the specified engine and removes it from the pool. A new engine will be created in it's place.
+        /// Gets the total number of engines in this engine pool, including engines that are currently busy.
         /// </summary>
-        /// <param name="engine">The JavaScript engine.</param>
-        void RecycleEngine(IJavaScriptEngine engine);
+        int EngineCount { get; }
+
+        /// <summary>
+        /// Gets the number of currently available engines in this engine pool.
+        /// </summary>
+        int AvailableEngineCount { get; }
+
+        /// <summary>
+        /// Disposes the specified engine.
+        /// </summary>
+        /// <param name="engine">Engine to dispose</param>
+        /// <param name="repopulateEngines">
+        /// If <c>true</c>, a new engine will be created to replace the disposed engine
+        /// </param>
+        void DisposeEngine(IJavaScriptEngine engine, bool repopulateEngines = true);
 
         /// <summary>
         /// Disposes all engines in this pool, and creates new engines in their place.
         /// </summary>
-        void RecycleAllEngines();
+        void Recycle();
     }
 }

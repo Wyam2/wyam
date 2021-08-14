@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.Jint;
+using Wyam.Common.JavaScript;
 using IJavaScriptEngine = Wyam.Common.JavaScript.IJavaScriptEngine;
 
 namespace Wyam.Testing.JavaScript
@@ -37,11 +38,35 @@ namespace Wyam.Testing.JavaScript
 
         public string Version => _engine.Version;
 
+        public bool SupportsScriptPrecompilation => _engine.SupportsScriptPrecompilation;
+
+        public bool SupportsScriptInterruption => _engine.SupportsScriptInterruption;
+
+        public bool SupportsGarbageCollection => _engine.SupportsGarbageCollection;
+
+        public IPrecompiledJavaScript Precompile(string code) => throw new NotImplementedException("Not used by Wyam2");
+
+        public IPrecompiledJavaScript Precompile(string code, string documentName) => throw new NotImplementedException("Not used by Wyam2");
+
+        public IPrecompiledJavaScript PrecompileFile(string path, Encoding encoding = null) => throw new NotImplementedException("Not used by Wyam2");
+
+        public IPrecompiledJavaScript PrecompileResource(string resourceName, Type type) => throw new NotImplementedException("Not used by Wyam2");
+
+        public IPrecompiledJavaScript PrecompileResource(string resourceName, Assembly assembly) => throw new NotImplementedException("Not used by Wyam2");
+
         public object Evaluate(string expression) => _engine.Evaluate(expression);
+
+        public object Evaluate(string expression, string documentName) => _engine.Evaluate(expression, documentName);
 
         public T Evaluate<T>(string expression) => _engine.Evaluate<T>(expression);
 
+        public T Evaluate<T>(string expression, string documentName) => _engine.Evaluate<T>(expression, documentName);
+
         public void Execute(string code) => _engine.Execute(code);
+
+        public void Execute(string code, string documentName) => _engine.Execute(code, documentName);
+
+        public void Execute(IPrecompiledJavaScript precompiledScript) => throw new NotImplementedException("Not used by Wyam2");
 
         public void ExecuteFile(string path, Encoding encoding = null) => _engine.ExecuteFile(path, encoding);
 
@@ -66,5 +91,9 @@ namespace Wyam.Testing.JavaScript
         public void EmbedHostObject(string itemName, object value) => _engine.EmbedHostObject(itemName, value);
 
         public void EmbedHostType(string itemName, Type type) => _engine.EmbedHostType(itemName, type);
+
+        public void Interrupt() => _engine.Interrupt();
+
+        public void CollectGarbage() => _engine.CollectGarbage();
     }
 }

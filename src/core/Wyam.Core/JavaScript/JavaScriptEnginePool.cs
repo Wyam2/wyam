@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.Jint;
 using JSPool;
@@ -13,15 +9,15 @@ namespace Wyam.Core.JavaScript
 {
     internal class JavaScriptEnginePool : IJavaScriptEnginePool
     {
-        private readonly JsPool<JavaScriptEngine> _pool;
+        private readonly JsPool<PooledJavaScriptEngine, IJavaScriptEngine> _pool;
         private bool _disposed = false;
 
         public JavaScriptEnginePool(
-            Action<IJavaScriptEngine> initializer,
-            int startEngines,
-            int maxEngines,
-            int maxUsagesPerEngine,
-            TimeSpan engineTimeout)
+                Action<IJavaScriptEngine> initializer,
+                int startEngines,
+                int maxEngines,
+                int maxUsagesPerEngine,
+                TimeSpan engineTimeout)
         {
             // First we need to check if the JsEngineSwitcher has been configured. We'll do this
             // by checking the DefaultEngineName being set. If that's there we can safely assume
@@ -33,7 +29,7 @@ namespace Wyam.Core.JavaScript
                 JsEngineSwitcher.Current.DefaultEngineName = JintJsEngine.EngineName;
             }
 
-            _pool = new JsPool<JavaScriptEngine>(new JsPoolConfig<JavaScriptEngine>
+            _pool = new JsPool<PooledJavaScriptEngine, IJavaScriptEngine>(new JsPoolConfig<IJavaScriptEngine>
             {
                 EngineFactory = () => new JavaScriptEngine(JsEngineSwitcher.Current.CreateDefaultEngine()),
                 Initializer = x => initializer?.Invoke(x),
@@ -44,34 +40,32 @@ namespace Wyam.Core.JavaScript
             });
         }
 
-        public void Dispose()
-        {
-            CheckDisposed();
-            _pool.Dispose();
-            _disposed = true;
-        }
+        /// <inheritdoc />
+        public IJavaScriptEngine GetEngine(TimeSpan? timeout = null) => new PooledJavaScriptEngine(_pool.GetEngine(timeout));
 
-        public IJavaScriptEngine GetEngine(TimeSpan? timeout = null) => new PooledJavaScriptEngine(_pool.GetEngine(timeout), _pool);
+        /// <inheritdoc />
+        public int EngineCount => _pool.EngineCount;
 
-        public void RecycleEngine(IJavaScriptEngine engine)
+        /// <inheritdoc />
+        public int AvailableEngineCount => _pool.AvailableEngineCount;
+
+        /// <inheritdoc />
+        public void DisposeEngine(IJavaScriptEngine engine, bool repopulateEngines = true)
         {
             if (engine == null)
             {
                 throw new ArgumentNullException(nameof(engine));
             }
-            PooledJavaScriptEngine pooledEngine = engine as PooledJavaScriptEngine;
-            if (pooledEngine == null)
+
+            if (!(engine is PooledJavaScriptEngine pooledEngine))
             {
                 throw new ArgumentException("The specified engine was not from a pool");
             }
-            if (pooledEngine.Pool != _pool)
-            {
-                throw new ArgumentException("The specified engine is from a different pool");
-            }
-            _pool.DisposeEngine(pooledEngine.Engine);
+
+            _pool.DisposeEngine(pooledEngine);
         }
 
-        public void RecycleAllEngines() => _pool.Recycle();
+        public void Recycle() => _pool.Recycle();
 
         private void CheckDisposed()
         {
@@ -79,6 +73,13 @@ namespace Wyam.Core.JavaScript
             {
                 throw new ObjectDisposedException(nameof(JsPool));
             }
+        }
+
+        public void Dispose()
+        {
+            CheckDisposed();
+            _pool.Dispose();
+            _disposed = true;
         }
     }
 }

@@ -308,18 +308,24 @@ namespace Wyam.Testing.Execution
                 return engine;
             }
 
+            /// <inheritdoc />
+            public int EngineCount => throw new NotImplementedException();
+
+            /// <inheritdoc />
+            public int AvailableEngineCount => throw new NotImplementedException();
+
+            public void DisposeEngine(IJavaScriptEngine engine, bool repopulateEngines = true)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Recycle()
+            {
+                throw new NotImplementedException();
+            }
+
             public void Dispose()
             {
-            }
-
-            public void RecycleEngine(IJavaScriptEngine engine)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void RecycleAllEngines()
-            {
-                throw new NotImplementedException();
             }
         }
 
