@@ -19,7 +19,7 @@
     <PackageReference Include="NuGet.Common" Version="5.10.0" />
     <PackageReference Include="NuGet.Configuration" Version="5.10.0" />
     <PackageReference Include="NuGet.ContentModel" Version="4.2.0" />
-    <PackageReference Include="NuGet.DependencyResolver.Core" Version="5.10.0" />
+    <PackageReference Include="NuGet.DependencyResolver.Core" Version="5.11.0" />
     <PackageReference Include="NuGet.Frameworks" Version="5.10.0" />
     <PackageReference Include="NuGet.LibraryModel" Version="5.10.0" />
     <PackageReference Include="NuGet.PackageManagement.NetStandard" Version="4.9.2" />
