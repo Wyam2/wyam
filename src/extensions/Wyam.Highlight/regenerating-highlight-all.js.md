@@ -7,12 +7,18 @@ when running.
 
 This gives us one big file with all the languages that doesn't need npm or a browser.
 
-To rebuild
+## To rebuild
 
+This works best from WSL or from any linux distro. Make sure `nodejs` and `npm` are installed.  
+Create a folder somewhere and install locally the required node modules:
 ```
 npm install browserify
 npm install highlight.js
-browserify index.js --standalone hljs -o highlight-all.js
+```
+In the same folder create an `index.js` file containing just one line: `hljs = require('highlight.js');`  
+Now we can generate the updated highlight-all.js with the following command:
+```
+$(npm bin)/browserify index.js --standalone hljs -o highlight-all.js
 ```
 
 It then needs a few tweaks to be compliant with the .net regex engine. 
@@ -32,4 +38,10 @@ It then needs a few tweaks to be compliant with the .net regex engine.
   with
   ```
   var MEC_RE = '\\|[\S\s]*?\\|';
+  ```
+
+  It can be further minimized using the `uglify.js` library:
+  ```
+  npm install uglify-js
+  $(npm bin)/uglifyjs highlight-all.js --compress -o highlight-all.min.js
   ```

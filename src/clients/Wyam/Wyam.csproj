@@ -20,9 +20,6 @@
       <HintPath>..\..\..\lib\System.CommandLine\System.CommandLine.dll</HintPath>
     </Reference>
   </ItemGroup>
-<!--   <ItemGroup>
-    <None Include="..\..\..\assets\wyam-square-128.png" Pack="true" PackagePath=""/>
-  </ItemGroup> -->
   <Target Name="SignBuild" Condition="'$(OS)' == 'Windows_NT' AND '$(SIGNTOOL)' != '' AND $(WYAM_CERTPASS) != '' AND !($(DesignTimeBuild) == true OR $(BuildingProject) != true)" AfterTargets="AfterBuild">
     <!-- https://www.digicert.com/code-signing/signcode-signtool-command-line.htm -->
     <PropertyGroup>

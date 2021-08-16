@@ -1,4 +1,6 @@
-[![Wyam2 build](https://github.com/Wyam2/wyam/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/build.yml)  [![Wyam2 nightly build](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml) [![Join the chat at https://gitter.im/Wyam2/Wyam2](https://badges.gitter.im/Wyam2/Wyam2.svg)](https://gitter.im/Wyam2/Wyam2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Wyam2 build](https://github.com/Wyam2/wyam/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/build.yml)  [![Wyam2 nightly build](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml)  
+
+[![Join the chat at https://gitter.im/Wyam2/Wyam2](https://badges.gitter.im/Wyam2/Wyam2.svg)](https://gitter.im/Wyam2/Wyam2)
 
 A continuation of the awesome project [Wyam](https://github.com/Wyamio/Wyam) created by [Dave Glick](https://github.com/daveaglick) since it's the only open-source, cross-platform .NET documentation project that I know of, except [docFX](https://github.com/dotnet/docfx). 
 For Windows-only there is also [Sandcastle](https://github.com/EWSoftware/SHFB).
@@ -27,7 +29,11 @@ The easiest way to get started is to install as a .NET Core global tool and use 
 
 To go deeper, read more about the [underlying concepts](https://wyam2.github.io/docs/concepts) and then read about [configuration files](https://wyam2.github.io/docs/usage/configuration) and the [available command line arguments](https://wyam2.github.io/docs/usage/command-line). Then check out the full list of [modules](https://wyam2.github.io/modules).
 
-For more information see [Wyam2](https://wyam2.github.io).
+For more information see [Wyam2](https://wyam2.github.io).  
+For questions and everything else
+- please open a [new discussion on GitHub](https://github.com/Wyam2/wyam/discussions) 
+- or [chat on Gitter](https://gitter.im/Wyam2/community)
+- or [on Matrix](https://matrix.to/#/#Wyam2_community:gitter.im)
 
 
 ## Contributing
@@ -48,6 +54,13 @@ For details on building this project, see [this](BUILDING.md).
 ## Acknowledgements
 
 * Original project [Wyam](https://github.com/Wyamio/Wyam) under MIT license.
-* Portions of the IO support were originally inspired from [Cake](http://cakebuild.net) under an MIT license.
-* The RSS/Atom support was originally ported from [WebFeeds](https://github.com/mckamey/web-feeds.net) under an MIT license.
+* Portions of the IO support were originally inspired from [Cake](http://cakebuild.net) under MIT license.
+* The RSS/Atom support was originally ported from [WebFeeds](https://github.com/mckamey/web-feeds.net) under MIT license.
+* Themes:
+    - [Phantom](https://html5up.net/phantom) under CreativeCommons license.
+    - [SolidState](https://html5up.net/solid-state) under CreativeCommons license.
+    - [Stellar](https://html5up.net/stellar) under CreativeCommons license.
+    - [Trophy](https://github.com/thomasvaeth/trophy-jekyll) under MIT license.
+    - [Boostrap](https://getbootstrap.com/) under MIT license.
+    - [AdminLTE](https://adminlte.io/) under MIT license.
 * Many other fantastic OSS libraries are used directly as NuGet packages, thanks to all the OSS authors out there!

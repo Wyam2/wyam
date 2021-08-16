@@ -8,8 +8,8 @@
     <projectUrl>https://wyam2.github.io</projectUrl>
     <projectSourceUrl>https://github.com/Wyam2/Wyam</projectSourceUrl>
     <packageSourceUrl>https://github.com/Wyam2/Wyam</packageSourceUrl>
-    <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-square-64.png</iconUrl>
-    <docsUrl>https://wyam.github.io/docs/</docsUrl>
+    <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-drop-64.png</iconUrl>
+    <docsUrl>https://wyam2.github.io/docs/</docsUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This is a tools package that contains the Wyam2 CLI.</description>
     <summary>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This is a tools package that contains the Wyam2 CLI.</summary>
@@ -19,7 +19,7 @@ All release notes for Wyam2 can be found on the GitHub site - https://github.com
     <tags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</tags>
   </metadata>
   <files>
-    <file src="..\..\..\build\bin\**\*" target="/"/>
-    <file src="VERIFICATION.txt" target="VERIFICATION.txt"/>
+    <file src="..\..\..\build\bin\**\*" target="/" />
+    <file src="VERIFICATION.txt" target="VERIFICATION.txt" />
   </files>
 </package>

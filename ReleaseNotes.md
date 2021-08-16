@@ -1,7 +1,14 @@
 # 3.0.0 (:unlock: Unreleased)
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
-    - wyam was renamed to wyam2 `wyam2 new --recipe Blog
+    - wyam was renamed to wyam2 `wyam2 new --recipe Blog`
+- [Refactoring] Update JSPool to v4.0.0
+- [Refactoring] Update JavaScriptEngineSwitcher.Core to v3.3.0 and JavaScriptEngineSwitcher.Jint to v3.1.0
+- [Refactoring] Update Microsoft.NET.Test.Sdk to v16.11.0
+- [Refactoring] Update NuGet to 5.11.0
+- [Refactoring] Update MetadataExtractor to v2.7.0 
+- [Refactoring] Update Google.Apis.* to v1.54.0 and Google.Apis.YouTube to 1.54.0.2378
+- [Fix] Update blog themes: CleanBlog to v6.0.4, Phantom, SolidState, Stellar
 - [Feature] Render all XML comment tags (#24)
     - added support for: revisionHistory, note, definition list, cref langword
 - [Refactoring] Update System.Data.SqlClient to v4.8.2

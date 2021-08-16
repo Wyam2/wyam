@@ -6,8 +6,8 @@
     <title>Wyam2.All</title>
     <authors>Simona Avornicesei, Wyam2, and contributors</authors>
     <license type="expression">MIT</license>
-    <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-square-128.png</iconUrl>
-    <icon>wyam-square-128.png</icon>
+    <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-drop-64.png</iconUrl>
+    <icon>logo-drop.png</icon>
     <projectUrl>https://wyam2.github.io</projectUrl>
     <repository type="git" url="https://github.com/Wyam2/Wyam.git" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -16,6 +16,6 @@
     <tags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</tags>
   </metadata>
   <files>
-    <file src="..\..\..\assets\wyam-square-128.png" target="" />
+    <file src="..\..\..\assets\logo-drop-128.png" target="logo-drop.png" />
   </files>
 </package>

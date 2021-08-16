@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>Wyam2</id>
     <version>$version$</version>
     <title>Wyam2</title>
     <authors>Simona Avornicesei, Wyam2, and contributors</authors>
     <license type="expression">MIT</license>
-    <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-square-128.png</iconUrl>
-    <icon>wyam-square-128.png</icon>
+    <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-square-64.png</iconUrl>
+    <icon>logo-drop.png</icon>
     <projectUrl>https://wyam2.github.io</projectUrl>
     <repository type="git" url="https://github.com/Wyam2/Wyam.git" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -17,6 +17,6 @@
   </metadata>
   <files>
     <file src="bin\$configuration$\netcoreapp2.1\publish\*" target="tools\netcoreapp2.1" />
-    <file src="..\..\..\assets\wyam-square-128.png" target="" />
+    <file src="../../../assets/logo-drop-128.png" target="logo-drop.png" />
   </files>
 </package>

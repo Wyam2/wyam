@@ -10,7 +10,7 @@ Here are a few ways you could get involved:
 - Write a new module and open a pull request for it.
 - Write a blog post about your experiences and let us know about it.
 
-If you need help with any of these things, **please don't hesitate to ask**. Wyam is a beginner-friendly project and we want to help anyone contribute who would like to.
+If you need help with any of these things, **please don't hesitate to ask**. Wyam2 is a beginner-friendly project and we want to help anyone contribute who would like to.
 
 Build instructions are in the `BUILDING.md` file at the root of the repository.
 
@@ -57,7 +57,6 @@ If you need to make a new project, there are a number of things that need to be 
 
 - Create the project in the appropriate location
 - Edit the AssemblyInfo.cs file to remove everything but `AssemblyTitle`, `AssemblyDescription`, `ComVisible`, and `Guid`
-- Add *a link* to the SolutionInfo.cs file inside the project Properties folder (the link won't actually be added to the file system)
 - Add a .nuspec file if appropriate
 - Apply the "Wyam Rules" code analysis ruleset by opening Analyze, Configure Code Analysis (apply the "Wyam Test Rules" ruleset to test projects)
 - Install the StyleCop.Analyzers NuGet package into the project

@@ -27,14 +27,18 @@ jobs:
       CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
     steps:
       - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        run: echo "GITHUB_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
         shell: bash
-      - name: Publish app
-        run: ./build.ps1 -Target Publish-Release -gittag={{env.TAG}}
+      - name: Create packages
+        run: ./build.ps1 -Target Package -ScriptArgs ('--tag=${{env.GITHUB_TAG}}')
+        shell: pwsh
+      - name: Publish packages
+        run: ./build.ps1 -Target Publish -ScriptArgs ('--tag=${{env.GITHUB_TAG}}')
         shell: pwsh
       - name: Trigger documentation build
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
+          repository: Wyam2/docs
           event-type: release
-          client-payload: '{"tag": "${{ env.TAG }}"}'
+          client-payload: '{"tag": "${{ env.GITHUB_TAG }}"}'

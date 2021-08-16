@@ -48,13 +48,13 @@ using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-string gitTag = Argument<string>("git-tag", string.Empty);
+string gitTag = EnvironmentVariable("GITHUB_TAG") ?? Argument<string>("tag", string.Empty);
 
 var sonarUrl   = Argument<string>("sonar-url", "https://sonarcloud.io");
 var sonarProjectKey = Argument<string>("sonar-key", "Wyam2_wyam");
 var sonarProjectName = Argument<string>("sonar-name", "wyam");
 var sonarOrganization = Argument<string>("sonar-org", "wyam2");
-var sonarToken = EnvironmentVariable("SONAR_TOKEN") ?? Argument<string>("sonar-token", "");
+var sonarToken = EnvironmentVariable("SONAR_TOKEN") ?? Argument<string>("sonar-token", string.Empty);
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -70,6 +70,10 @@ var isGitHubAction = BuildSystem.GitHubActions.IsRunningOnGitHubActions;
 var isRunningOnBuildServer = isAzurePipelines || isGitHubAction;
 var isNightlyBuild = target == "Nightly";
 var isCodeQualityBuild = (target == "CodeQuality" || target == "SonarQube");
+
+//embed pdb when running locally and when running the nightly build from GHA
+bool embedSymbols = (isLocal && string.IsNullOrEmpty(gitTag)) || (isGitHubAction && isNightlyBuild);
+
 var isPullRequest = false;
 var pullRequestId = 0;
 var pullRequestNumber = 0;
@@ -216,12 +220,17 @@ if (FileExists(".local.Build.props"))
 var msBuildSettings = new DotNetCoreMSBuildSettings()
     .WithProperty("ContinuousIntegrationBuild", "true")//cake build should always be deterministic
     .WithProperty("SourceRevisionId", sha)
+    .WithProperty("RepositoryBranch", branch)
     .SetVersionPrefix(versionPrefix)
     .SetConfiguration(configuration);
 
-if(isLocal || (isGitHubAction && isNightlyBuild)) //embed pdb when running locally and when running the nightly build from GHA
+if(embedSymbols)
 {
     msBuildSettings.WithProperty("DebugType", "embedded");
+}
+else
+{
+    msBuildSettings.WithProperty("DebugType", "portable");
 }
 if(string.IsNullOrEmpty(versionPrefix))
 {
@@ -370,7 +379,7 @@ Task("Run-Tests-With-Coverage")
                 }
                 else
                 {
-                    Error($"dotnet test failed with code {exitCode}");
+                    Verbose($"dotnet test returned code {exitCode}");
                     return true;
                 }
             }
@@ -387,7 +396,7 @@ Task("Run-Tests-With-Coverage")
 
                 Information($"Running tests and calculating coverage in {project}");
                 OpenCover(context => context.DotNetCoreTest(MakeAbsolute(project).ToString(), testSettings),
-                          reportsDir + File($"{projectName}.opencover.xml"), 
+                           $@"{reportsDir}/{projectName}.opencover.xml", 
                           openCoverSettings);
             }
             catch (Exception ex)
@@ -406,13 +415,13 @@ Task("Run-Tests-With-Coverage")
 Task("Coverage-Report")
     .Does(() => 
     {
-        if(DirectoryExists($"{reportsDir}/coverage_html"))
+        if(DirectoryExists($@"{reportsDir}/coverage_html"))
         {
-            CleanDirectory($"{reportsDir}/coverage_html");
+            CleanDirectory($@"{reportsDir}/coverage_html");
         }
         else
         {
-            CreateDirectory($"{reportsDir}/coverage_html");
+            CreateDirectory($@"{reportsDir}/coverage_html");
         }
 
         var coverageFiles = GetFileSet(
@@ -426,10 +435,10 @@ Task("Coverage-Report")
             return;
         }
 
-        ReportGenerator(GlobPattern.FromString(reportsDir.ToString() + "/*.opencover.xml"), 
-                        reportsDir + Directory("coverage_html"),
+        ReportGenerator(GlobPattern.FromString($@"{reportsDir}/*.opencover.xml"), 
+                        $@"{reportsDir}/coverage_html",
                         new ReportGeneratorSettings(){
-                            HistoryDirectory = reportsDir + Directory("coverage_history"),
+                            HistoryDirectory = $@"{reportsDir}/coverage_history",
                             ReportTypes = {ReportGeneratorReportType.Html, ReportGeneratorReportType.HtmlSummary},
                             SourceDirectories = { Directory("./src")},
                             AssemblyFilters = {"+Wyam.*", "+Cake.Wyam", "+Wyam", "-*.Tests"},
@@ -519,7 +528,8 @@ Task("Create-Theme-Packages")
                 Authors = new [] { "Simona Avornicesei", "Wyam2", "and contributors" },
                 Description = "A theme for the Wyam2 " + segments[segments.Length - 2] + " recipe.",
                 ProjectUrl = new Uri("https://wyam2.github.io"),
-                IconUrl = new Uri("https://github.com/Wyam2/assets/raw/master/logo-square-64.png"),
+                IconUrl = new Uri("https://github.com/Wyam2/assets/raw/master/logo-square-invert-64.png"),
+                Icon = "logo-square-invert.png",
                 LicenseUrl = new Uri("https://github.com/Wyam2/assets/raw/master/LICENSE"),
                 Copyright = $"Copyright {DateTime.Now.Year} © Wyam2 Contributors",
                 Tags = new [] { "Wyam", "Wyam2", "Theme", "Static", "StaticContent", "StaticSite", "Blog", "BlogEngine", "Documentation" },
@@ -527,7 +537,10 @@ Task("Create-Theme-Packages")
                 Symbols = false,
                 Repository = new NuGetRepository {
                     Type = "git",
-                    Url = "https://github.com/Wyam2/Wyam.git"
+                    Url = "https://github.com/Wyam2/Wyam.git",
+                    Branch = branch,
+                    Commit = sha
+
                 },
                 Files = new []
                 {
@@ -535,6 +548,11 @@ Task("Create-Theme-Packages")
                     { 
                         Source = "**/*",
                         Target = "content"
+                    },
+                    new NuSpecContent 
+                    { 
+                        Source = "../../../assets/logo-square-invert-128.png",
+                        Target = "logo-square-invert.png"
                     }                     
                 },
                 BasePath = themeDirectory,
@@ -573,8 +591,15 @@ Task("Create-AllModules-Package")
             Copyright = $"Copyright {DateTime.Now.Year} © Wyam2 Contributors",
             BasePath = nuspec.GetDirectory(),
             OutputDirectory = nugetRoot,
-            Symbols = false,
-            Dependencies = dependencies
+            Symbols = false, //this is just a meta package (aka like openSUSE's patterns)
+            Dependencies = dependencies,
+            Repository = new NuGetRepository {
+                Type = "git",
+                Url = "https://github.com/Wyam2/Wyam.git",
+                Branch = branch,
+                Commit = sha
+
+            },
         });
     });
     
@@ -594,7 +619,16 @@ Task("Create-Tools-Package")
             Version = semVersion,
             BasePath = nuspec.GetDirectory(),
             OutputDirectory = nugetRoot,
-            Symbols = false,
+            Symbols = !embedSymbols,
+            ArgumentCustomization = arg => arg.Append("-SymbolPackageFormat snupkg")
+                                              .Append($"-Properties EmbedUntrackedSources=true"),
+            Icon = "logo-drop.png",
+            Repository = new NuGetRepository {
+                Type = "git",
+                Url = "https://github.com/Wyam2/Wyam.git",
+                Branch = branch,
+                Commit = sha
+            },
             Files = new [] 
             { 
                 new NuSpecContent 
@@ -604,8 +638,8 @@ Task("Create-Tools-Package")
                 },
                 new NuSpecContent
                 {
-                    Source = System.IO.Path.Combine(nuspec.GetDirectory().FullPath, "..\\..\\..\\assets\\wyam-square-128.png"),
-                    Target = ""
+                    Source = @"../../../assets/logo-drop-128.png",
+                    Target = "logo-drop.png"
                 }
             }
         });
@@ -706,6 +740,8 @@ Task("Publish-NuGetFeed")
     .Does(() =>
     {
         var apiKey = EnvironmentVariable("NUGET_API_KEY");
+        var url = "https://api.nuget.org/v3/index.json";
+
         if (string.IsNullOrEmpty(apiKey))
         {
             throw new InvalidOperationException("Could not resolve NuGet API key.");
@@ -716,7 +752,15 @@ Task("Publish-NuGetFeed")
             NuGetPush(nupkg, new NuGetPushSettings 
             {
                 ApiKey = apiKey,
-                Source = "https://api.nuget.org/v3/index.json"
+                Source = url
+            });
+        }
+        foreach (var snupkg in GetFiles(nugetRoot.Path.FullPath + "/*.snupkg"))
+        {
+            NuGetPush(snupkg, new NuGetPushSettings 
+            {
+                ApiKey = apiKey,
+                Source = url
             });
         }
     });

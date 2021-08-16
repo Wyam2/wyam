@@ -5,8 +5,8 @@
     <Authors>Simona Avornicesei, Wyam2, and contributors</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageIcon>wyam-square-128.png</PackageIcon>
-    <PackageIconUrl>https://github.com/Wyam2/assets/raw/master/logo-square-128.png</PackageIconUrl>
+    <PackageIcon>logo-drop.png</PackageIcon>
+    <PackageIconUrl>https://github.com/Wyam2/assets/raw/master/logo-drop-64.png</PackageIconUrl>
     <Wyam2Description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick.</Wyam2Description>
     <PackageTags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</PackageTags>
     <PackageProjectUrl>https://wyam2.github.io</PackageProjectUrl>
@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup> <!-- SourceLink props, see https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/ -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols Condition=" '$(DebugType)' != 'embedded' ">true</IncludeSymbols>
+    <IncludeSymbols Condition=" '$(DebugType)' == 'portable' ">true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
@@ -35,7 +35,7 @@
     <PackageReference Include="Roslynator.Analyzers" Version="3.2.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\assets\wyam-square-128.png" Pack="true" PackagePath=""/>
+    <None Include="..\..\..\assets\logo-drop-128.png" Pack="true" PackagePath="logo-drop.png"/>
   </ItemGroup>
   <Import Project="$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), '.local.Build.props'))" Condition="Exists($([System.IO.Path]::Combine($(MSBuildThisFileDirectory), '.local.Build.props')))" />
 </Project>
