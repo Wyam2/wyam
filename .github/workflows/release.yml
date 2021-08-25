@@ -20,6 +20,7 @@ jobs:
         run: ./build.ps1 -Target Run-Tests
         shell: pwsh
   release:
+    needs: [build]
     runs-on: windows-latest
     env:
       GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -29,6 +30,10 @@ jobs:
       - name: Get the tag name
         run: echo "GITHUB_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
         shell: bash
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Create packages
         run: ./build.ps1 -Target Package -ScriptArgs ('--tag=${{env.GITHUB_TAG}}')
         shell: pwsh
