@@ -17,12 +17,13 @@ namespace Wyam.Tables
     /// This module reads the content of each input document as CSV and outputs an Markdown table
     /// containing the CSV content. The input CSV content must use <c>,</c> as separator and enclose
     /// every value in <c>"</c>. The output table has the format
-    ///
+    /// <code language="md">
     /// +--------------+-------------+
     /// | Test value 1 | TestValue 2 |
     /// +--------------+-------------+
     /// | Test value 2 | TestValue 3 |
     /// +--------------+-------------+
+    /// </code>
     /// </remarks>
     /// <category>Content</category>
     public class CsvToMarkdown : IModule

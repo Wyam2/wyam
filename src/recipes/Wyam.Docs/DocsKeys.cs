@@ -72,8 +72,9 @@ namespace Wyam.Docs
         public const string IncludeGlobalNamespace = nameof(IncludeGlobalNamespace);
 
         /// <summary>
-        /// Controls whether type names from the API enclosed in code fences in either
-        /// blog posts or content pages should be automatically linked to the
+        /// Controls whether type names from the API enclosed in code fences 
+        /// (simple class name between back-ticks or full code fence (three ticks before and after) without any language specification)
+        /// in either blog posts or content pages should be automatically linked to the
         /// corresponding API documentation page (the default is <c>true</c>).
         /// </summary>
         /// <type><see cref="bool"/></type>

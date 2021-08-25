@@ -25,7 +25,7 @@
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Octokit&version=0.50.0"
 //#addin "nuget:https://api.nuget.org/v3/index.json?package=System.Text.RegularExpressions&version=4.3.1"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Incubator&version=6.0.0"
-#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Git&version=1.0.1"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Git&version=1.1.0"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Sonar&version=1.1.25"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Microsoft.Extensions.FileSystemGlobbing&version=2.2.0.0"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.FileSet&version=2.0.0"
