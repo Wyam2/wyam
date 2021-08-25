@@ -2,6 +2,9 @@
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog`
+    
+- [Documentation]  Markdown table not well rendered #73
+- [Documentation] AutoLinkTypes docs theme setting is slightly confusing #74 
 - [Refactoring] Update JSPool to v4.0.0
 - [Refactoring] Update JavaScriptEngineSwitcher.Core to v3.3.0 and JavaScriptEngineSwitcher.Jint to v3.1.0
 - [Refactoring] Update Microsoft.NET.Test.Sdk to v16.11.0
