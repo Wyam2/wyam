@@ -177,12 +177,13 @@ else
     Match version = regEx.Match(gitTag);
     if(version.Success)
     {
-        semVersion = gitTag;
         versionPrefix = version.Value;
         if(gitTag.Contains("-"))
         {
             versionSuffix = gitTag.Substring(gitTag.IndexOf("-") +1);
         }
+
+        semVersion =  $"{versionPrefix}-{versionSuffix}";
     }
 }
 var informalVersion = $"{semVersion}.Branch.{branch}.Sha.{sha}";
@@ -202,6 +203,8 @@ Information($@"Build information
     sha: {sha}
     git tag: {gitTag}
     semVersion: {semVersion}
+    versionPrefix: {versionPrefix}
+    versionSuffix: {versionSuffix}
     informalVersion: {informalVersion}
 ");
 
@@ -279,10 +282,7 @@ Task("Clean")
 Task("Restore-Packages")
     .Does(() =>
     {
-        DotNetCoreRestore("./Wyam.sln", new DotNetCoreRestoreSettings
-        {
-            MSBuildSettings = msBuildSettings
-        });
+        DotNetCoreRestore("./Wyam.sln");
     });
 
 Task("Sonar-Begin")

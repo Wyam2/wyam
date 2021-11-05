@@ -19,6 +19,7 @@
 .local.Build.props
 config.wyam.hash
 config.wyam.dll
+*.log
 
 # User-specific files
 *.rsuser
