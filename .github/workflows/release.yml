@@ -34,11 +34,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Create packages
-        run: ./build.ps1 -Target Package -ScriptArgs ('--tag=${{env.GITHUB_TAG}}')
-        shell: pwsh
-      - name: Publish packages
-        run: ./build.ps1 -Target Publish -ScriptArgs ('--tag=${{env.GITHUB_TAG}}')
+      - name: Publish release
+        run: ./build.ps1 -Target Release -ScriptArgs ('--tag=${{env.GITHUB_TAG}}')
         shell: pwsh
       - name: Trigger documentation build
         uses: peter-evans/repository-dispatch@v1

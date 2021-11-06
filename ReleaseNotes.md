@@ -1,3 +1,7 @@
+# 3.0.0-rc2
+[Fix] Fixed Wyam.All nuget package not containing the proper dependencies
+[DevOps] Adjustments to the release process
+
 # 3.0.0-rc1
 - first release of Wyam2, as a drop-in replacement for Wyam
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`

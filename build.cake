@@ -581,16 +581,25 @@ Task("Create-AllModules-Package")
             throw new InvalidOperationException("Could not find all modules nuspec.");
         }
         
-        // Add dependencies for all module libraries
-        List<FilePath> nuspecs = new List<FilePath>(GetFiles("./src/extensions/**/*.nuspec"));
-        nuspecs.RemoveAll(x => x.GetDirectory().GetDirectoryName() == "Wyam.All");
+        //TODO: Dynamically add dependencies for all module libraries
+        List<FilePath> nuspecs = new List<FilePath>(GetFiles($"./src/extensions/**/*.{versionPrefix}-{versionSuffix}.nuspec"));
+        foreach (var spec in nuspecs)
+        {
+            Verbose($"Found dependency {spec}");
+        }
+        nuspecs.RemoveAll(x => x.GetFilenameWithoutExtension().ToString().StartsWith("Wyam2.All"));
         List<NuSpecDependency> dependencies = new List<NuSpecDependency>(
             nuspecs
-                .Select(x => new NuSpecDependency
+                .Select(x => 
+                {
+                    string dependencyId = x.GetFilenameWithoutExtension().ToString().Replace($".{versionPrefix}-{versionSuffix}", "");
+                    Verbose($"Adding nuspec dependency {dependencyId} from {x}");
+                    return new NuSpecDependency
                     {
-                        Id = x.GetDirectory().GetDirectoryName(),
+                        Id = dependencyId,
                         Version = semVersion
-                    })
+                    };
+                })
         );
         
         // Pack the all modules package
@@ -761,7 +770,8 @@ Task("Publish-NuGetFeed")
             NuGetPush(nupkg, new NuGetPushSettings 
             {
                 ApiKey = apiKey,
-                Source = url
+                Source = url,
+                SkipDuplicate = true
             });
         }
         foreach (var snupkg in GetFiles(nugetRoot.Path.FullPath + "/*.snupkg"))
@@ -769,7 +779,8 @@ Task("Publish-NuGetFeed")
             NuGetPush(snupkg, new NuGetPushSettings 
             {
                 ApiKey = apiKey,
-                Source = url
+                Source = url,
+                SkipDuplicate = true
             });
         }
     });
@@ -868,7 +879,7 @@ Task("Create-Packages")
     .Does(() => { Information("Ran Create-Packages target"); });
     
 Task("Package")
-    .IsDependentOn("Run-Tests")
+    .IsDependentOn("Build")
     .IsDependentOn("Zip-Wyam-Client")
     .IsDependentOn("Create-Packages")
     .Does(() => { Information("Ran Package target"); });
@@ -898,7 +909,8 @@ Task("Nightly")
     .IsDependentOn("Publish-GitHubFeed")
     .Does(() => { Information("Ran Nightly target"); });
 
-Task("Publish")
+Task("Release")
+    .IsDependentOn("Package")
     .IsDependentOn("Publish-NuGetFeed")
     .IsDependentOn("Publish-ChocolateyFeed")
     .IsDependentOn("Publish-Release")
