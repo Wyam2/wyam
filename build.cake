@@ -818,7 +818,7 @@ Task("Publish-Release")
             throw new InvalidOperationException("Could not resolve Wyam GitHub token.");
         };
         
-        var github = new GitHubClient(new ProductHeaderValue("Wyam2 wyam release"))
+        var github = new GitHubClient(new ProductHeaderValue("Wyam2-wyam-release"))
         {
             Credentials = new Credentials(githubToken)
         };
