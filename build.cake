@@ -83,7 +83,14 @@ var branch = "main";
 var sha = "00000000";
 
 //There are cases when Cake.Git fails due to LibGit2Sharp / LibGit2Sharp.NativeBinaries type initialization errors
+//TODO: Replace this try-catch with libgit2sharp when https://github.com/libgit2/libgit2sharp/issues/1904 is fixed
 try{
+    //ugly hack to get the correct branch name - Cake.Git does not get it right since the git repo is in detached mode
+    if(!string.IsNullOrEmpty(gitTag))
+    {
+        throw new Exception("Repository is in 'detached HEAD' state. Git log must be run");
+    }
+
     branch = GitBranchCurrent(DirectoryPath.FromString(".")).FriendlyName;
     sha = GitBranchCurrent(DirectoryPath.FromString(".")).Tip.Sha;
 }
@@ -113,9 +120,11 @@ catch(Exception ex)
             throw new CakeException($"git {procSettings.Arguments.RenderSafe()} returned no output to be parsed");
         }
 
+        //if it's a normal commit: HEAD -> main, tag: v3.0.0-rc1, origin/main, 57fcb522f939e5c9eda05141f7f184384e868458, 57fcb522
+        //if it's a tag          : HEAD, tag: v3.0.0-rc1, origin/main, main, 57fcb522f939e5c9eda05141f7f184384e868458, 57fcb522
         string[] shards = output.ElementAt(0).Split(new string[] {"HEAD -> ", ", "}, StringSplitOptions.RemoveEmptyEntries);
-        branch = shards[0];
-        sha    = shards[2];
+        branch = shards.Length == 5 ? shards[0] : shards[3]; //a tag has 6 shards, a normal commit has 5
+        sha    = shards.Length == 5 ? shards[3] : shards[4];
     }
 }
 
@@ -736,7 +745,7 @@ Task("Publish-GitHubFeed")
 Task("Publish-NuGetFeed")
     .IsDependentOn("Create-Packages")
     .WithCriteria(() => isRunningOnWindows)
-    .WithCriteria(() => branch == "main")
+    .WithCriteria(() => !string.IsNullOrEmpty(gitTag))
     .Does(() =>
     {
         var apiKey = EnvironmentVariable("NUGET_API_KEY");
@@ -768,7 +777,7 @@ Task("Publish-NuGetFeed")
 Task("Publish-ChocolateyFeed")
     .IsDependentOn("Create-Chocolatey-Package")
     .WithCriteria(() => isRunningOnWindows)
-    .WithCriteria(() => branch == "main")
+    .WithCriteria(() => !string.IsNullOrEmpty(gitTag))
     .Does(()=> 
     {
         var chocolateyApiKey = EnvironmentVariable("CHOCOLATEY_API_KEY");
@@ -789,7 +798,6 @@ Task("Publish-ChocolateyFeed")
 Task("Publish-Release")
     .IsDependentOn("Zip-Wyam-Client")
     .WithCriteria(() => isRunningOnWindows)
-    .WithCriteria(() => branch == "main")
     .WithCriteria(() => !string.IsNullOrEmpty(gitTag))
     .Does(() =>
     {
@@ -895,6 +903,9 @@ Task("Publish")
     .IsDependentOn("Publish-ChocolateyFeed")
     .IsDependentOn("Publish-Release")
     .Does(() => { Information("Ran Publish target"); });
+
+Task("Info")
+    .Does(() => { Information("Ran Info target"); });
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
