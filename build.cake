@@ -31,12 +31,12 @@
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.FileSet&version=2.0.0"
 //#addin "nuget:https://api.nuget.org/v3/index.json?package=GitHubActionsTestLogger&version=1.2.0"
 
-#tool "nuget:https://api.nuget.org/v3/index.json?package=NuGet.CommandLine&version=5.9.1"
-#tool "nuget:https://api.nuget.org/v3/index.json?package=NUnit.ConsoleRunner&version=3.12.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=NuGet.CommandLine&version=6.0.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=NUnit.ConsoleRunner&version=3.13.0"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=OpenCover&version=4.7.1221"
-#tool "nuget:https://api.nuget.org/v3/index.json?package=ReportGenerator&version=4.8.12"
-#tool "nuget:https://api.nuget.org/v3/index.json?package=dotnet-sonarscanner&version=5.2.2"
-#tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.10.14"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=ReportGenerator&version=5.0.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=dotnet-sonarscanner&version=5.4.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.11.3"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=AzurePipelines.TestLogger&version=1.1.0"
 
 using Octokit;
@@ -122,9 +122,10 @@ catch(Exception ex)
 
         //if it's a normal commit: HEAD -> main, tag: v3.0.0-rc1, origin/main, 57fcb522f939e5c9eda05141f7f184384e868458, 57fcb522
         //if it's a tag          : HEAD, tag: v3.0.0-rc1, origin/main, main, 57fcb522f939e5c9eda05141f7f184384e868458, 57fcb522
+        //if it's a normal commit with no tag: HEAD -> main, 0a03e791aa223f1f44a2248139117d9f39e40614, 0a03e791 
         string[] shards = output.ElementAt(0).Split(new string[] {"HEAD -> ", ", "}, StringSplitOptions.RemoveEmptyEntries);
-        branch = shards.Length == 5 ? shards[0] : shards[3]; //a tag has 6 shards, a normal commit has 5
-        sha    = shards.Length == 5 ? shards[3] : shards[4];
+        branch = shards.Length == 5 || shards.Length == 3 ? shards[0] : shards[3]; //a tag has 6 shards, a normal commit has 5
+	    sha = shards.Length == 5 ? shards[3] : (shards.Length == 3 ? shards[1] : shards[4]);
     }
 }
 
@@ -669,7 +670,9 @@ Task("Create-Chocolatey-Package")
     .Does(() => {
         var nuspecFile = GetFiles("./src/clients/Chocolatey/*.nuspec").FirstOrDefault();
         ChocolateyPack(nuspecFile, new ChocolateyPackSettings {
-            Version = string.IsNullOrEmpty(gitTag) ? $"{versionPrefix}.{DateTime.Now.ToString("yyyyMMdd")}" : versionPrefix,
+            Version = string.IsNullOrEmpty(gitTag) 
+                        ? $"{versionPrefix}.{DateTime.Now.ToString("yyyyMMdd")}" 
+                        : $"{versionPrefix}-{versionSuffix}",
             OutputDirectory = chocoRoot.Path.FullPath,
             WorkingDirectory = buildResultDir.Path.FullPath
         });
