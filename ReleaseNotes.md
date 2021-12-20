@@ -1,3 +1,9 @@
+# 3.0.0-rc3
+[DevOps] Mark release as prerelease if there's a version suffix available
+[DevOps] GHA(deps): Bump smartsquaregmbh/delete-old-packages from 0.3.1 to 0.3.3
+[DevOps] Allow prerelease versions in choco package 
+[DevOps] Fixed 'The format of value  Wyam2 wyam release' is invalid.' in the Release cake target
+
 # 3.0.0-rc2
 [Fix] Fixed Wyam.All nuget package not containing the proper dependencies
 [DevOps] Adjustments to the release process
