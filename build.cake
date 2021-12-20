@@ -830,7 +830,9 @@ Task("Publish-Release")
             Name = gitTag,
             Body = string.Join(Environment.NewLine, releaseNotes.Notes) + Environment.NewLine + Environment.NewLine
                 + @"### Please see https://wyam2.github.io/docs/usage/obtaining for important notes about downloading and installing.",
-            TargetCommitish = sha
+            TargetCommitish = sha,
+            Draft = false,
+            Prerelease = !string.IsNullOrEmpty(versionSuffix)
         }).Result; 
         
         var zipPath = buildResultDir + File(zipFile);
