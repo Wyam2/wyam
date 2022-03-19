@@ -20,7 +20,7 @@ jobs:
       create_nightlies: ${{ steps.should_run.outputs.create_nightlies }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: check commits less than a day that had changes in src or theme folders
         id: should_run
         continue-on-error: true
@@ -32,7 +32,7 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Build and test
@@ -47,7 +47,7 @@ jobs:
       GH_USERNAME: ${{ secrets.GH_USERNAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Nightly pack
