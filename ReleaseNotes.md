@@ -1,3 +1,27 @@
+# 3.0.0-rc4
+- [Refactoring] Update NuGet.* packages to v6.1.0
+- [Refactoring] Added dependency NuGet.PackageManagement to Wyam2.Configuration project
+- [Refactoring] Removed dependencies to NuGet.Client, NuGet.ContentModel, NuGet.PackageManagement.NetStandard, NuGet.Repositories, NuGet.RuntimeModel in Wyam2.Configuration project
+- [Refactoring] Update SixLabors.ImageSharp to v2.1.0
+- [Refactoring] Update Polly to v7.2.3
+- [Refactoring] Update Microsoft.CodeAnalysis.CSharp to v4.1.0
+- [Refactoring] Update Microsoft.SourceLink.GitHub to v1.1.1
+- [Refactoring] Update SharpZipLib to v1.3.3
+- [Refactoring] Update MetadataExtractor to v2.7.2
+- [Refactoring] Update Google.Apis, Google.Apis.Auth, Google.Apis.Core to v1.56.0
+- [Refactoring] Update CsvHelper to v27.2.1
+- [Refactoring] Update Markdig to v0.28.0
+- [Refactoring] Update NSubstitute to v4.3.0
+- [Refactoring] Update Microsoft.NET.Test.Sdk to v17.1.0
+- [Refactoring] Update System.Data.SqlClient to v4.8.3
+- [Refactoring] Update NUnit3TestAdapter to v4.2.1
+- [Refactoring] Update Microsoft.IO.RecyclableMemoryStream to v2.2.0
+- [Refactoring] Downgrade Roslynator.Analyzers to v3.3.0 due to [dependency on .NET SDK 6.0](https://github.com/JosefPihrt/Roslynator/issues/878)
+- [Refactoring] Update AngleSharp to v0.16.1
+- [Refactoring] Update Google.Apis.YouTube.v3 to v1.56.0.2630
+- [DevOps] GHA(deps): Bump smartsquaregmbh/delete-old-packages from 0.3.3 to 0.4.0
+- [DevOps] GHA(deps): Bump actions/checkout from 2 to 3
+
 # 3.0.0-rc3
 [DevOps] Mark release as prerelease if there's a version suffix available
 [DevOps] GHA(deps): Bump smartsquaregmbh/delete-old-packages from 0.3.1 to 0.3.3
