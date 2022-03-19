@@ -9,6 +9,7 @@ on:
       - main
 
 env:
+  DOTNET_NOLOGO: true
   # Stop wasting time caching packages
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   # Disable sending usage data to Microsoft
@@ -30,7 +31,13 @@ jobs:
       - name: Setup dotnet 2.1
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '2.1.x'
+          dotnet-version: | 
+            2.1.x
+            2.2.x
+            3.1.x
+            5.0.x
+      - run: dotnet --list-sdks
+      - run: dotnet --list-runtimes
       - name: Build and test
         run: ./build.ps1 -Target Run-Tests
         shell: pwsh
