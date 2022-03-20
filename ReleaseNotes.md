@@ -1,11 +1,11 @@
 # 3.0.0-rc4
+- [Fix] Wyam 3.0.0-rc3 does not render correctly note and table list XML comments (#92) 
 - [Refactoring] Update NuGet.* packages to v6.1.0
 - [Refactoring] Added dependency NuGet.PackageManagement to Wyam2.Configuration project
 - [Refactoring] Removed dependencies to NuGet.Client, NuGet.ContentModel, NuGet.PackageManagement.NetStandard, NuGet.Repositories, NuGet.RuntimeModel in Wyam2.Configuration project
 - [Refactoring] Update SixLabors.ImageSharp to v2.1.0
 - [Refactoring] Update Polly to v7.2.3
 - [Refactoring] Update Microsoft.CodeAnalysis.CSharp to v4.1.0
-- [Refactoring] Update Microsoft.SourceLink.GitHub to v1.1.1
 - [Refactoring] Update SharpZipLib to v1.3.3
 - [Refactoring] Update MetadataExtractor to v2.7.2
 - [Refactoring] Update Google.Apis, Google.Apis.Auth, Google.Apis.Core to v1.56.0

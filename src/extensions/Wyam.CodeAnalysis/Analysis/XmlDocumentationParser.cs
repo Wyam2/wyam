@@ -785,20 +785,47 @@ namespace Wyam.CodeAnalysis.Analysis
 
         private void ProcessListElementTable(XElement listElement, XAttribute typeAttribute)
         {
+            // The <listheader> block is used to define the heading row of either a table or definition list
+            // When defining a table, you only need to supply an entry for term in the heading
+            // When creating a definition list, you'll need to specify both term and description
+            // For a table, bulleted list, or numbered list, you only need to supply an entry for description
+            
             listElement.Name = "table";
             typeAttribute?.Remove();
-
-            foreach (XElement itemElement in listElement.Elements("listheader")
-                .Concat(listElement.Elements("item")).ToList())
+            
+            // header
+            XElement headerElement = listElement.Element("listheader");
+            headerElement.Name = "thead";
+            List<XElement> headerCols = headerElement.Elements().ToList();
+            XElement headerRow = new XElement("tr");
+            foreach (XElement headerCol in headerCols)
             {
-                foreach (XElement termElement in itemElement.Elements("term"))
+                headerCol.Name = "th";
+                ProcessChildElements(headerCol);
+                headerRow.Add(headerCol);
+            }
+            headerElement.RemoveNodes();
+            headerElement.Add(headerRow);
+
+            //body
+            XElement bodyElement = new XElement("tbody");
+            List<XElement> items = listElement.Elements("item").ToList();
+            foreach (XElement itemElement in items)
+            {
+                foreach (XElement termElement in itemElement.Elements())
                 {
-                    termElement.Name = itemElement.Name == "listheader" ? "th" : "td";
+                    termElement.Name = "td";
                     ProcessChildElements(termElement);
                 }
 
                 itemElement.Name = "tr";
+                bodyElement.Add(itemElement);
             }
+            
+            //combine all
+            listElement.RemoveNodes();
+            listElement.Add(headerElement);
+            listElement.Add(bodyElement);
         }
 
         private void ProcessListElementDefinition(XElement listElement, XAttribute typeAttribute)
@@ -840,19 +867,20 @@ namespace Wyam.CodeAnalysis.Analysis
 
             typeAttribute?.Remove();
 
-            // Replace children
+            // Replace children: 'item' will always have one 'term' child and one 'description' child
             foreach (XElement itemElement in listElement.Elements("listheader")
                 .Concat(listElement.Elements("item")).ToList())
             {
-                foreach (XElement termElement in itemElement.Elements("term").ToList())
+                if (itemElement.HasElements)
                 {
+                    XElement termElement = itemElement.Element("term");
                     termElement.Name = "span";
                     AddCssClasses(termElement, "term");
                     ProcessChildElements(termElement);
-                }
 
-                foreach (XElement descriptionElement in itemElement.Elements("description").ToList())
-                {
+                    termElement.AddAfterSelf(new XElement("span", " - "));
+
+                    XElement descriptionElement = itemElement.Element("description");
                     descriptionElement.Name = "span";
                     AddCssClasses(descriptionElement, "description");
                     ProcessChildElements(descriptionElement);
