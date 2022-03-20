@@ -1,4 +1,5 @@
 # 3.0.0-rc4
+- [DevOps] GHA(deps): Bump actions/setup-dotnet from 1 to 2
 - [Fix] Wyam 3.0.0-rc3 does not render correctly note and table list XML comments (#92) 
 - [Refactoring] Update NuGet.* packages to v6.1.0
 - [Refactoring] Added dependency NuGet.PackageManagement to Wyam2.Configuration project
