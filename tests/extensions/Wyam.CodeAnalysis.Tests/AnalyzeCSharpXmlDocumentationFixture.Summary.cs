@@ -391,9 +391,46 @@ namespace Wyam.CodeAnalysis.Tests
                 // Then
                 GetResult(results, "Green")["Summary"].ShouldBe("\n    This is a summary repeated for each partial class\n    ");
             }
+            
+            [Test]
+            public void Summary_OnClass_WithListElement_AndBulletType_WithOnlyStringItems()
+            {
+                // Given
+                const string code = @"
+                    namespace Foo
+                    {
+                        /// <summary>
+                        /// This is a summary.
+                        /// <list type=""bullet"">
+                        /// <item>x</item>
+                        /// <item>y</item>
+                        /// </list>
+                        /// </summary>
+                        class Green
+                        {
+                        }
+                    }
+                ";
+                IDocument document = GetDocument(code);
+                IExecutionContext context = GetContext();
+                IModule module = new AnalyzeCSharp();
+
+                // When
+                List<IDocument> results = module.Execute(new[] { document }, context).ToList();  // Make sure to materialize the result list
+
+                // Then
+                GetResult(results, "Green")["Summary"].ShouldBe(
+                    @"
+                This is a summary.
+                <ul>
+                <li>x</li>
+                <li>y</li>
+                </ul>
+                ".Replace("\r\n", "\n").Replace("                ", "    "));
+            }
 
             [Test]
-            public void Summary_OnClass_WithBulletListElement()
+            public void Summary_OnClass_WithListElement_AndBulletType_WithListHeader()
             {
                 // Given
                 const string code = @"
@@ -434,15 +471,15 @@ namespace Wyam.CodeAnalysis.Tests
                 This is a summary.
                 <ul>
                 <li>
-                <span class=""term"">A</span>
+                <span class=""term"">A</span><span> - </span>
                 <span class=""description"">a</span>
                 </li>
                 <li>
-                <span class=""term"">X</span>
+                <span class=""term"">X</span><span> - </span>
                 <span class=""description"">x</span>
                 </li>
                 <li>
-                <span class=""term"">Y</span>
+                <span class=""term"">Y</span><span> - </span>
                 <span class=""description"">y</span>
                 </li>
                 </ul>
@@ -450,7 +487,44 @@ namespace Wyam.CodeAnalysis.Tests
             }
 
             [Test]
-            public void Summary_OnClass_WithNumberListElement()
+            public void Summary_OnClass_WithListElement_AndNumberType_WithOnlyStringItems()
+            {
+                // Given
+                const string code = @"
+                    namespace Foo
+                    {
+                        /// <summary>
+                        /// This is a summary.
+                        /// <list type=""number"">
+                        /// <item>X</item>
+                        /// <item>Y</item>
+                        /// </list>
+                        /// </summary>
+                        class Green
+                        {
+                        }
+                    }
+                ";
+                IDocument document = GetDocument(code);
+                IExecutionContext context = GetContext();
+                IModule module = new AnalyzeCSharp();
+
+                // When
+                List<IDocument> results = module.Execute(new[] { document }, context).ToList();  // Make sure to materialize the result list
+
+                // Then
+                GetResult(results, "Green")["Summary"].ShouldBe(
+                    @"
+                This is a summary.
+                <ol>
+                <li>X</li>
+                <li>Y</li>
+                </ol>
+                ".Replace("\r\n", "\n").Replace("                ", "    "));
+            }
+            
+            [Test]
+            public void Summary_OnClass_WithListElement_AndNumberType_WithListHeader()
             {
                 // Given
                 const string code = @"
@@ -491,15 +565,15 @@ namespace Wyam.CodeAnalysis.Tests
                 This is a summary.
                 <ol>
                 <li>
-                <span class=""term"">A</span>
+                <span class=""term"">A</span><span> - </span>
                 <span class=""description"">a</span>
                 </li>
                 <li>
-                <span class=""term"">X</span>
+                <span class=""term"">X</span><span> - </span>
                 <span class=""description"">x</span>
                 </li>
                 <li>
-                <span class=""term"">Y</span>
+                <span class=""term"">Y</span><span> - </span>
                 <span class=""description"">y</span>
                 </li>
                 </ol>
@@ -507,7 +581,7 @@ namespace Wyam.CodeAnalysis.Tests
             }
             
             [Test]
-            public void Summary_OnClass_WithNumberListElement_AndStartAttribute()
+            public void Summary_OnClass_WithListElement_AndNumberType_AndStartAttribute()
             {
                 // Given
                 const string code = @"
@@ -548,15 +622,15 @@ namespace Wyam.CodeAnalysis.Tests
                 This is a summary.
                 <ol start=""2"">
                 <li>
-                <span class=""term"">A</span>
+                <span class=""term"">A</span><span> - </span>
                 <span class=""description"">a</span>
                 </li>
                 <li>
-                <span class=""term"">X</span>
+                <span class=""term"">X</span><span> - </span>
                 <span class=""description"">x</span>
                 </li>
                 <li>
-                <span class=""term"">Y</span>
+                <span class=""term"">Y</span><span> - </span>
                 <span class=""description"">y</span>
                 </li>
                 </ol>
@@ -564,7 +638,7 @@ namespace Wyam.CodeAnalysis.Tests
             }
 
             [Test]
-            public void Summary_OnClass_WithTableListElement()
+            public void Summary_OnClass_WithListElement_AndTableType_With2Columns()
             {
                 // Given
                 const string code = @"
@@ -574,16 +648,16 @@ namespace Wyam.CodeAnalysis.Tests
                         /// This is a summary.
                         /// <list type=""table"">
                         /// <listheader>
-                        /// <term>A</term>
-                        /// <term>a</term>
+                        /// <term>i</term>
+                        /// <description>d</description>
                         /// </listheader>
                         /// <item>
-                        /// <term>X</term>
-                        /// <term>x</term>
+                        /// <term>A</term>
+                        /// <description>x</description>
                         /// </item>
                         /// <item>
-                        /// <term>Y</term>
-                        /// <term>y</term>
+                        /// <term>B</term>
+                        /// <description>y</description>
                         /// </item>
                         /// </list>
                         /// </summary>
@@ -603,25 +677,73 @@ namespace Wyam.CodeAnalysis.Tests
                 GetResult(results, "Green")["Summary"].ShouldBe(
                     @"
                 This is a summary.
-                <table class=""table"">
-                <tr>
-                <th>A</th>
-                <th>a</th>
-                </tr>
-                <tr>
-                <td>X</td>
+                <table class=""table""><thead><tr><th>i</th><th>d</th></tr></thead><tbody><tr>
+                <td>A</td>
                 <td>x</td>
-                </tr>
-                <tr>
-                <td>Y</td>
+                </tr><tr>
+                <td>B</td>
                 <td>y</td>
-                </tr>
-                </table>
+                </tr></tbody></table>
                 ".Replace("\r\n", "\n").Replace("                ", "    "));
             }
             
             [Test]
-            public void Summary_OnClass_WithDefinitionListElement()
+            public void Summary_OnClass_WithListElement_AndTableType_WithMultipleColumns()
+            {
+                // Given
+                const string code = @"
+                    namespace Foo
+                    {
+                        /// <summary>
+                        /// This is a summary.
+                        /// <list type=""table"">
+                        /// <listheader>
+                        /// <term>Column 1</term>
+                        /// <term>Column 2</term>
+                        /// <term>Column 3</term>
+                        /// </listheader>
+                        /// <item>
+                        /// <term>R1, C1</term>
+                        /// <term>R1, C2</term>
+                        /// <term>R1, C3</term>
+                        /// </item>
+                        /// <item>
+                        /// <description>R2, C1</description>
+                        /// <description>R2, C2</description>
+                        /// <description>R2, C3</description>
+                        /// </item>
+                        /// </list>
+                        /// </summary>
+                        class Green
+                        {
+                        }
+                    }
+                ";
+                IDocument document = GetDocument(code);
+                IExecutionContext context = GetContext();
+                IModule module = new AnalyzeCSharp();
+
+                // When
+                List<IDocument> results = module.Execute(new[] { document }, context).ToList();  // Make sure to materialize the result list
+
+                // Then
+                GetResult(results, "Green")["Summary"].ShouldBe(
+                    @"
+                This is a summary.
+                <table class=""table""><thead><tr><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr></thead><tbody><tr>
+                <td>R1, C1</td>
+                <td>R1, C2</td>
+                <td>R1, C3</td>
+                </tr><tr>
+                <td>R2, C1</td>
+                <td>R2, C2</td>
+                <td>R2, C3</td>
+                </tr></tbody></table>
+                ".Replace("\r\n", "\n").Replace("                ", "    "));
+            }
+            
+            [Test]
+            public void Summary_OnClass_WithListElement_AndDefinitionType()
             {
                 // Given
                 const string code = @"
