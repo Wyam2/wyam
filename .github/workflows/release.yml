@@ -58,7 +58,7 @@ jobs:
         run: ./build.ps1 -Target Release -ScriptArgs ('--tag=${{env.GITHUB_TAG}}')
         shell: pwsh
       - name: Trigger documentation build
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: Wyam2/docs
