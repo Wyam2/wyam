@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Google.Apis" Version="1.56.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.56.0" />
-    <PackageReference Include="Google.Apis.Core" Version="1.56.0" />
+    <PackageReference Include="Google.Apis.Core" Version="1.57.0" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.56.0.2630" />
   </ItemGroup>
 </Project>
