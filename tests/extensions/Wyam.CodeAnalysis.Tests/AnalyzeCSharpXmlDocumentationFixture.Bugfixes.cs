@@ -110,6 +110,66 @@ namespace Wyam.CodeAnalysis.Tests
                   </tr></tbody></table> 
     ".Replace("\r\n", "\n").Replace("                ", "      "));
             }
+
+            [Test]
+            public void Issue92_Example_OnClass_WithBulletList_AndItems_HavingOnlyDescription()
+            {
+               // Given
+                const string code = @"
+                    namespace Foo
+                    {
+                        /// <example>
+                        ///   <list type=""bullet"">
+                        ///   <item>
+                        ///   <description>Full Name &lt;address@abcxyz.com&gt;</description>
+                        ///   </item>
+                        ///   <item>
+                        ///   <description>&lt;address@abcxyz.com&gt; Full Name</description>
+                        ///   </item>
+                        ///   <item>
+                        ///   <description>(Full Name) address@abcxyz.com</description>
+                        ///   </item>
+                        ///   <item>
+                        ///   <description>address@abcxyz.com (Full Name)</description>
+                        ///   </item>
+                        ///   <item>
+                        ///   <description>address@abcxyz.com</description>
+                        ///   </item>
+                        ///   </list>
+                        /// </example>
+                        class Green
+                        { }
+                    }
+                ";
+                IDocument document = GetDocument(code);
+                IExecutionContext context = GetContext();
+                IModule module = new AnalyzeCSharp();
+
+                // When
+                List<IDocument> results = module.Execute(new[] { document }, context).ToList();  // Make sure to materialize the result list
+
+                // Then
+                GetResult(results, "Green")["Example"].ShouldBe(
+                    @"
+                <ul>
+                <li>
+                <span class=""description"">Full Name &lt;address@abcxyz.com&gt;</span>
+                </li>
+                <li>
+                <span class=""description"">&lt;address@abcxyz.com&gt; Full Name</span>
+                </li>
+                <li>
+                <span class=""description"">(Full Name) address@abcxyz.com</span>
+                </li>
+                <li>
+                <span class=""description"">address@abcxyz.com (Full Name)</span>
+                </li>
+                <li>
+                <span class=""description"">address@abcxyz.com</span>
+                </li>
+                </ul>
+    ".Replace("\r\n", "\n").Replace("                ", "      "));
+            }
         }
     }
 }

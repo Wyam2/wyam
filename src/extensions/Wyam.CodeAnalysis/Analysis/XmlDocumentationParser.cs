@@ -795,17 +795,21 @@ namespace Wyam.CodeAnalysis.Analysis
             
             // header
             XElement headerElement = listElement.Element("listheader");
-            headerElement.Name = "thead";
-            List<XElement> headerCols = headerElement.Elements().ToList();
-            XElement headerRow = new XElement("tr");
-            foreach (XElement headerCol in headerCols)
+            if (headerElement != null)
             {
-                headerCol.Name = "th";
-                ProcessChildElements(headerCol);
-                headerRow.Add(headerCol);
+                headerElement.Name = "thead";
+                List<XElement> headerCols = headerElement.Elements().ToList();
+                XElement headerRow = new XElement("tr");
+                foreach (XElement headerCol in headerCols)
+                {
+                    headerCol.Name = "th";
+                    ProcessChildElements(headerCol);
+                    headerRow.Add(headerCol);
+                }
+
+                headerElement.RemoveNodes();
+                headerElement.Add(headerRow);
             }
-            headerElement.RemoveNodes();
-            headerElement.Add(headerRow);
 
             //body
             XElement bodyElement = new XElement("tbody");
@@ -824,7 +828,10 @@ namespace Wyam.CodeAnalysis.Analysis
             
             //combine all
             listElement.RemoveNodes();
-            listElement.Add(headerElement);
+            if (headerElement != null)
+            {
+                listElement.Add(headerElement);
+            }
             listElement.Add(bodyElement);
         }
 
@@ -874,16 +881,28 @@ namespace Wyam.CodeAnalysis.Analysis
                 if (itemElement.HasElements)
                 {
                     XElement termElement = itemElement.Element("term");
-                    termElement.Name = "span";
-                    AddCssClasses(termElement, "term");
-                    ProcessChildElements(termElement);
-
-                    termElement.AddAfterSelf(new XElement("span", " - "));
-
                     XElement descriptionElement = itemElement.Element("description");
-                    descriptionElement.Name = "span";
-                    AddCssClasses(descriptionElement, "description");
-                    ProcessChildElements(descriptionElement);
+                    
+                    // 'item' node can have 'term' as child, 'description' as child, both of them or none
+                    if (termElement != null)
+                    {
+                        termElement.Name = "span";
+                        AddCssClasses(termElement, "term");
+                        ProcessChildElements(termElement);
+                    }
+
+                    if (termElement != null && descriptionElement != null)
+                    {
+                        // add separator between term and description
+                        termElement.AddAfterSelf(new XElement("span", " - "));
+                    }
+                    
+                    if (descriptionElement != null)
+                    {
+                        descriptionElement.Name = "span";
+                        AddCssClasses(descriptionElement, "description");
+                        ProcessChildElements(descriptionElement);
+                    }
                 }
 
                 itemElement.Name = "li";
