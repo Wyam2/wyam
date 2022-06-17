@@ -10,7 +10,7 @@ using Cake.Core.Tooling;
 namespace Cake.Wyam
 {
     /// <summary>
-    /// The Wyam Runner used to execute the Wyam Executable
+    /// The Wyam2 Runner used to execute the Wyam2 Executable
     /// </summary>
     public sealed class WyamRunner : Tool<WyamSettings>
     {
@@ -66,7 +66,7 @@ namespace Cake.Wyam
         /// <returns>The name of the tool.</returns>
         protected override string GetToolName()
         {
-            return "Wyam";
+            return "Wyam2";
         }
 
         /// <summary>

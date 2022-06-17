@@ -36,7 +36,7 @@
 #tool "nuget:https://api.nuget.org/v3/index.json?package=OpenCover&version=4.7.1221"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=ReportGenerator&version=5.0.0"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=dotnet-sonarscanner&version=5.4.0"
-#tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.11.3"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.12.1"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=AzurePipelines.TestLogger&version=1.1.0"
 
 using Octokit;

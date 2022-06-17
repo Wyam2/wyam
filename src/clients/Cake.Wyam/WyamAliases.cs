@@ -5,20 +5,23 @@ using Cake.Core.Annotations;
 namespace Cake.Wyam
 {
     /// <summary>
-    /// <para>Contains functionality related to <see href="https://github.com/Wyamio/Wyam">Wyam</see>.</para>
+    /// <para>Contains functionality related to <see href="https://github.com/Wyam2/wyam">Wyam2</see>.</para>
     /// <para>
     /// In order to use the commands for this alias, include the following in your build.cake file to download and install from NuGet.org, or specify the ToolPath within the WyamSettings class:
     /// <code>
-    /// #addin "nuget:?package=Cake.Wyam"
-    /// #tool "nuget:?package=Wyam"
+    /// #addin "nuget:?package=Cake.Wyam2"
+    /// #tool "nuget:?package=Wyam2"
     /// </code>
     /// </para>
     /// </summary>
+    /// <remarks>
+    /// Make sure to remove existing references to old Cake.Wyam addin (https://www.nuget.org/packages/Wyam/).
+    /// </remarks>
     [CakeAliasCategory("Wyam")]
     public static class WyamAliases
     {
         /// <summary>
-        /// Runs Wyam using the specified settings.
+        /// Runs Wyam2 using the specified settings.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <example>
@@ -38,7 +41,7 @@ namespace Cake.Wyam
         }
 
         /// <summary>
-        /// Runs Wyam using the specified settings.
+        /// Runs Wyam2 using the specified settings.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="settings">The settings.</param>

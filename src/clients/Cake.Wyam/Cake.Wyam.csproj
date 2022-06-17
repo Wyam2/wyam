@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Cake.Wyam2</PackageId>
-    <Description>$(Wyam2Description) This library contains an addin for Cake for interacting with Wyam.</Description>
+    <Description>$(Wyam2Description) This library contains an addin for Cake for interacting with Wyam2.</Description>
     <PackageTags>Cake cake-addin $(PackageTags)</PackageTags>
     <PackageIcon>cake-contrib-addin-medium.png</PackageIcon>
     <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/addin/cake-contrib-addin-medium.png</PackageIconUrl>
