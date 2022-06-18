@@ -62,7 +62,8 @@ C";
 A=
 =B
 //#valid   x y z  
-C", StringCompareShould.IgnoreLineEndings);
+C",
+                    StringCompareShould.IgnoreLineEndings);
 
                 directiveParser.DirectiveValues
                     .Select(x => Tuple.Create(x.Line, x.Name, x.Value))

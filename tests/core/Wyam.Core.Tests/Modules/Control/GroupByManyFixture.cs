@@ -35,10 +35,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 GroupByMany groupByMany = new GroupByMany((d, c) => new[] { d.Get<int>("A") % 3, 3 }, count);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return d;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return d;
+                    },
+                    false);
                 engine.Pipelines.Add(groupByMany, gatherData);
 
                 // When
@@ -62,10 +63,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 OrderBy orderBy = new OrderBy((d, c) => d.Get<int>(Keys.GroupKey));
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Get<IList<IDocument>>(Keys.GroupDocuments).Select(x => x.Content).ToList());
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Get<IList<IDocument>>(Keys.GroupDocuments).Select(x => x.Content).ToList());
+                        return null;
+                    }, 
+                    false);
                 engine.Pipelines.Add(groupByMany, orderBy, gatherData);
 
                 // When
@@ -93,10 +95,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 GroupByMany groupByMany = new GroupByMany("GroupMetadata", count, meta);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupByMany, gatherData);
 
                 // When
@@ -118,17 +121,19 @@ namespace Wyam.Core.Tests.Modules.Control
                 };
                 Execute meta = new Execute(
                     (d, c) =>
-                {
-                    int groupMetadata = d.Get<int>("A") % 3;
-                    return groupMetadata == 0 ? d : c.GetDocument(d, new MetadataItems { { "GroupMetadata", new[] { groupMetadata, 3 } } });
-                }, false);
+                    {
+                        int groupMetadata = d.Get<int>("A") % 3;
+                        return groupMetadata == 0 ? d : c.GetDocument(d, new MetadataItems { { "GroupMetadata", new[] { groupMetadata, 3 } } });
+                    },
+                    false);
                 GroupByMany groupByMany = new GroupByMany("GroupMetadata", count, meta);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupByMany, gatherData);
 
                 // When
@@ -146,21 +151,23 @@ namespace Wyam.Core.Tests.Modules.Control
                 Engine engine = new Engine();
                 Execute meta = new Execute(
                     (d, c) => new IDocument[]
-                {
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { "A", "b" } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { "B" } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", "C" } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { "c" } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { 1 } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", "1" } })
-                }, false);
+                    {
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { "A", "b" } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { "B" } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", "C" } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { "c" } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { 1 } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", "1" } })
+                    },
+                    false);
                 GroupByMany groupByMany = new GroupByMany("Tag", meta);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupByMany, gatherData);
 
                 // When
@@ -178,21 +185,23 @@ namespace Wyam.Core.Tests.Modules.Control
                 Engine engine = new Engine();
                 Execute meta = new Execute(
                     (d, c) => new IDocument[]
-                {
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { "A", "b" } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { "B" } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", "C" } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { "c" } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", new[] { 1 } } }),
-                    c.GetDocument(d, new MetadataItems { { "Tag", "1" } })
-                }, false);
+                    {
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { "A", "b" } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { "B" } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", "C" } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { "c" } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", new[] { 1 } } }),
+                        c.GetDocument(d, new MetadataItems { { "Tag", "1" } })
+                    },
+                    false);
                 GroupByMany groupByMany = new GroupByMany("Tag", meta).WithComparer(StringComparer.OrdinalIgnoreCase);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupByMany, gatherData);
 
                 // When
@@ -216,10 +225,11 @@ namespace Wyam.Core.Tests.Modules.Control
                     .Where((d, c) => d.Get<int>("A") % 3 != 0);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupByMany, gatherData);
 
                 // When

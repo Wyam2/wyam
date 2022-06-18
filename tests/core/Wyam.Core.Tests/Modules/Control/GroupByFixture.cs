@@ -34,10 +34,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 GroupBy groupBy = new GroupBy((d, c) => d.Get<int>("A") % 3, count);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupBy, gatherData);
 
                 // When
@@ -61,10 +62,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 OrderBy orderBy = new OrderBy((d, c) => d.Get<int>(Keys.GroupKey));
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Get<IList<IDocument>>(Keys.GroupDocuments).Select(x => x.Content).ToList());
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Get<IList<IDocument>>(Keys.GroupDocuments).Select(x => x.Content).ToList());
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupBy, orderBy, gatherData);
 
                 // When
@@ -91,10 +93,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 GroupBy groupBy = new GroupBy("GroupMetadata", count, meta);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupBy, gatherData);
 
                 // When
@@ -116,17 +119,19 @@ namespace Wyam.Core.Tests.Modules.Control
                 };
                 Execute meta = new Execute(
                     (d, c) =>
-                {
-                    int groupMetadata = d.Get<int>("A") % 3;
-                    return groupMetadata == 0 ? d : c.GetDocument(d, new MetadataItems { { "GroupMetadata", groupMetadata } });
-                }, false);
+                    {
+                        int groupMetadata = d.Get<int>("A") % 3;
+                        return groupMetadata == 0 ? d : c.GetDocument(d, new MetadataItems { { "GroupMetadata", groupMetadata } });
+                    },
+                    false);
                 GroupBy groupBy = new GroupBy("GroupMetadata", count, meta);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupBy, gatherData);
 
                 // When
@@ -150,10 +155,11 @@ namespace Wyam.Core.Tests.Modules.Control
                     .Where((d, c) => d.Get<int>("A") % 3 != 0);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    groupKey.Add(d.Get<int>(Keys.GroupKey));
-                    return null;
-                }, false);
+                    {
+                        groupKey.Add(d.Get<int>(Keys.GroupKey));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(groupBy, gatherData);
 
                 // When

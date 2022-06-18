@@ -38,7 +38,8 @@ namespace Wyam.Core.Tests.Documents
                     new Dictionary<string, object>
                     {
                         { "Foo", "Bar" }
-                    }, resultDocument);
+                    }, 
+                    resultDocument);
             }
 
             [Test]

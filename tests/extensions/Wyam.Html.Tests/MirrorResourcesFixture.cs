@@ -47,7 +47,8 @@ namespace Wyam.Html.Tests
                       </head>
                       <body>
                       
-                    </body></html>", StringCompareShould.IgnoreLineEndings);
+                    </body></html>",
+                    StringCompareShould.IgnoreLineEndings);
             }
 
             [Test]
@@ -75,7 +76,8 @@ namespace Wyam.Html.Tests
                       </head>
                       <body>
                       
-                    </body></html>", StringCompareShould.IgnoreLineEndings);
+                    </body></html>",
+                    StringCompareShould.IgnoreLineEndings);
             }
 
             [Test]
@@ -106,7 +108,8 @@ namespace Wyam.Html.Tests
                       </head>
                       <body>
                       </body>
-                    </html>", StringCompareShould.IgnoreLineEndings);
+                    </html>",
+                    StringCompareShould.IgnoreLineEndings);
             }
 
             [Test]
@@ -134,7 +137,8 @@ namespace Wyam.Html.Tests
                       </head>
                       <body>
                       
-                    </body></html>", StringCompareShould.IgnoreLineEndings);
+                    </body></html>",
+                    StringCompareShould.IgnoreLineEndings);
             }
         }
     }

@@ -242,15 +242,16 @@ namespace Wyam.Core.Tests.IO
                 // Then
                 CollectionAssert.AreEquivalent(
                     new[]
-                {
-                    "/a/theme",
-                    "/a/input",
-                    "/a/b/c",
-                    "/a/b/d",
-                    "/a/x",
-                    "/a/y",
-                    "/z"
-                }, result.Select(x => x.Path.FullPath));
+                    {
+                        "/a/theme",
+                        "/a/input",
+                        "/a/b/c",
+                        "/a/b/d",
+                        "/a/x",
+                        "/a/y",
+                        "/z"
+                    },
+                    result.Select(x => x.Path.FullPath));
             }
         }
 

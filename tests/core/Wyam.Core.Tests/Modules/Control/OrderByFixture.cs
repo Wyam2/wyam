@@ -33,10 +33,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 OrderBy orderBy = new OrderBy((d, c) => d.Get<int>("A"));
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Content);
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Content);
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(count, concat, orderBy, gatherData);
 
                 // When
@@ -65,10 +66,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 OrderBy orderBy = new OrderBy((d, c) => d.Get<int>("A")).Descending();
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Content);
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Content);
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(count, concat, orderBy, gatherData);
 
                 // When
@@ -97,10 +99,11 @@ namespace Wyam.Core.Tests.Modules.Control
                     .ThenBy((d, c) => d.Get<int>("B"));
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Content);
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Content);
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(count, count2, orderBy, gatherData);
 
                 // When
@@ -130,10 +133,11 @@ namespace Wyam.Core.Tests.Modules.Control
                     .Descending();
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Content);
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Content);
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(count, count2, orderBy, gatherData);
 
                 // When
@@ -164,10 +168,11 @@ namespace Wyam.Core.Tests.Modules.Control
                     .Descending();
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Content);
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Content);
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(count, count2, orderBy, gatherData);
 
                 // When
@@ -197,10 +202,11 @@ namespace Wyam.Core.Tests.Modules.Control
                     .ThenBy((d, c) => d.Get<int>("B"));
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Content);
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Content);
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(count, count2, orderBy, gatherData);
 
                 // When

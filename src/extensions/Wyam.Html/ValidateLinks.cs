@@ -86,8 +86,8 @@ namespace Wyam.Html
 #pragma warning restore RCS1163 // Unused parameter.
 
             // Key = link, Value = source, tag HTML
-            ConcurrentDictionary<string, ConcurrentBag<(string documentSource, string outerHtml)>> links =
-                new ConcurrentDictionary<string, ConcurrentBag<(string documentSource, string outerHtml)>>();
+            ConcurrentDictionary<string, ConcurrentBag<(string DocumentSource, string OuterHtml)>> links =
+                new ConcurrentDictionary<string, ConcurrentBag<(string DocumentSource, string OuterHtml)>>();
 
             // Key = source, Value = tag HTML
             ConcurrentDictionary<string, ConcurrentBag<string>> failures = new ConcurrentDictionary<string, ConcurrentBag<string>>();
@@ -145,7 +145,7 @@ namespace Wyam.Html
         }
 
         // Internal for testing
-        internal static void GatherLinks(IDocument input, HtmlParser parser, ConcurrentDictionary<string, ConcurrentBag<(string source, string outerHtml)>> links)
+        internal static void GatherLinks(IDocument input, HtmlParser parser, ConcurrentDictionary<string, ConcurrentBag<(string Source, string OuterHtml)>> links)
         {
             IHtmlDocument htmlDocument = input.ParseHtml(parser);
             if (htmlDocument != null)
@@ -327,7 +327,7 @@ namespace Wyam.Html
             }
         }
 
-        private static void AddOrUpdateLink(string link, IElement element, string source, ConcurrentDictionary<string, ConcurrentBag<(string source, string outerHtml)>> links)
+        private static void AddOrUpdateLink(string link, IElement element, string source, ConcurrentDictionary<string, ConcurrentBag<(string Source, string OuterHtml)>> links)
         {
             if (string.IsNullOrEmpty(link))
             {
@@ -344,7 +344,7 @@ namespace Wyam.Html
                 });
         }
 
-        private static void AddOrUpdateFailure(ConcurrentBag<(string source, string outerHtml)> links, ConcurrentDictionary<string, ConcurrentBag<string>> failures)
+        private static void AddOrUpdateFailure(ConcurrentBag<(string Source, string OuterHtml)> links, ConcurrentDictionary<string, ConcurrentBag<string>> failures)
         {
             foreach ((string source, string outerHtml) in links)
             {

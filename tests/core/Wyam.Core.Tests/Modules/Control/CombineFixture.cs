@@ -56,11 +56,12 @@ namespace Wyam.Core.Tests.Modules.Control
                 // Then
                 CollectionAssert.AreEquivalent(
                     new Dictionary<string, object>
-                {
-                    { "a", 1 },
-                    { "b", 3 },
-                    { "c", 4 }
-                }, Iterate(results.First().GetEnumerator()));
+                    {
+                        { "a", 1 },
+                        { "b", 3 },
+                        { "c", 4 }
+                    },
+                    Iterate(results.First().GetEnumerator()));
             }
         }
 

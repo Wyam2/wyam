@@ -38,14 +38,15 @@ namespace Wyam.Core.Tests.Modules.Control
                 Paginate paginate = new Paginate(3, count);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    currentPage.Add(d.Get<int>(Keys.CurrentPage));
-                    totalPages.Add(d.Get<int>(Keys.TotalPages));
-                    totalItems.Add(d.Get<int>(Keys.TotalItems));
-                    hasNextPage.Add(d.Bool(Keys.HasNextPage));
-                    hasPreviousPage.Add(d.Bool(Keys.HasPreviousPage));
-                    return null;
-                }, false);
+                    {
+                        currentPage.Add(d.Get<int>(Keys.CurrentPage));
+                        totalPages.Add(d.Get<int>(Keys.TotalPages));
+                        totalItems.Add(d.Get<int>(Keys.TotalItems));
+                        hasNextPage.Add(d.Bool(Keys.HasNextPage));
+                        hasPreviousPage.Add(d.Bool(Keys.HasPreviousPage));
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(paginate, gatherData);
 
                 // When
@@ -72,10 +73,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 Paginate paginate = new Paginate(3, count);
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Get<IList<IDocument>>(Keys.PageDocuments).Select(x => x.Content).ToList());
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Get<IList<IDocument>>(Keys.PageDocuments).Select(x => x.Content).ToList());
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(paginate, gatherData);
 
                 // When
@@ -106,7 +108,8 @@ namespace Wyam.Core.Tests.Modules.Control
                         previousPages.Add(d.Document(Keys.PreviousPage)?.Get<IList<IDocument>>(Keys.PageDocuments).Select(x => x.Content).ToList());
                         nextPages.Add(d.Document(Keys.NextPage)?.Get<IList<IDocument>>(Keys.PageDocuments).Select(x => x.Content).ToList());
                         return null;
-                    }, false);
+                    },
+                    false);
                 engine.Pipelines.Add(paginate, gatherData);
 
                 // When
@@ -136,10 +139,11 @@ namespace Wyam.Core.Tests.Modules.Control
                 Paginate paginate = new Paginate(3, count).Where((doc, ctx) => doc.Content != "5");
                 Execute gatherData = new Execute(
                     (d, c) =>
-                {
-                    content.Add(d.Get<IList<IDocument>>(Keys.PageDocuments).Select(x => x.Content).ToList());
-                    return null;
-                }, false);
+                    {
+                        content.Add(d.Get<IList<IDocument>>(Keys.PageDocuments).Select(x => x.Content).ToList());
+                        return null;
+                    },
+                    false);
                 engine.Pipelines.Add(paginate, gatherData);
 
                 // When

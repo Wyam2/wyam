@@ -48,10 +48,12 @@ Content2")
                 Assert.AreEqual(
                     @"FM1
 FM2
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -83,13 +85,15 @@ Content2")
                 Assert.AreEqual(1, documents.Count());
                 Assert.AreEqual(
                     @"
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"FM1
 FM2
 ---
 Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -122,10 +126,12 @@ Content2")
                     @"
 FM1
 FM2
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -159,7 +165,8 @@ Content2")
 FM2
 ---
 Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -190,10 +197,12 @@ Content2")
                 Assert.AreEqual(
                     @"FM1
 FM2
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -224,10 +233,12 @@ Content2")
                 Assert.AreEqual(
                     @"FM1
 FM2
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -258,10 +269,12 @@ Content2")
                 Assert.AreEqual(
                     @"FM1
 FM2
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -295,7 +308,8 @@ Content2")
 FM2
   !!!!
 Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -329,11 +343,13 @@ Content2")
                     @"FM1
 FM2
 
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"
 Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -364,10 +380,12 @@ Content2")
                 Assert.AreEqual(
                     @"FM1
 FM2
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -399,7 +417,8 @@ YY")
                 Assert.AreEqual(
                     @"AA
 BB
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual("XX", documents.First().Content);
                 Assert.AreEqual("YY", documents.Skip(1).First().Content);
             }
@@ -433,10 +452,12 @@ Content2")
                 Assert.AreEqual(
                     @"FM1
 FM2
-", frontMatterContent);
+",
+                    frontMatterContent);
                 Assert.AreEqual(
                     @"Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
 
             [Test]
@@ -471,7 +492,8 @@ Content2")
 FM2
 ---
 Content1
-Content2", documents.First().Content);
+Content2",
+                    documents.First().Content);
             }
         }
     }

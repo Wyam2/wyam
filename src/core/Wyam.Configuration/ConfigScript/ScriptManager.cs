@@ -193,7 +193,8 @@ namespace Wyam.Configuration.ConfigScript
                 new[] { syntaxTree },
                 referenceAssemblies
                     .Where(x => !x.IsDynamic && !string.IsNullOrEmpty(x.Location))
-                    .Select(x => MetadataReference.CreateFromFile(x.Location)), compilationOptions)
+                    .Select(x => MetadataReference.CreateFromFile(x.Location)), 
+                compilationOptions)
                     .AddReferences(
                         MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
                         MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),

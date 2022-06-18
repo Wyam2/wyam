@@ -63,12 +63,14 @@ namespace Wyam.Core.Tests.Execution
                     {
                         ctx.GetDocument(x, (Stream)null, new Dictionary<string, object> { { c.ToString(), c++ } }),
                         ctx.GetDocument(x, (Stream)null, new Dictionary<string, object> { { c.ToString(), c++ } })
-                    }, false),
+                    },
+                    false),
                 new Execute(
                     (x, ctx) => new[]
                     {
                         ctx.GetDocument(x, (Stream)null, new Dictionary<string, object> { { c.ToString(), c++ } })
-                    }, false));
+                    },
+                    false));
 
             // When
             engine.Execute();
@@ -103,12 +105,14 @@ namespace Wyam.Core.Tests.Execution
                     {
                         ctx.GetDocument(x, ctx.GetContentStream(c++.ToString())),
                         ctx.GetDocument(x, ctx.GetContentStream(c++.ToString()))
-                    }, false),
+                    },
+                    false),
                 new Execute(
                     (x, ctx) => new[]
                     {
                         ctx.GetDocument(x, ctx.GetContentStream(c++.ToString()))
-                    }, false),
+                    },
+                    false),
                 new Core.Modules.Metadata.Meta("Content", (x, y) => x.Content));
 
             // When
