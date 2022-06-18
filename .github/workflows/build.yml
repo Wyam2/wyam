@@ -40,5 +40,5 @@ jobs:
       - run: dotnet --list-sdks
       - run: dotnet --list-runtimes
       - name: Build and test
-        run: ./build.ps1 -Target Run-Tests -Verbosity "Verbose"
+        run: ./build.ps1 -Target Run-Tests -Verbose
         shell: pwsh
