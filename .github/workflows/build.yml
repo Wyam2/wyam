@@ -36,8 +36,9 @@ jobs:
             2.2.x
             3.1.x
             5.0.x
+            6.0.x
       - run: dotnet --list-sdks
       - run: dotnet --list-runtimes
       - name: Build and test
-        run: ./build.ps1 -Target Run-Tests
+        run: ./build.ps1 -Target Run-Tests -Verbosity "Verbose"
         shell: pwsh
