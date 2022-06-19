@@ -1,8 +1,8 @@
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/Wyam2/wyam?display_name=tag&sort=semver&style=plastic) [![Join the chat at https://gitter.im/Wyam2/Wyam2](https://badges.gitter.im/Wyam2/Wyam2.svg)](https://gitter.im/Wyam2/Wyam2) 
+
 ![Nuget](https://img.shields.io/nuget/dt/Wyam2?label=NuGet%20downloads&style=plastic) ![Chocolatey](https://img.shields.io/chocolatey/dt/Wyam2?label=Chocolatey%20downloads&style=plastic) ![GitHub release (latest by SemVer)](https://img.shields.io/github/downloads/Wyam2/wyam/latest/total?label=GitHub%20downloads%40latest&sort=semver)  
  
 [![Wyam2 build](https://github.com/Wyam2/wyam/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/build.yml)  [![Wyam2 nightly build](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Wyam2/wyam?style=plastic)  
-
-[![Join the chat at https://gitter.im/Wyam2/Wyam2](https://badges.gitter.im/Wyam2/Wyam2.svg)](https://gitter.im/Wyam2/Wyam2)
 
 A continuation of the awesome project [Wyam](https://github.com/Wyamio/Wyam) created by [Dave Glick](https://github.com/daveaglick) since it's the only open-source, cross-platform .NET documentation project that I know of, except [docFX](https://github.com/dotnet/docfx). 
 For Windows-only there is also [Sandcastle](https://github.com/EWSoftware/SHFB).
