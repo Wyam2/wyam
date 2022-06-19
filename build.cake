@@ -195,7 +195,9 @@ else
             versionSuffix = gitTag.Substring(gitTag.IndexOf("-") +1);
         }
 
-        semVersion =  $"{versionPrefix}-{versionSuffix}";
+        semVersion = string.IsNullOrEmpty(versionSuffix)
+                        ? versionPrefix
+                        : $"{versionPrefix}-{versionSuffix}";
     }
 }
 var informalVersion = $"{semVersion}.Branch.{branch}.Sha.{sha}";
@@ -676,7 +678,9 @@ Task("Create-Chocolatey-Package")
         ChocolateyPack(nuspecFile, new ChocolateyPackSettings {
             Version = string.IsNullOrEmpty(gitTag) 
                         ? $"{versionPrefix}.{DateTime.Now.ToString("yyyyMMdd")}" 
-                        : $"{versionPrefix}-{versionSuffix}",
+                        : ( string.IsNullOrEmpty(versionSuffix)
+                                ? versionPrefix
+                                : $"{versionPrefix}-{versionSuffix}"),
             OutputDirectory = chocoRoot.Path.FullPath,
             WorkingDirectory = buildResultDir.Path.FullPath
         });

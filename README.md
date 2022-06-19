@@ -1,4 +1,6 @@
-[![Wyam2 build](https://github.com/Wyam2/wyam/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/build.yml)  [![Wyam2 nightly build](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml)  
+![Nuget](https://img.shields.io/nuget/dt/Wyam2?label=NuGet%20downloads&style=plastic) ![Chocolatey](https://img.shields.io/chocolatey/dt/Wyam2?label=Chocolatey%20downloads&style=plastic) ![GitHub release (latest by SemVer)](https://img.shields.io/github/downloads/Wyam2/wyam/latest/total?label=GitHub%20downloads%40latest&sort=semver)  
+ 
+[![Wyam2 build](https://github.com/Wyam2/wyam/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/build.yml)  [![Wyam2 nightly build](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml/badge.svg?branch=main)](https://github.com/Wyam2/wyam/actions/workflows/nightly.yml) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Wyam2/wyam?style=plastic)  
 
 [![Join the chat at https://gitter.im/Wyam2/Wyam2](https://badges.gitter.im/Wyam2/Wyam2.svg)](https://gitter.im/Wyam2/Wyam2)
 
