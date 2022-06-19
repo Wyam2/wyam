@@ -1,5 +1,25 @@
-# 3.0.0-rc4
+# 3.0.0
+- [DevOps] Simplified extraction of git branch and SHA in build script
+- [DevOps] Fixed Wyam2 and Wyam2.Tool nuget packages description
+- [DevOps] Roslynator.Analyzers 4.x requires Roslyn 4.0.1 thus .NET SDK 6.0 build
+- [Refactoring] Update JavaScriptEngineSwitcher.Jint to v3.18.0-preview to support ES6, [see here](https://github.com/sebastienros/jint/issues/343#issuecomment-1133930693)
+- [Refactoring] Update Microsoft.NET.Test.Sdk to v17.2.0
+- [Refactoring] Update SixLabors.ImageSharp to v2.1.2
+- [Security] Update NuGet.* packages to v6.2.1 to mitigate CVE-2022-30184 / GHSA-3885-8gqc-3wpf
+- [Refactoring] Update Google.Apis, Google.Apis.Auth, Google.Apis.Core and Google.Apis.YouTube.v3 to v1.57.0
+- [Refactoring] Update StyleCop.Analyzers to v1.2.0-beta.435
+- [Refactoring] Update Roslynator.Analyzers to v4.1.1
+- [Refactoring] Update Microsoft.SourceLink.GitHub to v1.1.1
+- [Refactoring] Update Castle.Core to v.5.0.0
+- [Refactoring] Update Markdig to v0.30.2
+- [Refactoring] Update Octokit to v0.51.0
+- [Refactoring] Update Nunit to v3.13.3
+- [DevOps] GHA(deps): Bump peter-evans/repository-dispatch from 1 to 2
+- [DevOps] GHA(deps): Bump actions/upload-artifact from 2 to 3
+- [DevOps] GHA(deps): Bump github/codeql-action from 1 to 2
+- [DevOps] GHA(deps): Bump crazy-max/ghaction-github-labeler from 3 to 4
 - [DevOps] GHA(deps): Bump actions/setup-dotnet from 1 to 2
+- [Fix] Cake addin documentation updated to specify Wyam2 instead of the original Wyam project
 - [Fix] Wyam 3.0.0-rc3 does not render correctly note and table list XML comments (#92) 
 - [Refactoring] Update NuGet.* packages to v6.1.0
 - [Refactoring] Added dependency NuGet.PackageManagement to Wyam2.Configuration project
@@ -38,7 +58,7 @@
     - Wyam.Tool was renamed to Wyam2.Tool `dotnet tool install -g Wyam2.Tool`
     - wyam was renamed to wyam2 `wyam2 new --recipe Blog`
     
-- [Documentation]  Markdown table not well rendered #73
+- [Documentation] Markdown table not well rendered #73
 - [Documentation] AutoLinkTypes docs theme setting is slightly confusing #74 
 - [Refactoring] Update JSPool to v4.0.0
 - [Refactoring] Update JavaScriptEngineSwitcher.Core to v3.3.0 and JavaScriptEngineSwitcher.Jint to v3.1.0
