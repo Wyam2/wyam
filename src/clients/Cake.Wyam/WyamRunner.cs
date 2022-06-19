@@ -40,7 +40,7 @@ namespace Cake.Wyam
 
             public IProcess Start(FilePath filePath, ProcessSettings settings)
             {
-                // Prepends "dotnet" to the tool and escapes wyam2 path: "dotnet" "some_path/wyam2.dll" args
+                // Prepends "dotnet" to the tool and escapes wyam2 path: "dotnet" "some_path/wyam.dll" args
                 settings.Arguments.Prepend(filePath.FullPath.Quote());
                 return _processRunner.Start("dotnet", settings);
             }

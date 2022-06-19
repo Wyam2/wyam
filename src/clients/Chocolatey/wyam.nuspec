@@ -9,7 +9,7 @@
     <projectSourceUrl>https://github.com/Wyam2/Wyam</projectSourceUrl>
     <packageSourceUrl>https://github.com/Wyam2/Wyam</packageSourceUrl>
     <iconUrl>https://github.com/Wyam2/assets/raw/master/logo-drop-64.png</iconUrl>
-    <docsUrl>https://wyam2.github.io/docs/</docsUrl>
+    <docsUrl>https://wyam2.github.io</docsUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This is a tools package that contains the Wyam2 CLI.</description>
     <summary>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This is a tools package that contains the Wyam2 CLI.</summary>

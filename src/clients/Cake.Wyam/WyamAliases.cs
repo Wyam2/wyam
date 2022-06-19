@@ -17,7 +17,7 @@ namespace Cake.Wyam
     /// <remarks>
     /// Make sure to remove existing references to old Cake.Wyam addin (https://www.nuget.org/packages/Wyam/).
     /// </remarks>
-    [CakeAliasCategory("Wyam")]
+    [CakeAliasCategory("Wyam2")]
     public static class WyamAliases
     {
         /// <summary>

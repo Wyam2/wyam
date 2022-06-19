@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>Wyam2</id>
+    <id>$id$</id>
     <version>$version$</version>
     <title>Wyam2</title>
     <authors>Simona Avornicesei, Wyam2, and contributors</authors>
@@ -11,7 +11,10 @@
     <projectUrl>https://wyam2.github.io</projectUrl>
     <repository type="git" url="https://github.com/Wyam2/Wyam.git" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This is a tools package that contains the Wyam CLI.</description>
+    <description>$description$</description>
+    <releaseNotes>
+All release notes for Wyam2 can be found on the GitHub site - https://github.com/Wyam2/Wyam/releases
+    </releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Wyam Wyam2 Static StaticContent StaticSite Blog BlogEngine</tags>
   </metadata>

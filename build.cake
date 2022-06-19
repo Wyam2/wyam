@@ -123,9 +123,11 @@ catch(Exception ex)
         //if it's a normal commit: HEAD -> main, tag: v3.0.0-rc1, origin/main, 57fcb522f939e5c9eda05141f7f184384e868458, 57fcb522
         //if it's a tag          : HEAD, tag: v3.0.0-rc1, origin/main, main, 57fcb522f939e5c9eda05141f7f184384e868458, 57fcb522
         //if it's a normal commit with no tag: HEAD -> main, 0a03e791aa223f1f44a2248139117d9f39e40614, 0a03e791 
-        string[] shards = output.ElementAt(0).Split(new string[] {"HEAD -> ", ", "}, StringSplitOptions.RemoveEmptyEntries);
-        branch = shards.Length == 5 || shards.Length == 3 ? shards[0] : shards[3]; //a tag has 6 shards, a normal commit has 5
-	    sha = shards.Length == 5 ? shards[3] : (shards.Length == 3 ? shards[1] : shards[4]);
+        //if it's a normal commit with no tag: HEAD -> main, origin/main, c2aa60950f0143555a813fc3fe1722f5c3297ef9, c2aa6095
+        //last 3 values are always: branch, full sha, short sha
+        string[] shards = output.ElementAt(0).Split(new string[] { "HEAD -> ", "tag: ", ", origin/", ", " }, StringSplitOptions.RemoveEmptyEntries);
+        branch = shards[shards.Length -3];
+	    sha = shards[shards.Length -2]; 
     }
 }
 
@@ -635,7 +637,9 @@ Task("Create-Tools-Package")
         var pattern = string.Format("bin\\{0}\\netcoreapp2.1\\publish\\**\\*", configuration);  // This is needed to get around a Mono scripting issue (see #246, #248, #249)
         NuGetPack(nuspec, new NuGetPackSettings
         {
+            Id = "Wyam2.Tool",
             Version = semVersion,
+            Description = "Wyam2 is a simple to use, highly modular, and extremely configurable static content generator and is a continuation of the awesome project Wyam created by Dave Glick. This is a dotnet tool package containing the Wyam2 CLI.",
             BasePath = nuspec.GetDirectory(),
             OutputDirectory = nugetRoot,
             Symbols = !embedSymbols,
