@@ -53,6 +53,7 @@ jobs:
             2.2.x
             3.1.x
             5.0.x
+            6.0.x
       - run: dotnet --list-sdks
       - run: dotnet --list-runtimes
       - name: Publish release
