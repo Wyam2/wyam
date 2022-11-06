@@ -19,7 +19,7 @@
     <PackageReference Include="NuGet.Configuration" Version="6.2.1" />
     <PackageReference Include="NuGet.DependencyResolver.Core" Version="6.2.1" />
     <PackageReference Include="NuGet.Frameworks" Version="6.2.1" />
-    <PackageReference Include="NuGet.LibraryModel" Version="6.2.1" />
+    <PackageReference Include="NuGet.LibraryModel" Version="6.3.1" />
     <PackageReference Include="NuGet.PackageManagement" Version="6.2.1" />
     <PackageReference Include="NuGet.Packaging" Version="6.2.1" />
     <PackageReference Include="NuGet.Packaging.Core" Version="6.2.1" />
