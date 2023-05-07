@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Wyam2.YouTube</PackageId>
     <Description>$(Wyam2Description) This library provides support for interacting with YouTube.</Description>
@@ -13,6 +13,6 @@
     <PackageReference Include="Google.Apis" Version="1.57.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.57.0" />
     <PackageReference Include="Google.Apis.Core" Version="1.57.0" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.57.0.2721" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.60.0.3043" />
   </ItemGroup>
 </Project>
