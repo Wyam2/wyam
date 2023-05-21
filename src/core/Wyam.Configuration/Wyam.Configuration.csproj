@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Wyam2.Configuration</PackageId>
     <Description>$(Wyam2Description) This library provides services for configuring the engine using configuration files and Roslyn.</Description>
@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="ConcurrentHashSet" Version="1.3.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
-    <PackageReference Include="NuGet.Commands" Version="6.2.1" />
+    <PackageReference Include="NuGet.Commands" Version="6.6.0" />
     <PackageReference Include="NuGet.Common" Version="6.2.1" />
     <PackageReference Include="NuGet.Configuration" Version="6.2.1" />
     <PackageReference Include="NuGet.DependencyResolver.Core" Version="6.2.1" />
